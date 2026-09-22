@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
@@ -58,6 +58,7 @@ function visible(draft: boolean) {
 
 function readMdx(directory: string) {
   const dir = join(contentRoot, directory);
+  if (!existsSync(dir)) return [];
   return readdirSync(dir)
     .filter((file) => file.endsWith(".mdx"))
     .map((file) => {
