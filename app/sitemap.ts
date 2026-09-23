@@ -3,8 +3,11 @@ import { getNotes, getPosts, getWork } from "@/lib/content";
 import { absoluteUrl } from "@/lib/metadata";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ["/", "/work", "/blog", "/notes", "/experience", "/resume"].map(
-    (path) => ({ url: absoluteUrl(path) }),
+  const pages = ["/", "/about", "/work", "/blog", "/notes", "/experience", "/resume"].map(
+    (path) => ({
+      url: absoluteUrl(path),
+      lastModified: path === "/" || path === "/about" ? new Date("2026-09-23") : undefined,
+    }),
   );
 
   const work = getWork().map((item) => ({

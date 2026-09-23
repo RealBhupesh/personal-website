@@ -24,8 +24,8 @@ export type TimelineItem = {
 export const site = {
   name: "Bhupesh Cholake",
   description:
-    "Developer from Nashik, India, building web apps and exploring applied AI. Projects, writing, and notes on what I'm learning.",
-  url: "https://bhupeshcholake.com",
+    "Bhupesh Cholake is a software engineer from Nashik, India, with a degree in Artificial Intelligence and Data Science. He builds applied AI products and is looking for an AI engineer role.",
+  url: "https://www.bhupeessh.in",
   email: "work.bhupesh@gmail.com",
   github: "https://github.com/RealBhupesh",
   linkedin: "https://www.linkedin.com/in/thebhupesh/",
@@ -80,7 +80,7 @@ The thread running through all of it is the same one that drew me to technology 
     { href: "/work", label: "Work" },
     { href: "/blog", label: "Writing" },
     { href: "/notes", label: "Notes" },
-    { href: "/#about", label: "About" },
+    { href: "/about", label: "About" },
   ] satisfies NavItem[],
   experience: [] satisfies TimelineItem[],
   education: [

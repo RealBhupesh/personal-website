@@ -102,15 +102,94 @@ export function articleMetadata({
   };
 }
 
+const personId = `${site.url}/#person`;
+
 export function personJsonLd() {
   return {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: site.name,
-    url: site.url,
-    email: site.email,
-    description: site.description,
-    sameAs: [site.github, site.linkedin, site.x],
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": personId,
+        name: site.name,
+        url: site.url,
+        email: site.email,
+        description: site.description,
+        jobTitle: "Software engineer",
+        knowsAbout: [
+          "Artificial intelligence",
+          "Applied AI",
+          "Large language models",
+          "AI engineering",
+          "Web development",
+        ],
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Nashik",
+          addressRegion: "Maharashtra",
+          addressCountry: "IN",
+        },
+        alumniOf: {
+          "@type": "EducationalOrganization",
+          name: "Bachelor of Engineering, Artificial Intelligence and Data Science",
+        },
+        sameAs: [site.github, site.linkedin, site.x],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${site.url}/#website`,
+        name: site.name,
+        url: site.url,
+        description: site.description,
+        publisher: { "@id": personId },
+        inLanguage: "en",
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": `${site.url}/about#profile`,
+        url: `${site.url}/about`,
+        name: `About ${site.name}`,
+        mainEntity: { "@id": personId },
+        isPartOf: { "@id": `${site.url}/#website` },
+      },
+    ],
+  };
+}
+
+export function faqJsonLd(items: readonly { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+export function workListJsonLd(
+  items: readonly { title: string; description: string; slug: string; github?: string }[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Work by Bhupesh Cholake",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "SoftwareSourceCode",
+        name: item.title,
+        description: item.description,
+        url: absoluteUrl(`/work/${item.slug}`),
+        ...(item.github ? { codeRepository: item.github } : {}),
+        author: { "@id": personId },
+      },
+    })),
   };
 }
 

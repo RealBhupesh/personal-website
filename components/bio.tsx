@@ -34,6 +34,10 @@ export function Bio({
   const [mode, setMode] = useState<"default" | "long">("default");
   const text = mode === "long" && long ? long : short;
   const showPictures = mode === "long";
+  const parts = paragraphs(text);
+  const splitAt = showPictures && portrait ? Math.floor(parts.length / 2) : parts.length;
+  const before = parts.slice(0, splitAt);
+  const after = parts.slice(splitAt);
 
   return (
     <div>
@@ -70,25 +74,36 @@ export function Bio({
           </div>
         ) : null}
       </div>
-      {showPictures && portrait ? (
-        <figure className="mt-8">
-          <Image
-            src={portrait.src}
-            alt={portrait.alt}
-            width={portrait.width}
-            height={portrait.height}
-            className="h-auto w-full rounded-2xl"
-          />
-          <figcaption className="mt-2 text-sm leading-[1.6] text-muted">{portrait.caption}</figcaption>
-        </figure>
-      ) : null}
-      <div className={showPictures && portrait ? "mt-6 space-y-4" : "space-y-4"}>
-        {paragraphs(text).map((paragraph) => (
+      <div className="space-y-4">
+        {before.map((paragraph) => (
           <p key={paragraph} className="leading-[1.75]">
             {paragraph}
           </p>
         ))}
       </div>
+      {showPictures && portrait ? (
+        <figure className="my-8 flex flex-col items-center">
+          <Image
+            src={portrait.src}
+            alt={portrait.alt}
+            width={portrait.width}
+            height={portrait.height}
+            className="h-auto w-full max-w-[18rem] rounded-2xl"
+          />
+          <figcaption className="mt-2 max-w-[18rem] text-sm leading-[1.6] text-muted">
+            {portrait.caption}
+          </figcaption>
+        </figure>
+      ) : null}
+      {after.length > 0 ? (
+        <div className="space-y-4">
+          {after.map((paragraph) => (
+            <p key={paragraph} className="leading-[1.75]">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      ) : null}
       {showPictures && tech && tech.length > 0 ? (
         <ul className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-4">
           {tech.map((picture) => (

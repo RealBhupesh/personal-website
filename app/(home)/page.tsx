@@ -24,11 +24,11 @@ export default function HomePage() {
           short={site.bio}
           long={site.bioLong}
           portrait={{
-            src: "/about/childhood.jpg",
+            src: "/about/childhood-portrait.jpg",
             alt: "Bhupesh as a child, sitting on a cabinet and holding a landline phone",
             caption: "Nashik. The phone was already the interesting object in the room.",
-            width: 664,
-            height: 1024,
+            width: 370,
+            height: 625,
           }}
           tech={[
             {

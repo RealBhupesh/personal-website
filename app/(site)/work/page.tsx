@@ -1,6 +1,7 @@
+import { JsonLd } from "@/components/json-ld";
 import { WorkStory } from "@/components/work-story";
 import { projects, workIntro } from "@/config/work";
-import { pageMetadata } from "@/lib/metadata";
+import { pageMetadata, workListJsonLd } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
   title: "Work",
@@ -15,6 +16,16 @@ export default function WorkPage() {
 
   return (
     <div>
+      <JsonLd
+        data={workListJsonLd(
+          projects.map((project) => ({
+            title: "displayTitle" in project && project.displayTitle ? project.displayTitle : project.title,
+            description: project.summary,
+            slug: project.slug,
+            github: project.href,
+          })),
+        )}
+      />
       <header>
         <h1 className="section-title">Work</h1>
         <div className="mt-4 space-y-4">
