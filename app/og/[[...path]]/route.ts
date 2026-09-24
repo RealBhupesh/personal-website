@@ -1,12 +1,9 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { site } from "@/config/site";
-import {
-  formatMonthYear,
-  getNoteBySlug,
-  getPostBySlug,
-  getWorkBySlug,
-} from "@/lib/content";
+import { profile } from "@/config/profile";
+import { getProject, titleOf } from "@/config/work";
+import { formatMonthYear, getNoteBySlug, getPostBySlug } from "@/lib/content";
 import { createOgImage } from "@/lib/og";
 
 type Props = { params: Promise<{ path?: string[] }> };
@@ -49,15 +46,15 @@ export async function GET(_request: Request, { params }: Props) {
   }
 
   if (kind === "work" && slug) {
-    const project = getWorkBySlug(slug);
+    const project = getProject(slug);
     return createOgImage({
-      title: project?.title ?? "Work",
-      label: project?.year,
+      title: project ? titleOf(project) : "Work",
+      label: project ? project.stack.slice(0, 3).join(" · ") : undefined,
     });
   }
 
   return createOgImage({
     title: site.name,
-    label: "AI engineer and builder",
+    label: profile.headline,
   });
 }

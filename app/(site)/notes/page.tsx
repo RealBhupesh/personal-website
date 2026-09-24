@@ -6,6 +6,7 @@ export const metadata = pageMetadata({
   title: "Notes",
   description: "Short observations on software, learning, and work in progress.",
   path: "/notes",
+  noindex: getNotes().length === 0,
 });
 
 const noteLink =

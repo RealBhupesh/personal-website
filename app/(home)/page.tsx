@@ -1,11 +1,12 @@
-import { Bio } from "@/components/bio";
-import { site } from "@/config/site";
-import { projects, selectedWorkIntro } from "@/config/work";
-import { pageMetadata } from "@/lib/metadata";
 import Link from "next/link";
+import { Bio } from "@/components/bio";
+import { contributions, mergedPrCount, openSourceIntro, roles } from "@/config/experience";
+import { site } from "@/config/site";
+import { projects, selectedWorkIntro, titleOf } from "@/config/work";
+import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
-  title: site.name,
+  title: site.title,
   description: site.description,
   path: "/",
   absolute: true,
@@ -14,8 +15,11 @@ export const metadata = pageMetadata({
 const textLink =
   "underline decoration-foreground/25 underline-offset-[0.2em] transition-[text-decoration-color] duration-150 hover:decoration-foreground/80";
 
+const label = "font-mono text-[0.8125rem] text-muted";
+
 export default function HomePage() {
   const featured = projects.filter((project) => project.featured);
+  const featuredContributions = contributions.filter((item) => item.featured);
 
   return (
     <div className="space-y-16">
@@ -59,21 +63,58 @@ export default function HomePage() {
         />
       </section>
 
-      <section aria-labelledby="now-heading">
-        <h2 id="now-heading" className="section-title mb-4">
-          Now
+      <section aria-labelledby="experience-heading">
+        <h2 id="experience-heading" className="section-title mb-4">
+          Experience
         </h2>
-        <dl className="space-y-4">
-          {site.now.map((item) => (
-            <div
-              key={item.label}
-              className="grid gap-1 sm:grid-cols-[10.5rem_1fr] sm:gap-x-6"
-            >
-              <dt className="font-mono text-[0.8125rem] text-muted">{item.label}</dt>
-              <dd className="leading-[1.7]">{item.text}</dd>
-            </div>
+        <ul className="border-b border-border">
+          {roles.map((role) => (
+            <li key={role.org} className="border-t border-border py-4">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+                <h3 className="font-medium">
+                  {role.title}, {role.org}
+                </h3>
+                {"period" in role && role.period ? (
+                  <p className={`shrink-0 ${label}`}>{role.period}</p>
+                ) : null}
+              </div>
+              <p className="mt-1 leading-[1.7]">{role.summary}</p>
+            </li>
           ))}
-        </dl>
+        </ul>
+      </section>
+
+      <section aria-labelledby="open-source-heading">
+        <div className="mb-4 flex items-baseline justify-between gap-4">
+          <h2 id="open-source-heading" className="section-title">
+            Open source
+          </h2>
+          <p className={label}>{mergedPrCount} merged PRs</p>
+        </div>
+        <p className="mb-6 leading-[1.75]">{openSourceIntro}</p>
+        <ul className="border-b border-border">
+          {featuredContributions.map((item) => (
+            <li key={item.repo} className="border-t border-border py-4">
+              <div className="flex items-baseline justify-between gap-6">
+                <h3 className="font-medium">
+                  <a href={item.repo} className={textLink} rel="noreferrer" target="_blank">
+                    {item.project}
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </h3>
+                <p className={`shrink-0 ${label}`}>
+                  {item.prs.length} {item.prs.length === 1 ? "PR" : "PRs"}
+                </p>
+              </div>
+              <p className="mt-1 leading-[1.7]">{item.summary}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4">
+          <Link href="/about#open-source" className={textLink}>
+            Every contribution, with links
+          </Link>
+        </p>
       </section>
 
       <section aria-labelledby="work-heading">
@@ -86,19 +127,44 @@ export default function HomePage() {
             <li key={project.slug} className="border-t border-border py-4">
               <h3 className="font-medium">
                 <Link href={`/work/${project.slug}`} className={textLink}>
-                  {project.title}
+                  {titleOf(project)}
                 </Link>
               </h3>
               <p className="mt-1 leading-[1.7]">{project.summary}</p>
-              <p className="mt-2">
-                <a href={project.href} className={textLink} rel="noreferrer" target="_blank">
-                  Explore {project.title}
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
-              </p>
+              <p className={`mt-2 ${label}`}>{project.stack.slice(0, 4).join(" · ")}</p>
+              {"demo" in project && project.demo ? (
+                <p className="mt-2">
+                  <a href={project.demo} className={textLink} rel="noreferrer" target="_blank">
+                    Try the live demo
+                    <span className="sr-only"> of {titleOf(project)} (opens in a new tab)</span>
+                  </a>
+                </p>
+              ) : null}
             </li>
           ))}
         </ul>
+        <p className="mt-4">
+          <Link href="/work" className={textLink}>
+            All work
+          </Link>
+        </p>
+      </section>
+
+      <section aria-labelledby="now-heading">
+        <div className="mb-4 flex items-baseline justify-between gap-4">
+          <h2 id="now-heading" className="section-title">
+            Now
+          </h2>
+          <p className={label}>{site.nowUpdated}</p>
+        </div>
+        <dl className="space-y-4">
+          {site.now.map((item) => (
+            <div key={item.label} className="grid gap-1 sm:grid-cols-[10.5rem_1fr] sm:gap-x-6">
+              <dt className={label}>{item.label}</dt>
+              <dd className="leading-[1.7]">{item.text}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
 
       <section aria-labelledby="contact-heading">
@@ -115,7 +181,11 @@ export default function HomePage() {
             Email me
           </a>
           <a href={site.github} className={textLink} rel="noreferrer" target="_blank">
-            Find me on GitHub
+            GitHub
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+          <a href={site.linkedin} className={textLink} rel="noreferrer" target="_blank">
+            LinkedIn
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </p>

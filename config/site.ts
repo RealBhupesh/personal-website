@@ -13,26 +13,21 @@ export type NavItem = {
   label: string;
 };
 
-export type TimelineItem = {
-  title: string;
-  place?: string;
-  start?: string;
-  end?: string;
-  detail?: string;
-};
-
 export const site = {
   name: "Bhupesh Cholake",
+  title: "Bhupesh Cholake · Software engineer building AI applications",
   description:
-    "Bhupesh Cholake is a software engineer from Nashik, India, with a degree in Artificial Intelligence and Data Science. He builds applied AI products and is looking for an AI engineer role.",
+    "Bhupesh Cholake builds AI applications and has merged open-source work in Cloudflare, Sentry, and Grafana. Software engineer seeking an AI engineer role.",
   url: "https://www.bhupeessh.in",
   email: "work.bhupesh@gmail.com",
   github: "https://github.com/RealBhupesh",
   linkedin: "https://www.linkedin.com/in/thebhupesh/",
   x: "https://x.com/bhupeshcholake",
-  bio: `I've loved technology for as long as I can remember. Growing up in Nashik, that curiosity took me from a YouTube channel about tech to programming, an agency I started in 11th standard, and a degree in Artificial Intelligence and Data Science.
+  bio: `I'm a software engineer in Nashik who builds AI applications people can rely on. Most recently I was a founding engineer intern at Physicore Engine, where I built a physics solver that runs in the browser.
 
-I'm looking for work. I want problems that ask me to think deeply, learn quickly, and take responsibility for bringing something into the world.`,
+I also work in other people's codebases. My changes have been merged into Cloudflare's Workers SDK, Sentry, Grafana Faro, Gumroad, and Nanocoder, an open-source AI coding agent.
+
+I'm looking for an AI engineer role.`,
   bioLong: `Long before I knew what I wanted to do for a living, I knew what could hold my attention for hours: technology, and the possibility of making something with it.
 
 Growing up in Nashik, that curiosity kept finding new forms. I started a YouTube channel about tech. I began learning programming and web development. By 11th standard, I had started my own agency. Each step brought something that had once felt distant a little closer: I could learn how it worked, try it myself, and put something of my own into the world.
@@ -58,22 +53,23 @@ Once I commit, I want to be responsible for moving the work forward. I will ask 
 That is the person I am working to become: someone whose curiosity develops into understanding, and whose understanding becomes something other people can use.
 
 The thread running through all of it is the same one that drew me to technology as a child. I want to understand enough to make a difference, and become capable enough to act on it.`,
+  nowUpdated: "September 2026",
   now: [
     {
       label: "Building",
-      text: "Software and research tools, including Stokex, alongside work on agent evaluation and websites through Redowl Studio.",
+      text: "STOCKEX, a research harness that gives AI agents a traceable process for equity research, alongside work on agent evaluation and websites through Redowl Studio.",
+    },
+    {
+      label: "Contributing",
+      text: "Fixes to developer tools and SDKs, most recently Cloudflare's Workers SDK, Grafana Faro, and Plane.",
     },
     {
       label: "Studying",
       text: "Strategy, human behaviour, and the choices that help a product find its place in people's lives.",
     },
     {
-      label: "Thinking about",
-      text: "How to build systems that make good work easier to repeat, and how to turn a broad range of interests into useful judgment.",
-    },
-    {
       label: "Looking for",
-      text: "Work that asks me to think deeply, learn quickly, and take responsibility for bringing something into the world.",
+      text: "An AI engineer role where I can own problems end to end, from the model's behaviour to the product around it.",
     },
   ] satisfies NowItem[],
   navigation: [
@@ -82,16 +78,11 @@ The thread running through all of it is the same one that drew me to technology 
     { href: "/notes", label: "Notes" },
     { href: "/about", label: "About" },
   ] satisfies NavItem[],
-  experience: [] satisfies TimelineItem[],
   education: [
     {
       title: "Bachelor of Engineering, Artificial Intelligence & Data Science",
-      detail: "CGPA 8.6/10.",
+      detail:
+        "CGPA 8.6/10. Coursework in Machine Learning, Data Structures and Algorithms, and Business Intelligence.",
     },
-  ] satisfies TimelineItem[],
+  ],
 } as const;
-
-export function timelineRange(item: TimelineItem) {
-  if (item.start && item.end) return `${item.start} — ${item.end}`;
-  return item.start || item.end || "";
-}

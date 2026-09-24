@@ -1,14 +1,31 @@
+import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
-import { WorkStory } from "@/components/work-story";
-import { projects, workIntro } from "@/config/work";
-import { pageMetadata, workListJsonLd } from "@/lib/metadata";
+import { projects, titleOf, workIntro, type ProjectEntry } from "@/config/work";
+import { breadcrumbJsonLd, pageMetadata, workListJsonLd } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
   title: "Work",
   description:
-    "A selection of Bhupesh Cholake's work in applied AI, agent evaluation, and web development.",
+    "AI applications and developer tools built by Bhupesh Cholake, including a hotel guest assistant, a real-time fitness coach, and an agentic Discord bot.",
   path: "/work",
 });
+
+const textLink =
+  "underline decoration-foreground/25 underline-offset-[0.2em] transition-[text-decoration-color] duration-150 hover:decoration-foreground/80";
+
+function WorkRow({ project, heading: Heading }: { project: ProjectEntry; heading: "h2" | "h3" }) {
+  return (
+    <li className="border-t border-border py-6">
+      <Heading className="font-medium">
+        <Link href={`/work/${project.slug}`} className={textLink}>
+          {titleOf(project)}
+        </Link>
+      </Heading>
+      <p className="mt-1 leading-[1.7]">{project.lede}</p>
+      <p className="mt-2 font-mono text-[0.8125rem] text-muted">{project.stack.join(" · ")}</p>
+    </li>
+  );
+}
 
 export default function WorkPage() {
   const main = projects.filter((project) => !project.early);
@@ -16,16 +33,8 @@ export default function WorkPage() {
 
   return (
     <div>
-      <JsonLd
-        data={workListJsonLd(
-          projects.map((project) => ({
-            title: "displayTitle" in project && project.displayTitle ? project.displayTitle : project.title,
-            description: project.summary,
-            slug: project.slug,
-            github: project.href,
-          })),
-        )}
-      />
+      <JsonLd data={workListJsonLd(projects)} />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Work", path: "/work" }])} />
       <header>
         <h1 className="section-title">Work</h1>
         <div className="mt-4 space-y-4">
@@ -36,21 +45,21 @@ export default function WorkPage() {
           ))}
         </div>
       </header>
-      <div className="mt-16 space-y-16">
+      <ul className="mt-10 border-b border-border">
         {main.map((project) => (
-          <WorkStory key={project.slug} project={project} />
+          <WorkRow key={project.slug} project={project} heading="h2" />
         ))}
-      </div>
+      </ul>
       {early.length > 0 ? (
-        <section className="mt-16" aria-labelledby="early-heading">
-          <h2 id="early-heading" className="section-title">
+        <section className="mt-14" aria-labelledby="early-heading">
+          <h2 id="early-heading" className="section-title mb-2">
             Early explorations
           </h2>
-          <div className="mt-10 space-y-16">
+          <ul className="border-b border-border">
             {early.map((project) => (
-              <WorkStory key={project.slug} project={project} heading="h3" />
+              <WorkRow key={project.slug} project={project} heading="h3" />
             ))}
-          </div>
+          </ul>
         </section>
       ) : null}
     </div>

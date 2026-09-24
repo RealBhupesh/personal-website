@@ -10,6 +10,8 @@ function escapeXml(value: string) {
     .replaceAll('"', "&quot;");
 }
 
+export const dynamic = "force-static";
+
 export function GET() {
   const items = getPosts()
     .map((post) => {

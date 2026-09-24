@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { site } from "@/config/site";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { getNotes, getPosts } from "@/lib/content";
+
+function navigation() {
+  const empty = new Set<string>();
+  if (getPosts().length === 0) empty.add("/blog");
+  if (getNotes().length === 0) empty.add("/notes");
+  return site.navigation.filter((item) => !empty.has(item.href));
+}
 
 const navLink =
   "text-muted underline decoration-transparent underline-offset-[0.2em] transition-[color,text-decoration-color] duration-150 hover:text-foreground hover:decoration-foreground/40";
@@ -31,15 +39,12 @@ export function Header({ nameAs = "p" }: { nameAs?: "h1" | "p" }) {
             LinkedIn
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
-          <Link href="/resume" className={metaLink}>
-            Resume
-          </Link>
           <ThemeToggle />
         </div>
       </div>
       <nav aria-label="Primary">
         <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
-          {site.navigation.map((item) => (
+          {navigation().map((item) => (
             <li key={item.href}>
               <Link href={item.href} className={navLink}>
                 {item.label}

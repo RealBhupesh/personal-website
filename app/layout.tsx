@@ -7,23 +7,22 @@ import { JsonLd } from "@/components/json-ld";
 import { site } from "@/config/site";
 import { personJsonLd } from "@/lib/metadata";
 import "./globals.css";
-import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const themeScript = `(function(){try{var stored=localStorage.getItem("theme");var pref=stored==="light"||stored==="dark"?stored:"system";var dark=window.matchMedia("(prefers-color-scheme: dark)").matches;var theme=pref==="system"?(dark?"dark":"light"):pref;var root=document.documentElement;root.dataset.theme=theme;root.dataset.themePreference=pref;root.style.colorScheme=theme;}catch(e){}})();`;
+
+const bingVerification = process.env.BING_SITE_VERIFICATION;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: site.name,
+    default: site.title,
     template: `%s · ${site.name}`,
   },
   description: site.description,
   applicationName: site.name,
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
+  publisher: site.name,
   alternates: {
     types: {
       "application/rss+xml": "/feed.xml",
@@ -33,11 +32,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: site.name,
-    title: site.name,
+    title: site.title,
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
+  },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    ...(bingVerification ? { other: { "msvalidate.01": bingVerification } } : {}),
   },
 };
 
@@ -53,7 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", GeistSans.variable, GeistMono.variable, "font-sans", geist.variable)}
+      className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -68,7 +71,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
           <Footer />
         </div>
-        <aside className="pointer-events-none fixed top-12 right-[max(2rem,calc((100vw-min(100vw,88rem))/2+2rem))] bottom-12 z-0 hidden w-[min(30vw,28rem)] print:hidden lg:flex lg:items-start lg:justify-center">
+        <aside className="pointer-events-none fixed top-12 right-[max(2rem,calc((100vw-min(100vw,88rem))/2+2rem))] bottom-12 z-0 hidden w-[min(30vw,28rem)] lg:flex lg:items-start lg:justify-center">
           <Image
             src="/place.jpg"
             alt="Colourful pencil drawing of a riverside city inspired by Nashik, with temples, green mountains, and a sunset."

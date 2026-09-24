@@ -8,6 +8,7 @@ export const metadata = pageMetadata({
   title: "Writing",
   description: "Essays on building software, working with AI, and thinking through ideas.",
   path: "/blog",
+  noindex: getPosts().length === 0,
 });
 
 const textLink =

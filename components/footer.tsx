@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { site } from "@/config/site";
 
 const item =
@@ -28,11 +27,6 @@ export function Footer() {
             <a href={`mailto:${site.email}`} className={item}>
               Email
             </a>
-          </li>
-          <li>
-            <Link href="/resume" className={item}>
-              Resume
-            </Link>
           </li>
         </ul>
       </nav>

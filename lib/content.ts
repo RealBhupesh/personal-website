@@ -3,23 +3,8 @@ import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
-import { projects } from "@/config/work";
 
 const contentRoot = join(process.cwd(), "content");
-
-export type Work = {
-  slug: string;
-  title: string;
-  description: string;
-  year?: string;
-  role?: string;
-  technologies: string[];
-  github?: string;
-  live?: string;
-  draft: boolean;
-  order: number;
-  body: string;
-};
 
 export type Note = {
   slug: string;
@@ -110,19 +95,6 @@ export function formatMonthYear(iso: string) {
   }).format(new Date(Date.UTC(year, (month ?? 1) - 1, day ?? 1)));
 }
 
-export const getWork = cache((): Work[] => {
-  return projects.map((project, order) => ({
-    slug: project.slug,
-    title: project.title,
-    description: project.summary,
-    technologies: [],
-    github: project.href,
-    draft: false,
-    order,
-    body: project.paragraphs.join("\n\n"),
-  }));
-});
-
 export const getNotes = cache((): Note[] => {
   return readMdx("notes")
     .map(({ slug, data, body, file }) => {
@@ -163,10 +135,6 @@ export const getPosts = cache((): Post[] => {
     .filter((item) => visible(item.draft))
     .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 });
-
-export function getWorkBySlug(slug: string) {
-  return getWork().find((item) => item.slug === slug);
-}
 
 export function getNoteBySlug(slug: string) {
   return getNotes().find((item) => item.slug === slug);

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { contributions, skills } from "@/config/experience";
+import { profile } from "@/config/profile";
 import { site } from "@/config/site";
-import type { Note, Post, Work } from "@/lib/content";
+import { titleOf, type ProjectEntry } from "@/config/work";
+import type { Note, Post } from "@/lib/content";
 
 export function absoluteUrl(path: string) {
   return new URL(path, site.url).toString();
@@ -25,6 +28,7 @@ export function pageMetadata({
   absolute = false,
   image = "/opengraph-image",
   imageAlt,
+  noindex = false,
 }: {
   title: string;
   description: string;
@@ -32,6 +36,7 @@ export function pageMetadata({
   absolute?: boolean;
   image?: string;
   imageAlt?: string;
+  noindex?: boolean;
 }): Metadata {
   const resolved = fullTitle(title, absolute);
   const alt = imageAlt ?? resolved;
@@ -40,6 +45,7 @@ export function pageMetadata({
     title: absolute ? { absolute: title } : title,
     description,
     alternates: { canonical: path, types: feed },
+    ...(noindex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       title: resolved,
       description,
@@ -103,6 +109,8 @@ export function articleMetadata({
 }
 
 const personId = `${site.url}/#person`;
+const websiteId = `${site.url}/#website`;
+const person = { "@id": personId };
 
 export function personJsonLd() {
   return {
@@ -112,47 +120,74 @@ export function personJsonLd() {
         "@type": "Person",
         "@id": personId,
         name: site.name,
+        givenName: "Bhupesh",
+        familyName: "Cholake",
         url: site.url,
-        email: site.email,
+        email: `mailto:${site.email}`,
         description: site.description,
-        jobTitle: "Software engineer",
+        jobTitle: profile.headline,
         knowsAbout: [
           "Artificial intelligence",
-          "Applied AI",
-          "Large language models",
           "AI engineering",
-          "Web development",
+          "Large language models",
+          "AI agents",
+          "Computer vision",
+          "Open-source software",
+          ...skills.flatMap((group) => group.items),
         ],
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: "Nashik",
-          addressRegion: "Maharashtra",
-          addressCountry: "IN",
+        homeLocation: {
+          "@type": "Place",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Nashik",
+            addressRegion: "Maharashtra",
+            addressCountry: "IN",
+          },
         },
-        alumniOf: {
-          "@type": "EducationalOrganization",
-          name: "Bachelor of Engineering, Artificial Intelligence and Data Science",
+        hasCredential: {
+          "@type": "EducationalOccupationalCredential",
+          credentialCategory: "degree",
+          name: "Bachelor of Engineering in Artificial Intelligence and Data Science",
+        },
+        hasOccupation: {
+          "@type": "Occupation",
+          name: "Software engineer",
+          skills: skills.flatMap((group) => group.items).join(", "),
         },
         sameAs: [site.github, site.linkedin, site.x],
       },
       {
         "@type": "WebSite",
-        "@id": `${site.url}/#website`,
+        "@id": websiteId,
         name: site.name,
         url: site.url,
         description: site.description,
-        publisher: { "@id": personId },
+        publisher: person,
         inLanguage: "en",
       },
       {
         "@type": "ProfilePage",
         "@id": `${site.url}/about#profile`,
-        url: `${site.url}/about`,
+        url: absoluteUrl("/about"),
         name: `About ${site.name}`,
-        mainEntity: { "@id": personId },
-        isPartOf: { "@id": `${site.url}/#website` },
+        dateModified: profile.updated,
+        mainEntity: person,
+        isPartOf: { "@id": websiteId },
       },
     ],
+  };
+}
+
+export function breadcrumbJsonLd(items: readonly { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [{ name: "Home", path: "/" }, ...items].map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
   };
 }
 
@@ -171,23 +206,52 @@ export function faqJsonLd(items: readonly { question: string; answer: string }[]
   };
 }
 
-export function workListJsonLd(
-  items: readonly { title: string; description: string; slug: string; github?: string }[],
-) {
+function projectEntity(project: ProjectEntry) {
+  return {
+    "@type": "SoftwareSourceCode",
+    "@id": `${absoluteUrl(`/work/${project.slug}`)}#project`,
+    name: titleOf(project),
+    description: project.lede,
+    url: absoluteUrl(`/work/${project.slug}`),
+    codeRepository: project.href,
+    keywords: project.stack.join(", "),
+    ...("image" in project && project.image ? { image: absoluteUrl(project.image.src) } : {}),
+    ...("demo" in project && project.demo ? { targetProduct: { "@type": "SoftwareApplication", name: titleOf(project), url: project.demo } } : {}),
+    author: person,
+  };
+}
+
+export function workListJsonLd(items: readonly ProjectEntry[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Work by Bhupesh Cholake",
-    itemListElement: items.map((item, index) => ({
+    name: `Work by ${site.name}`,
+    itemListElement: items.map((project, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: projectEntity(project),
+    })),
+  };
+}
+
+export function projectJsonLd(project: ProjectEntry) {
+  return { "@context": "https://schema.org", ...projectEntity(project) };
+}
+
+export function contributionsJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `Open-source contributions by ${site.name}`,
+    itemListElement: contributions.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
       item: {
         "@type": "SoftwareSourceCode",
-        name: item.title,
-        description: item.description,
-        url: absoluteUrl(`/work/${item.slug}`),
-        ...(item.github ? { codeRepository: item.github } : {}),
-        author: { "@id": personId },
+        name: item.project,
+        codeRepository: item.repo,
+        description: item.summary,
+        contributor: person,
       },
     })),
   };
@@ -203,7 +267,7 @@ export function blogPostingJsonLd(post: Post) {
     dateModified: post.updated ?? post.date,
     wordCount: post.words,
     keywords: post.tags.join(", "),
-    author: { "@type": "Person", name: site.name, url: site.url },
+    author: person,
     mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
   };
 }
@@ -215,20 +279,7 @@ export function noteArticleJsonLd(note: Note) {
     headline: note.title,
     description: note.description,
     wordCount: note.words,
-    author: { "@type": "Person", name: site.name, url: site.url },
+    author: person,
     mainEntityOfPage: absoluteUrl(`/notes/${note.slug}`),
-  };
-}
-
-export function workJsonLd(work: Work) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    name: work.title,
-    description: work.description,
-    ...(work.year ? { dateCreated: work.year } : {}),
-    creator: { "@type": "Person", name: site.name, url: site.url },
-    url: absoluteUrl(`/work/${work.slug}`),
-    keywords: work.technologies.join(", "),
   };
 }
