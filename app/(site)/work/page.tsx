@@ -1,39 +1,46 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
-import { projects, titleOf, workIntro, type ProjectEntry } from "@/config/work";
+import { titleOf, workGroups, workIntro, workProjects, type ProjectEntry } from "@/config/work";
 import { breadcrumbJsonLd, pageMetadata, workListJsonLd } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
   title: "Work",
   description:
-    "AI applications and developer tools built by Bhupesh Cholake, including a hotel guest assistant, a real-time fitness coach, and an agentic Discord bot.",
+    "Projects by Bhupesh Cholake: AI applications, developer tools, scientific computing, and work in progress. Read the decisions behind each project, try a demo, or explore the source.",
   path: "/work",
 });
 
 const textLink =
   "underline decoration-foreground/25 underline-offset-[0.2em] transition-[text-decoration-color] duration-150 hover:decoration-foreground/80";
 
-function WorkRow({ project, heading: Heading }: { project: ProjectEntry; heading: "h2" | "h3" }) {
+function WorkRow({ project }: { project: ProjectEntry }) {
   return (
-    <li className="border-t border-border py-6">
-      <Heading className="font-medium">
+    <li>
+      <h3 className="font-medium">
         <Link href={`/work/${project.slug}`} className={textLink}>
           {titleOf(project)}
         </Link>
-      </Heading>
-      <p className="mt-1 leading-[1.7]">{project.lede}</p>
-      <p className="mt-2 font-mono text-[0.8125rem] text-muted">{project.stack.join(" · ")}</p>
+      </h3>
+      <p className="mt-1 leading-[1.7]">{project.summary}</p>
+      <p className="mt-2 text-sm leading-relaxed text-muted">
+        {project.status}. {project.stack.slice(0, 4).join(" · ")}
+      </p>
+      {"demo" in project && project.demo ? (
+        <p className="mt-2 text-sm">
+          <a href={project.demo} className={textLink} rel="noreferrer" target="_blank">
+            Try {titleOf(project)}
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+        </p>
+      ) : null}
     </li>
   );
 }
 
 export default function WorkPage() {
-  const main = projects.filter((project) => !project.early);
-  const early = projects.filter((project) => project.early);
-
   return (
     <div>
-      <JsonLd data={workListJsonLd(projects)} />
+      <JsonLd data={workListJsonLd(workProjects)} />
       <JsonLd data={breadcrumbJsonLd([{ name: "Work", path: "/work" }])} />
       <header>
         <h1 className="section-title">Work</h1>
@@ -45,23 +52,31 @@ export default function WorkPage() {
           ))}
         </div>
       </header>
-      <ul className="mt-10 border-b border-border">
-        {main.map((project) => (
-          <WorkRow key={project.slug} project={project} heading="h2" />
+      <nav aria-label="Project collections" className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+        {workGroups.map((group) => (
+          <a key={group.id} href={`#${group.id}`} className={textLink}>
+            {group.title}
+          </a>
         ))}
-      </ul>
-      {early.length > 0 ? (
-        <section className="mt-14" aria-labelledby="early-heading">
-          <h2 id="early-heading" className="section-title mb-2">
-            Early explorations
-          </h2>
-          <ul className="border-b border-border">
-            {early.map((project) => (
-              <WorkRow key={project.slug} project={project} heading="h3" />
-            ))}
-          </ul>
-        </section>
-      ) : null}
+      </nav>
+      <div className="mt-12 space-y-14">
+        {workGroups.map((group) => {
+          const collection = workProjects.filter((project) => project.group === group.id);
+          return (
+            <section key={group.id} id={group.id} className="scroll-mt-8" aria-labelledby={`${group.id}-heading`}>
+              <h2 id={`${group.id}-heading`} className="text-xl font-medium tracking-[-0.02em]">
+                {group.title}
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{group.description}</p>
+              <ul className="mt-6 space-y-8">
+                {collection.map((project) => (
+                  <WorkRow key={project.slug} project={project} />
+                ))}
+              </ul>
+            </section>
+          );
+        })}
+      </div>
     </div>
   );
 }

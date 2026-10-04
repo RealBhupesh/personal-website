@@ -3,7 +3,7 @@ import { JsonLd } from "@/components/json-ld";
 import { contributions, mergedPrCount, roles, skills, training } from "@/config/experience";
 import { faqs, profile } from "@/config/profile";
 import { site } from "@/config/site";
-import { projects, titleOf } from "@/config/work";
+import { featuredProjects, titleOf } from "@/config/work";
 import { breadcrumbJsonLd, contributionsJsonLd, faqJsonLd, pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -26,7 +26,6 @@ const textLink =
   "underline decoration-foreground/25 underline-offset-[0.2em] transition-[text-decoration-color] duration-150 hover:decoration-foreground/80";
 
 export default function AboutPage() {
-  const featured = projects.filter((project) => project.featured);
   const [recentRole] = roles;
 
   return (
@@ -36,9 +35,13 @@ export default function AboutPage() {
       <JsonLd data={contributionsJsonLd()} />
       <article>
         <h1 className="section-title">About</h1>
-        <p className="mt-4 leading-[1.75]">{site.description}</p>
+        <p className="mt-4 leading-[1.75]">
+          I&apos;m Bhupesh, a software engineer in Nashik. I build AI applications, developer
+          tools, and scientific software. I like work that asks me to understand the system
+          behind an answer, then make it useful to the person asking.
+        </p>
         <p className="mt-4 font-mono text-[0.8125rem] text-muted">
-          Last updated {updated}. This page is the source for facts about Bhupesh Cholake.
+          Updated {updated}
         </p>
 
         <dl className="mt-10 space-y-4">
@@ -69,8 +72,8 @@ export default function AboutPage() {
           <div className="grid gap-1 sm:grid-cols-[10.5rem_1fr] sm:gap-x-6">
             <dt className="font-mono text-[0.8125rem] text-muted">Looking for</dt>
             <dd className="leading-[1.7]">
-              An AI engineer role: work that asks him to think deeply, learn quickly, and take
-              responsibility for bringing something into the world.
+              An AI engineer role where I can work on the model, the application, and the
+              experience of using it.
             </dd>
           </div>
           <div className="grid gap-1 sm:grid-cols-[10.5rem_1fr] sm:gap-x-6">
@@ -193,12 +196,12 @@ export default function AboutPage() {
 
         <h2 className="section-title mt-14 mb-4">Selected work</h2>
         <ul className="space-y-3">
-          {featured.map((project) => (
+          {featuredProjects.map((project) => (
             <li key={project.slug} className="leading-[1.7]">
               <Link href={`/work/${project.slug}`} className={textLink}>
                 {titleOf(project)}
               </Link>
-              <span className="text-muted"> — {project.summary}</span>
+              <p className="mt-1 text-muted">{project.summary}</p>
             </li>
           ))}
         </ul>

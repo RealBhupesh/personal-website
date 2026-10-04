@@ -47,7 +47,7 @@ export const roles = [
 ] as const satisfies readonly Role[];
 
 export const openSourceIntro =
-  "I learn a lot by working inside codebases I didn't write. These are merged changes to projects other people depend on.";
+  "I've worked on agent context limits, dropped telemetry, and failures in local development tools. These changes are merged into codebases other people depend on.";
 
 export const contributions = [
   {

@@ -3,7 +3,7 @@ import { Bio } from "@/components/bio";
 import GitHubActivity from "@/components/ui/github-activity";
 import { contributions, mergedPrCount, openSourceIntro, roles } from "@/config/experience";
 import { site } from "@/config/site";
-import { projects, selectedWorkIntro, titleOf } from "@/config/work";
+import { featuredProjects, selectedWorkIntro, titleOf } from "@/config/work";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -19,7 +19,6 @@ const textLink =
 const label = "font-mono text-[0.8125rem] text-muted";
 
 export default function HomePage() {
-  const featured = projects.filter((project) => project.featured);
   const featuredContributions = contributions.filter((item) => item.featured);
 
   return (
@@ -155,7 +154,7 @@ export default function HomePage() {
         </h2>
         <p className="mb-6 leading-[1.75]">{selectedWorkIntro}</p>
         <ul className="border-b border-border">
-          {featured.map((project) => (
+          {featuredProjects.map((project) => (
             <li key={project.slug} className="border-t border-border py-4">
               <h3 className="font-medium">
                 <Link href={`/work/${project.slug}`} className={textLink}>
@@ -204,9 +203,8 @@ export default function HomePage() {
           Contact
         </h2>
         <p className="leading-[1.75]">
-          If you&apos;re working on a problem that needs someone curious, resourceful, and willing
-          to take ownership, I&apos;d like to hear about it. Tell me what you&apos;re trying to
-          make possible.
+          Have an AI engineering role, a difficult problem, or a project you think I should see?
+          Write to me. A little context about what you&apos;re building is a good place to start.
         </p>
         <p className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
           <a href={`mailto:${site.email}`} className={textLink}>

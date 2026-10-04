@@ -57,7 +57,7 @@ export function Bio({
                   : "text-muted transition-colors duration-150 hover:text-foreground"
               }
             >
-              Default
+              In brief
             </button>
             <button
               type="button"
@@ -69,7 +69,7 @@ export function Bio({
                   : "text-muted transition-colors duration-150 hover:text-foreground"
               }
             >
-              Long
+              The longer story
             </button>
           </div>
         ) : null}

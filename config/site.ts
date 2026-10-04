@@ -17,59 +17,49 @@ export const site = {
   name: "Bhupesh Cholake",
   title: "Bhupesh Cholake · Software engineer building AI applications",
   description:
-    "Bhupesh Cholake builds AI applications and has merged open-source work in Cloudflare, Sentry, and Grafana. Software engineer seeking an AI engineer role.",
+    "Bhupesh Cholake is a software engineer in Nashik building AI applications, developer tools, and scientific software, with merged work in Cloudflare, Sentry, and Grafana.",
   url: "https://www.bhupeessh.in",
   email: "work.bhupesh@gmail.com",
   github: "https://github.com/RealBhupesh",
   linkedin: "https://www.linkedin.com/in/thebhupesh/",
   x: "https://x.com/bhupeshcholake",
-  bio: `I'm a software engineer in Nashik who builds AI applications people can rely on. Most recently I was a founding engineer intern at Physicore Engine, where I built a physics solver that runs in the browser.
+  bio: `I'm Bhupesh, a software engineer in Nashik. I build AI applications, from the tools a model calls to the interface someone uses to work with it.
 
-I also work in other people's codebases. My changes have been merged into Cloudflare's Workers SDK, Sentry, Grafana Faro, Gumroad, and Nanocoder, an open-source AI coding agent.
+Recently, I was a founding engineer intern at Physicore Engine, building a Python physics solver and its browser interface. Outside that work, I've built a hotel guest assistant, a Discord bot, and tools for monitoring websites and studying airflow.
 
-I'm looking for an AI engineer role.`,
-  bioLong: `Long before I knew what I wanted to do for a living, I knew what could hold my attention for hours: technology, and the possibility of making something with it.
+I also contribute to codebases other people depend on, including Cloudflare's Workers SDK, Sentry, Grafana, and Nanocoder. I'm looking for an AI engineer role where I can follow a problem from the first question through to a working product.`,
+  bioLong: `Technology caught my attention long before I knew what kind of work I wanted to do. Growing up in Nashik, I started a YouTube channel about tech, learned to build websites, and started my own agency by 11th standard. Each attempt gave me a new question to follow.
 
-Growing up in Nashik, that curiosity kept finding new forms. I started a YouTube channel about tech. I began learning programming and web development. By 11th standard, I had started my own agency. Each step brought something that had once felt distant a little closer: I could learn how it worked, try it myself, and put something of my own into the world.
+A website made me curious about design. Running an agency made me think about why someone chooses one business over another. Programming gave me a way to turn an idea into something I could put in front of a person and learn from.
 
-Starting early gave my curiosity somewhere to go. A website became a reason to understand design. An agency became a reason to think about business. An unfamiliar problem became a reason to learn. I began to see how much was connected, and how much more there was to understand.
+I went on to study Artificial Intelligence and Data Science. When I first used ChatGPT, ideas that had felt out of reach became things I could attempt. That made me more ambitious about what I could build, and more interested in how to tell whether it worked well enough to trust.
 
-I went on to pursue a degree in Artificial Intelligence and Data Science. When I first had access to ChatGPT, I saw the possibility of attempting ideas I had previously struggled to bring within reach. It expanded the scale of what I wanted to build, and made me more interested in the judgment behind the work: choosing the problem, asking better questions, and knowing whether the result deserved someone's trust.
+That question has stayed with me. In Asteria, the model can help a guest find a room, but code checks the inventory and staff confirm the booking. In PhysiCore, a predicted airflow field matters alongside the equations, derivatives, and assumptions that produced it. I like being able to follow an answer back to the machinery behind it.
 
-That interest has taken me well beyond programming.
+I learn from other people's machinery, too. Working on Nanocoder meant finding where oversized tool results and diffs could overwhelm an agent's context. Contributions to Cloudflare, Sentry, and Grafana have put me inside systems with existing users, constraints, and maintainers. A useful fix has to fit all three.
 
-I want to understand why people choose one product over another. Why a useful idea can struggle to find its audience. Why someone holds on to a familiar way of doing things, even when another option seems better to the person who built it. Those questions have drawn me toward marketing, psychology, and strategy, and toward a more careful way of looking at people.
+My curiosity also takes me beyond code. I read about strategy, psychology, and marketing because a working product still has to find a place in someone's life. People bring habits, pressures, and reasons to be cautious. I want to understand those before asking them to change how they work.
 
-A person arrives at a product with a world already in their head. They have habits, expectations, pressures, and reasons to be cautious. I want to understand that world before asking them to change anything about it. For me, empathy means doing the work of seeing a problem from their position, including the parts that are easy to overlook from mine.
+I'm drawn to tools and processes that carry a lesson forward: a check that catches the same mistake next time, a workflow that makes the next decision clearer, a small piece of software that removes a recurring job. Building them has become a way of making my own learning useful to someone else.
 
-That also shapes how I think about startups. I want to understand who a business intends to serve, what change it promises, and why people would choose to participate. I am interested in the decisions that give an idea a chance to endure: where to begin, what to leave out, how to earn trust, and what can become more valuable with time.
-
-I am drawn to systems for a similar reason. A well-designed process can carry a lesson forward. A useful tool can remove a problem each time it appears. I like building things that make the next effort more effective, and I am trying to bring that same intention to how I learn, work, and live.
-
-When a problem gets hold of me, I find it difficult to leave it at a surface understanding. I want to follow it far enough to see what is actually happening. That can mean learning a new tool, reconsidering an assumption, or stepping into a part of the work I have never done before. I am willing to begin without knowing everything the task will require of me.
-
-Once I commit, I want to be responsible for moving the work forward. I will ask questions, work through unfamiliar territory, and change my approach when the evidence calls for it. Difficulty gives me something to investigate; it does not settle the question of what I can do.
-
-That is the person I am working to become: someone whose curiosity develops into understanding, and whose understanding becomes something other people can use.
-
-The thread running through all of it is the same one that drew me to technology as a child. I want to understand enough to make a difference, and become capable enough to act on it.`,
-  nowUpdated: "September 2026",
+I'm looking for an AI engineer role where I can take responsibility for that whole process. I enjoy the point where a problem stops being familiar: there is something to investigate, a new skill to learn, and a chance to make a better decision than I could have made yesterday.`,
+  nowUpdated: "October 2026",
   now: [
     {
       label: "Building",
-      text: "STOCKEX, a research harness that gives AI agents a traceable process for equity research, alongside work on agent evaluation and websites through Redowl Studio.",
+      text: "Relay, a resumable coding-agent harness, alongside STOCKEX research workflows and websites through Redowl Studio.",
     },
     {
       label: "Contributing",
-      text: "Fixes to developer tools and SDKs, most recently Cloudflare's Workers SDK, Grafana Faro, and Plane.",
+      text: "Fixes to developer tools and SDKs, including Cloudflare’s Workers SDK, Grafana Faro, Plane, and Nanocoder.",
     },
     {
       label: "Studying",
-      text: "Strategy, human behaviour, and the choices that help a product find its place in people's lives.",
+      text: "Strategy, psychology, and why useful products become part of someone’s routine.",
     },
     {
       label: "Looking for",
-      text: "An AI engineer role where I can own problems end to end, from the model's behaviour to the product around it.",
+      text: "An AI engineer role with responsibility for the model’s behaviour, the application around it, and the person using it.",
     },
   ] satisfies NowItem[],
   navigation: [

@@ -11,7 +11,7 @@ function roleLine(role: (typeof roles)[number]) {
 
 function projectLine(project: (typeof projects)[number]) {
   const demo = "demo" in project && project.demo ? ` Live demo: ${project.demo}.` : "";
-  return `- [${titleOf(project)}](${site.url}/work/${project.slug}): ${project.summary} Built with ${project.stack.join(", ")}. Source: ${project.href}.${demo}`;
+  return `- [${titleOf(project)}](${site.url}/work/${project.slug}): ${project.summary} Status: ${project.status}. Built with ${project.stack.join(", ")}. Source: ${project.href}.${demo}`;
 }
 
 function contributionLine(item: (typeof contributions)[number]) {
@@ -73,7 +73,7 @@ export function llmsFullTxt() {
   const work = projects
     .map(
       (project) =>
-        `### ${titleOf(project)}\n\n${project.lede}\n\n${project.paragraphs.join("\n\n")}\n\nBuilt with: ${project.stack.join(", ")}\nSource: ${project.href}\n`,
+        `### ${titleOf(project)}\n\n${project.lede}\n\n${project.paragraphs.join("\n\n")}\n\nStatus: ${project.available}\nBuilt with: ${project.stack.join(", ")}\nSource: ${project.href}\n`,
     )
     .join("\n");
 

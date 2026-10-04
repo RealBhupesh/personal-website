@@ -78,14 +78,14 @@ export function WorkStory({ project, next }: { project: ProjectEntry; next: Proj
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
       </p>
-      <nav aria-label="More work" className="mt-14 border-t border-border pt-6">
+      <nav aria-label="More work" className="mt-14">
         <p className="font-mono text-[0.8125rem] text-muted">Next project</p>
         <p className="mt-1">
           <Link href={`/work/${next.slug}`} className={textLink}>
             {titleOf(next)}
           </Link>
-          <span className="text-muted"> — {next.summary}</span>
         </p>
+        <p className="mt-1 text-muted">{next.summary}</p>
       </nav>
     </article>
   );
