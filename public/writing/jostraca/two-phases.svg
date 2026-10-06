@@ -1,0 +1,19 @@
+<svg class="jostraca-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 208" role="img" aria-labelledby="phases-wide-title phases-wide-desc">
+<title id="phases-wide-title">Define first. Write second.</title><desc id="phases-wide-desc">The callback constructs the full in-memory tree before file policy writes files and a baseline copy.</desc>
+<style>
+.jostraca-svg { --svg-bg:#f6f4ef; --svg-ink:#1c1b19; --svg-muted:#5c574f; --svg-node:#eeebe4; --svg-line:#8a8275; --svg-good:#e3ebe0; --svg-good-ink:#315b39; --svg-risk:#efe4dc; --svg-risk-ink:#704937; background:var(--background,var(--svg-bg)); font-family:var(--font-geist-sans,system-ui,sans-serif); }
+@media(prefers-color-scheme:dark) { .jostraca-svg { --svg-bg:#121110; --svg-ink:#eceae4; --svg-muted:#a8a299; --svg-node:#1c1b19; --svg-line:#756d60; --svg-good:#1d2c21; --svg-good-ink:#b5ceb7; --svg-risk:#30251f; --svg-risk-ink:#d7b9a5; } }
+.jostraca-svg .main { font-size:18px; font-weight:500; fill:var(--foreground,var(--svg-ink)); }
+.jostraca-svg .secondary { font-size:15px; font-weight:400; fill:var(--muted,var(--svg-muted)); }
+.jostraca-svg .phase { font-size:15px; font-weight:500; fill:var(--muted,var(--svg-muted)); }
+.jostraca-svg .node rect,.jostraca-svg .node path { fill:var(--diagram-node,var(--svg-node)); stroke:var(--diagram-line,var(--svg-line)); stroke-width:1; stroke-linejoin:round; }
+.jostraca-svg .good rect { fill:var(--diagram-good,var(--svg-good)); stroke:none; }
+.jostraca-svg .good .main { fill:var(--diagram-good-ink,var(--svg-good-ink)); }
+.jostraca-svg .risk rect { fill:var(--diagram-risk,var(--svg-risk)); stroke:none; }
+.jostraca-svg .risk .main { fill:var(--diagram-risk-ink,var(--svg-risk-ink)); }
+.jostraca-svg .connector { fill:none; stroke:var(--diagram-line,var(--svg-line)); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.jostraca-svg .arrow { fill:var(--diagram-line,var(--svg-line)); }
+</style>
+<defs><marker id="phases-wide-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow" d="M1 1 L7 4 L1 7Z"/></marker></defs>
+<text class="phase" x="178" y="25" text-anchor="middle"><tspan x="178" dy="0">Define phase</tspan></text><text class="phase" x="542" y="25" text-anchor="middle"><tspan x="542" dy="0">Build phase</tspan></text><g class="node "><rect x="8" y="52" width="156" height="110" rx="9"/><text class="main" x="86" y="83" text-anchor="middle"><tspan x="86" dy="0">Your callback</tspan></text><text class="secondary" x="86" y="140" text-anchor="middle"><tspan x="86" dy="0">calls components</tspan></text></g><g class="node "><rect x="190" y="52" width="156" height="110" rx="9"/><text class="main" x="268" y="83" text-anchor="middle"><tspan x="268" dy="0">In-memory tree</tspan></text><text class="secondary" x="268" y="140" text-anchor="middle"><tspan x="268" dy="0">no disk writes</tspan></text></g><g class="node "><rect x="374" y="52" width="156" height="110" rx="9"/><text class="main" x="452" y="83" text-anchor="middle"><tspan x="452" dy="0">File policy</tspan></text><text class="secondary" x="452" y="140" text-anchor="middle"><tspan x="452" dy="0">one mode per file</tspan></text></g><g class="node "><rect x="556" y="52" width="156" height="110" rx="9"/><text class="main" x="634" y="83" text-anchor="middle"><tspan x="634" dy="0">Files on disk</tspan></text><text class="secondary" x="634" y="140" text-anchor="middle"><tspan x="634" dy="0">+ baseline copy</tspan></text></g><path class="connector" d="M164 107 H185" marker-end="url(#phases-wide-arrow)"/><path class="connector" d="M346 107 H369" marker-end="url(#phases-wide-arrow)"/><path class="connector" d="M530 107 H551" marker-end="url(#phases-wide-arrow)"/><text class="secondary" x="538" y="193" text-anchor="middle"><tspan x="538" dy="0">write · preserve · present · diff · merge</tspan></text>
+</svg>

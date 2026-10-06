@@ -1,7 +1,7 @@
 ---
-title: "Jostraca is built for the second run. Its defaults are built for the first."
-description: "A hands-on review of Jostraca 0.39.0: what its design gets right, where regeneration can lose hand edits, and the setup I would use."
-date: "2026-10-06"
+title: 'Jostraca is built for the second run. Its defaults are built for the first.'
+description: 'A hands-on review of Jostraca 0.39.0: what its design gets right, where regeneration can lose hand edits, and the setup I would use.'
+date: '2026-10-06'
 tags:
   - Code generation
   - Open source
@@ -29,14 +29,7 @@ await Jostraca().generate({ folder: './out' }, () => {
 })
 ```
 
-<Figure
-  src="/writing/jostraca/two-phases.png"
-  alt="Jostraca first builds an in-memory component tree without writing files, then applies file policy and writes files plus a baseline copy during the build phase."
-  width={1344}
-  height={452}
-  caption="Jostraca's two phases · the file policy runs only after the tree is complete"
-  fullSizeLink
-/>
+<JostracaDiagram kind="two-phases" />
 
 I think this is a good decision. Because the complete tree exists before the first write, the build step can compare each file with what is already on disk and decide what to do. If you know Terraform, it is close to plan and apply.
 
@@ -60,9 +53,10 @@ import { writeFileSync } from 'node:fs'
 import { Jostraca, Project, File, Content } from 'jostraca'
 
 const j = Jostraca()
-const run = (body) => j.generate({ folder: './out' }, () => {
-  Project({}, () => File({ name: 'a.txt' }, () => Content(body)))
-})
+const run = (body) =>
+  j.generate({ folder: './out' }, () => {
+    Project({}, () => File({ name: 'a.txt' }, () => Content(body)))
+  })
 
 await run('line1\nline2\nline3\n')
 writeFileSync('./out/a.txt', 'line1\nUSER EDIT\nline3\n')
@@ -90,14 +84,7 @@ The cause is the merge base. Jostraca stores it in `.jostraca/`, and by default 
 
 In practice, merge works on the machine that ran the generator last. Everywhere else it needs `control.version: true`, and nothing in the getting-started path tells you that.
 
-<Figure
-  src="/writing/jostraca/second-run-outcomes.png"
-  alt="Three tested second-run setups: default settings overwrite the hand edit; merge enabled on the same machine keeps the edit; merge enabled in a fresh clone without .jostraca overwrites the edit. Both overwrites are reported as written and exit zero."
-  width={1344}
-  height={554}
-  caption="What a second run does to a hand-edited file, by setup"
-  fullSizeLink
-/>
+<JostracaDiagram kind="second-run-outcomes" />
 
 Only the middle path keeps the edit, and it needs both an opt-in and the same machine.
 
@@ -133,14 +120,7 @@ Third, report every file. Protected and skipped files should appear in `result.f
 
 Fourth, expose the plan. The dry-run machinery already exists. An `npx jostraca plan` command that prints write, merge, conflict or edited for each file would show the second run before it happens.
 
-<Figure
-  src="/writing/jostraca/proposed-default.png"
-  alt="Proposed file policy: write new files; for an existing file, compare it with the baseline. If unchanged, apply the chosen mode. If edited by a person, skip it, report edited, and exit one."
-  width={1344}
-  height={516}
-  caption="Proposed default · one extra comparison before any overwrite"
-  fullSizeLink
-/>
+<JostracaDiagram kind="proposed-default" />
 
 The first suggestion adds one comparison that Jostraca already has the data for. Until something like it exists, this is the setup I would use. I checked it against 0.39.0: with `control.version` on, Jostraca stops writing its own `.gitignore`, and the dry run reports per file without touching the disk.
 

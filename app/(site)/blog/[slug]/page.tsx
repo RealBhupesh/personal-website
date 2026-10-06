@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { Mdx } from "@/components/mdx";
+import { ArticleToc } from "@/components/article-toc";
+import { getArticleHeadings } from "@/lib/article-headings";
 import { formatMonthYear, getPostBySlug, getPosts } from "@/lib/content";
 import { articleMetadata, blogPostingJsonLd } from "@/lib/metadata";
 
@@ -31,7 +33,9 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   return (
-    <article>
+    <div className="essay-layout">
+      <ArticleToc items={getArticleHeadings(post.body)} />
+      <article className="essay-article">
       <JsonLd data={blogPostingJsonLd(post)} />
       <header>
         <h1 className="text-[1.75rem] font-medium tracking-[-0.03em] sm:text-[2rem]">
@@ -51,6 +55,7 @@ export default async function BlogPostPage({ params }: Props) {
         ) : null}
       </header>
       <Mdx source={post.body} />
-    </article>
+      </article>
+    </div>
   );
 }

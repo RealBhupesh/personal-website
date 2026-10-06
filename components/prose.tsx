@@ -1,6 +1,8 @@
 import type { ComponentProps, ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { CodeBlock } from "@/components/code-block";
+import { JostracaDiagram } from "@/components/jostraca-diagram";
 
 const textLink =
   "underline decoration-foreground/25 underline-offset-[0.2em] transition-[color,text-decoration-color] duration-150 hover:decoration-foreground/80";
@@ -120,6 +122,7 @@ export const mdxComponents = {
   a: Anchor,
   img: MdxImage,
   Figure,
+  JostracaDiagram,
   blockquote: (props: ComponentProps<"blockquote">) => (
     <blockquote
       className="my-8 border-l border-border pl-4 text-muted"
@@ -152,7 +155,7 @@ export const mdxComponents = {
     <td className="border-b border-border py-2 pr-6 align-top" {...props} />
   ),
   code: (props: ComponentProps<"code">) => <code {...props} />,
-  pre: (props: ComponentProps<"pre">) => <pre {...props} />,
+  pre: CodeBlock,
 };
 
 export function Prose({ children }: { children: ReactNode }) {
