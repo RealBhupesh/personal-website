@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Bio } from "@/components/bio";
 import GitHubActivity from "@/components/ui/github-activity";
-import { contributions, mergedPrCount, openSourceIntro, roles } from "@/config/experience";
+import { openSourceIntro, roles } from "@/config/experience";
+import { getGitHubContributions, projectCounts } from "@/lib/github-contributions";
 import { site } from "@/config/site";
 import { featuredProjects, selectedWorkIntro, titleOf } from "@/config/work";
 import { pageMetadata } from "@/lib/metadata";
@@ -18,7 +19,10 @@ const textLink =
 
 const label = "font-mono text-[0.8125rem] text-muted";
 
-export default function HomePage() {
+export const revalidate = 3600;
+
+export default async function HomePage() {
+  const { projects: contributions, mergedPrCount, stale, updatedAt } = await getGitHubContributions();
   const featuredContributions = contributions.filter((item) => item.featured);
 
   return (
@@ -101,15 +105,13 @@ export default function HomePage() {
             "light-dark(#6ca77a, #559363)",
             "light-dark(#397d4b, #7bb788)",
           ]}
-          label="Merged PRs in:"
+          label={`Pull requests in ${contributions.length} projects`}
           className="mb-6"
           style={{ width: "100%" }}
-          repos={[...contributions]
-            .sort((a, b) => b.prs.length - a.prs.length)
-            .slice(0, 3)
-            .map((item) => ({
+          repos={contributions.map((item) => ({
               name: item.project,
               count: item.prs.length,
+              description: projectCounts(item),
               href: item.repo,
               logo: (
                 // GitHub's real owner avatars, rather than invented project marks.
@@ -123,6 +125,10 @@ export default function HomePage() {
               ),
             }))}
         />
+        <p className="mb-6 text-sm leading-relaxed text-muted">
+          All public pull requests to other people&apos;s repositories, including open and closed work.
+          {stale ? ` Showing the saved list from ${updatedAt.slice(0, 10)} while GitHub is unavailable.` : " Updated automatically from GitHub; checked hourly."}
+        </p>
         <ul className="border-b border-border">
           {featuredContributions.map((item) => (
             <li key={item.repo} className="border-t border-border py-4">
@@ -134,7 +140,7 @@ export default function HomePage() {
                   </a>
                 </h3>
                 <p className={`shrink-0 ${label}`}>
-                  {item.prs.length} {item.prs.length === 1 ? "PR" : "PRs"}
+                  {item.mergedCount} merged
                 </p>
               </div>
               <p className="mt-1 leading-[1.7]">{item.summary}</p>

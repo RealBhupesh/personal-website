@@ -1,4 +1,3 @@
-import { contributions, mergedPrCount } from "@/config/experience";
 import { site } from "@/config/site";
 
 /** Facts used by the About page, schema, and llms.txt. Keep these identical. */
@@ -12,7 +11,7 @@ export const profile = {
   headline: "Software engineer building AI applications",
 } as const;
 
-export const faqs = [
+export const getFaqs = (mergedPrCount: number, mergedProjectCount: number) => [
   {
     question: "What kind of role are you looking for?",
     answer:
@@ -25,7 +24,7 @@ export const faqs = [
   },
   {
     question: "What have you contributed to open source?",
-    answer: `I have ${mergedPrCount} merged pull requests across ${contributions.length} projects, including Cloudflare's Workers SDK, Nanocoder, Sentry, and Grafana Faro. The contributions above link to every pull request, so you can see the changes and the review behind them.`,
+    answer: `I have ${mergedPrCount} merged pull requests across ${mergedProjectCount} projects, including Cloudflare's Workers SDK, Nanocoder, Sentry, and Grafana Faro. The list above also includes open and closed PRs, with links to the changes and their current status.`,
   },
   {
     question: "Where are you based?",

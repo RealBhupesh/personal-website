@@ -184,8 +184,6 @@ export const contributions = [
   },
 ] as const satisfies readonly Contribution[];
 
-export const mergedPrCount = contributions.reduce((total, item) => total + item.prs.length, 0);
-
 export const skills = [
   { label: "Languages", items: ["Python", "TypeScript", "JavaScript", "SQL", "Ruby"] },
   { label: "AI", items: ["OpenAI API", "Groq", "Gemini", "OpenRouter", "Vercel AI SDK", "MediaPipe"] },

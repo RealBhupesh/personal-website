@@ -22,13 +22,14 @@ export type Contribution = {
 export type RepoContribution = {
   name: string;
   count: number;
+  description?: string;
   logo?: React.ReactNode;
   href?: string;
 };
 
 const DEFAULT_ACCENT = "#39d353";
 const DEFAULT_CELL_SIZE = 11;
-const DEFAULT_LABEL = "Top contributions in:";
+const DEFAULT_LABEL = "Pull requests in:";
 const DEFAULT_MONTHS = 12;
 const WEEKS_PER_MONTH = 365.25 / 12 / 7;
 const STACK_LIMIT = 3;
@@ -110,14 +111,8 @@ function describeDay({ count, date }: Contribution) {
 }
 
 const CALENDAR_API = "https://github-contributions-api.jogruber.de/v4";
-const EVENTS_API = "https://api.github.com/users";
 
 type ApiDay = { date: string; count: number; level: number };
-type PushEvent = {
-  type: string;
-  repo?: { name: string };
-  payload?: { commits?: unknown[] };
-};
 
 async function fetchCalendar(login: string, signal: AbortSignal) {
   const res = await fetch(`${CALENDAR_API}/${encodeURIComponent(login)}?y=last`, { signal });
@@ -140,47 +135,14 @@ async function fetchCalendar(login: string, signal: AbortSignal) {
   }))];
 }
 
-async function fetchRepos(login: string, signal: AbortSignal): Promise<RepoContribution[]> {
-  const res = await fetch(`${EVENTS_API}/${encodeURIComponent(login)}/events/public?per_page=100`, { signal });
-  if (!res.ok) return [];
-
-  const events: PushEvent[] = await res.json();
-  const counts = new Map<string, number>();
-
-  for (const event of events) {
-    if (event.type !== "PushEvent" || !event.repo) continue;
-    const commits = event.payload?.commits?.length ?? 1;
-    counts.set(event.repo.name, (counts.get(event.repo.name) ?? 0) + commits);
-  }
-
-  return [...counts.entries()]
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, STACK_LIMIT)
-    .map(([fullName, count]) => {
-      const [owner, name] = fullName.split("/");
-      return {
-        name,
-        count,
-        href: `https://github.com/${fullName}`,
-        // github has no repo logo, only an owner avatar, so own repos use the initial
-        logo:
-          owner.toLowerCase() === login.toLowerCase() ? undefined : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={`https://github.com/${owner}.png?size=64`} alt="" />
-          ),
-      };
-    });
-}
-
-function useGitHubUser(login: string | undefined, needsCalendar: boolean, needsRepos: boolean) {
+function useGitHubUser(login: string | undefined) {
   const [attempt, retry] = React.useReducer((value: number) => value + 1, 0);
   const [result, setResult] = React.useState<{
     key: string;
     contributions?: Contribution[];
-    repos: RepoContribution[];
     error: boolean;
   }>();
-  const key = `${login}:${needsCalendar}:${needsRepos}:${attempt}`;
+  const key = `${login}:${attempt}`;
 
   React.useEffect(() => {
     if (!login) return;
@@ -188,26 +150,21 @@ function useGitHubUser(login: string | undefined, needsCalendar: boolean, needsR
     const timeout = setTimeout(() => controller.abort(), 15000);
     let active = true;
 
-    Promise.allSettled([
-      needsCalendar ? fetchCalendar(login, controller.signal) : Promise.resolve(undefined),
-      needsRepos ? fetchRepos(login, controller.signal) : Promise.resolve([]),
-    ]).then(([calendar, repos]) => {
-      if (!active) return;
-      setResult({
-        key,
-        contributions: calendar.status === "fulfilled" ? calendar.value : undefined,
-        repos: repos.status === "fulfilled" ? repos.value : [],
-        error: calendar.status === "rejected",
-      });
-      clearTimeout(timeout);
-    });
+    fetchCalendar(login, controller.signal).then(
+      contributions => {
+        if (active) setResult({ key, contributions, error: false });
+      },
+      () => {
+        if (active) setResult({ key, error: true });
+      },
+    ).finally(() => clearTimeout(timeout));
 
     return () => {
       active = false;
       clearTimeout(timeout);
       controller.abort();
     };
-  }, [login, needsCalendar, needsRepos, key]);
+  }, [login, key]);
 
   return { data: result?.key === key ? result : undefined, retry };
 }
@@ -435,8 +392,9 @@ const RepoRow = ({
   const content = (
     <>
       <Avatar repo={repo} layoutId={layoutId} transition={transition} />
-      <span className="min-w-0 flex-1 text-sm leading-snug text-foreground">
+      <span className="min-w-0 flex-1 text-sm leading-snug text-foreground [overflow-wrap:anywhere]">
         {repo.name}
+        {repo.description && <span className="mt-1 block text-xs leading-relaxed text-muted">{repo.description}</span>}
       </span>
       <span className="text-sm tabular-nums text-foreground/70">
         {repo.count}
@@ -521,9 +479,8 @@ const GitHubActivity = ({
   };
 
   const needsCalendar = !contributionsProp.length;
-  const needsRepos = !reposProp.length;
   const { data: fetched, retry } = useGitHubUser(
-    needsCalendar || needsRepos ? username : undefined, needsCalendar, needsRepos,
+    needsCalendar ? username : undefined,
   );
   const loading = Boolean(username && needsCalendar && !fetched);
   const failed = Boolean(username && needsCalendar && fetched?.error);
@@ -531,7 +488,7 @@ const GitHubActivity = ({
   const contributions = contributionsProp.length
     ? contributionsProp
     : (fetched?.contributions ?? []);
-  const repos = reposProp.length ? reposProp : (fetched?.repos ?? []);
+  const repos = reposProp;
 
   const scale = React.useMemo(() => toScale(accent), [accent]);
   const transition = reduceMotion ? { duration: 0 } : SPRING;
@@ -567,7 +524,6 @@ const GitHubActivity = ({
       data-slot="github-activity"
       className={cn(
         "relative w-full max-w-full rounded-[24px] bg-code p-4",
-        repos.length > 0 && "pb-[76px]",
         className,
       )}
       style={{ width, ...style }}
@@ -606,8 +562,7 @@ const GitHubActivity = ({
           data-slot="github-activity-panel"
           data-state={open ? "open" : "closed"}
           className={cn(
-            "absolute inset-x-3 bottom-3 bg-background",
-            open && "top-3 overflow-y-auto",
+            "mt-3 bg-background",
           )}
           style={{ borderRadius: 18 }}
           transition={transition}
@@ -640,7 +595,7 @@ const GitHubActivity = ({
                 aria-expanded={open}
                 aria-controls={`${uid}-panel`}
                 aria-label={
-                  open ? "Hide top repositories" : "Show top repositories"
+                  open ? "Hide contributed repositories" : "Show all contributed repositories"
                 }
                 className="grid size-9 shrink-0 place-items-center rounded-full hover:bg-code transition-colors"
               >
@@ -656,7 +611,7 @@ const GitHubActivity = ({
                 layout="position"
                 {...listMotion}
                 transition={rowTransition}
-                className="px-0.5 pb-1"
+                className="max-h-80 overflow-y-auto px-0.5 pb-1"
               >
                 {repos.map((repo, index) => (
                   <li key={index}>

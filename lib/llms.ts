@@ -1,5 +1,6 @@
-import { contributions, mergedPrCount, roles, skills } from "@/config/experience";
-import { faqs, profile } from "@/config/profile";
+import { roles, skills } from "@/config/experience";
+import { getFaqs, profile } from "@/config/profile";
+import { getGitHubContributions, projectCounts, type ContributionProject } from "@/lib/github-contributions";
 import { site } from "@/config/site";
 import { projects, titleOf } from "@/config/work";
 import { getNotes, getPosts } from "@/lib/content";
@@ -14,12 +15,13 @@ function projectLine(project: (typeof projects)[number]) {
   return `- [${titleOf(project)}](${site.url}/work/${project.slug}): ${project.summary} Status: ${project.status}. Built with ${project.stack.join(", ")}. Source: ${project.href}.${demo}`;
 }
 
-function contributionLine(item: (typeof contributions)[number]) {
-  const prs = item.prs.map((pr) => pr.url).join(", ");
-  return `- ${item.project} (${item.repo}): ${item.summary} Merged PRs: ${prs}`;
+function contributionLine(item: ContributionProject) {
+  const prs = item.prs.map((pr) => `${pr.url} (${pr.status})`).join(", ");
+  return `- ${item.project} (${item.repo}): ${item.summary} ${projectCounts(item)}. PRs: ${prs}`;
 }
 
-export function llmsTxt() {
+export async function llmsTxt() {
+  const { projects: contributions, mergedPrCount, totalPrCount, updatedAt, stale } = await getGitHubContributions();
   const pages = [
     `- [About](${site.url}/about): Facts about Bhupesh Cholake: experience, every open-source contribution, skills, education, and answers to common questions.`,
     `- [Work](${site.url}/work): Case studies for the products he has built.`,
@@ -51,7 +53,7 @@ ${roles.map(roleLine).join("\n")}
 
 ## Open source
 
-${mergedPrCount} merged pull requests in projects maintained by others.
+${mergedPrCount} merged pull requests. ${totalPrCount} total public pull requests across ${contributions.length} projects maintained by others. ${stale ? "Saved snapshot" : "GitHub data"} checked ${updatedAt}. Statuses distinguish merged, open, and closed without merge.
 
 ${contributions.map(contributionLine).join("\n")}
 
@@ -69,7 +71,9 @@ ${pages.join("\n")}
 `;
 }
 
-export function llmsFullTxt() {
+export async function llmsFullTxt() {
+  const { projects: contributions, mergedPrCount } = await getGitHubContributions();
+  const faqs = getFaqs(mergedPrCount, contributions.filter(item => item.mergedCount > 0).length);
   const work = projects
     .map(
       (project) =>
@@ -83,7 +87,7 @@ export function llmsFullTxt() {
 
   const questions = faqs.map((item) => `### ${item.question}\n\n${item.answer}`).join("\n\n");
 
-  return `${llmsTxt()}
+  return `${await llmsTxt()}
 ## About, in his words
 
 ${site.bio}

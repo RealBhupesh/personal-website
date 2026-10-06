@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { contributions, skills } from "@/config/experience";
+import { skills } from "@/config/experience";
+import type { ContributionProject } from "@/lib/github-contributions";
 import { profile } from "@/config/profile";
 import { site } from "@/config/site";
 import { titleOf, type ProjectEntry } from "@/config/work";
@@ -238,7 +239,7 @@ export function projectJsonLd(project: ProjectEntry) {
   return { "@context": "https://schema.org", ...projectEntity(project) };
 }
 
-export function contributionsJsonLd() {
+export function contributionsJsonLd(contributions: ContributionProject[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -250,7 +251,7 @@ export function contributionsJsonLd() {
         "@type": "SoftwareSourceCode",
         name: item.project,
         codeRepository: item.repo,
-        description: item.summary,
+        description: item.summary || `Public pull requests by ${site.name} in ${item.repository}.`,
         contributor: person,
       },
     })),

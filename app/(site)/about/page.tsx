@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
-import { contributions, mergedPrCount, roles, skills, training } from "@/config/experience";
-import { faqs, profile } from "@/config/profile";
+import { roles, skills, training } from "@/config/experience";
+import { getFaqs, profile } from "@/config/profile";
+import { getGitHubContributions, projectCounts } from "@/lib/github-contributions";
 import { site } from "@/config/site";
 import { featuredProjects, titleOf } from "@/config/work";
 import { breadcrumbJsonLd, contributionsJsonLd, faqJsonLd, pageMetadata } from "@/lib/metadata";
@@ -25,14 +26,18 @@ const updated = new Intl.DateTimeFormat("en-GB", {
 const textLink =
   "underline decoration-foreground/25 underline-offset-[0.2em] transition-[text-decoration-color] duration-150 hover:decoration-foreground/80";
 
-export default function AboutPage() {
+export const revalidate = 3600;
+
+export default async function AboutPage() {
+  const { projects: contributions, mergedPrCount, totalPrCount, stale, updatedAt } = await getGitHubContributions();
+  const faqs = getFaqs(mergedPrCount, contributions.filter(item => item.mergedCount > 0).length);
   const [recentRole] = roles;
 
   return (
     <>
       <JsonLd data={faqJsonLd(faqs)} />
       <JsonLd data={breadcrumbJsonLd([{ name: "About", path: "/about" }])} />
-      <JsonLd data={contributionsJsonLd()} />
+      <JsonLd data={contributionsJsonLd(contributions)} />
       <article>
         <h1 className="section-title">About</h1>
         <p className="mt-4 leading-[1.75]">
@@ -58,8 +63,7 @@ export default function AboutPage() {
           <div className="grid gap-1 sm:grid-cols-[10.5rem_1fr] sm:gap-x-6">
             <dt className="font-mono text-[0.8125rem] text-muted">Open source</dt>
             <dd className="leading-[1.7]">
-              {mergedPrCount} merged pull requests across{" "}
-              {contributions.map((item) => item.project).join(", ")}.{" "}
+              {mergedPrCount} merged pull requests. {totalPrCount} public pull requests across {contributions.length} projects.{" "}
               <Link href="#open-source" className={textLink}>
                 See each one
               </Link>
@@ -129,7 +133,11 @@ export default function AboutPage() {
           <h2 id="open-source-heading" className="section-title mb-2">
             Open source
           </h2>
-          <p className={`mb-6 ${label}`}>{mergedPrCount} merged pull requests</p>
+          <p className="mb-2 text-sm text-muted">{mergedPrCount} merged · {totalPrCount} total PRs · {contributions.length} projects</p>
+          <p className="mb-6 text-sm leading-relaxed text-muted">
+            Public pull requests to repositories maintained by others. Statuses come from GitHub.
+            {stale ? ` Saved list from ${updatedAt.slice(0, 10)}; GitHub is temporarily unavailable.` : " New PRs and status changes are checked hourly."}
+          </p>
           <ol className="space-y-8">
             {contributions.map((item) => (
               <li key={item.repo}>
@@ -139,23 +147,26 @@ export default function AboutPage() {
                     <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </h3>
-                <p className="mt-1 text-sm leading-[1.6] text-muted">{item.about}</p>
-                <p className="mt-2 leading-[1.7]">{item.summary}</p>
-                <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[0.8125rem]">
+                {item.about && <p className="mt-1 text-sm leading-[1.6] text-muted">{item.about}</p>}
+                {item.summary && <p className="mt-2 leading-[1.7]">{item.summary}</p>}
+                <p className="mt-2 text-sm text-muted">{projectCounts(item)}</p>
+                <ul className="mt-3 space-y-2 text-sm">
                   {item.prs.map((pr) => (
-                    <a
-                      key={pr.number}
-                      href={pr.url}
-                      title={pr.title}
-                      className={textLink}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      #{pr.number}
-                      <span className="sr-only">: {pr.title} (opens in a new tab)</span>
-                    </a>
+                    <li key={pr.number} className="leading-relaxed">
+                      <a
+                        href={pr.url}
+                        title={pr.title}
+                        className={textLink}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        #{pr.number}: {pr.title}
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                      <span className="text-muted"> ({pr.status === "closed" ? "closed without merge" : pr.status})</span>
+                    </li>
                   ))}
-                </p>
+                </ul>
               </li>
             ))}
           </ol>
