@@ -18,7 +18,7 @@ export const site = {
   title: "Bhupesh Cholake · Software engineer building AI applications",
   description:
     "Bhupesh Cholake is a software engineer in Nashik building AI applications, developer tools, and scientific software, with merged work in Cloudflare, Sentry, and Grafana.",
-  url: "https://www.bhupeessh.in",
+  url: "https://www.bhupeshcholake.in",
   email: "work.bhupesh@gmail.com",
   github: "https://github.com/RealBhupesh",
   linkedin: "https://www.linkedin.com/in/thebhupesh/",
