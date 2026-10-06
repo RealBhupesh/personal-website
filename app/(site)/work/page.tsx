@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
+import { GitHubContributionActivity } from "@/components/github-contribution-activity";
+import { getGitHubContributions } from "@/lib/github-contributions";
 import { titleOf, workGroups, workIntro, workProjects, type ProjectEntry } from "@/config/work";
 import { breadcrumbJsonLd, pageMetadata, workListJsonLd } from "@/lib/metadata";
 
@@ -37,7 +39,10 @@ function WorkRow({ project }: { project: ProjectEntry }) {
   );
 }
 
-export default function WorkPage() {
+export const revalidate = 3600;
+
+export default async function WorkPage() {
+  const { projects: contributions, mergedPrCount, stale, updatedAt } = await getGitHubContributions();
   return (
     <div>
       <JsonLd data={workListJsonLd(workProjects)} />
@@ -59,6 +64,20 @@ export default function WorkPage() {
           </a>
         ))}
       </nav>
+      <section className="mt-10" aria-labelledby="github-activity-heading">
+        <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
+          <h2 id="github-activity-heading" className="section-title">GitHub contributions</h2>
+          <p className="text-sm text-muted">{mergedPrCount} merged PRs</p>
+        </div>
+        <GitHubContributionActivity projects={contributions} />
+        <p className="mt-4 text-sm leading-relaxed text-muted">
+          Public pull requests to other people&apos;s repositories, with their current status.
+          {stale ? ` Saved list from ${updatedAt.slice(0, 10)} while GitHub is unavailable.` : " Updated automatically from GitHub."}
+        </p>
+        <p className="mt-2 text-sm">
+          <Link href="/about#open-source" className={textLink}>Every pull request, with links</Link>
+        </p>
+      </section>
       <div className="mt-12 space-y-14">
         {workGroups.map((group) => {
           const collection = workProjects.filter((project) => project.group === group.id);

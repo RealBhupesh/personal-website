@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Bio } from "@/components/bio";
-import GitHubActivity from "@/components/ui/github-activity";
+import { GitHubContributionActivity } from "@/components/github-contribution-activity";
 import { openSourceIntro, roles } from "@/config/experience";
-import { getGitHubContributions, projectCounts } from "@/lib/github-contributions";
+import { getGitHubContributions } from "@/lib/github-contributions";
 import { site } from "@/config/site";
 import { featuredProjects, selectedWorkIntro, titleOf } from "@/config/work";
 import { pageMetadata } from "@/lib/metadata";
@@ -96,35 +96,9 @@ export default async function HomePage() {
           <p className={label}>{mergedPrCount} merged PRs</p>
         </div>
         <p className="mb-6 leading-[1.75]">{openSourceIntro}</p>
-        <GitHubActivity
-          username={site.github.split("/").pop()}
-          showMonths
-          accent={[
-            "light-dark(#d6e8da, #244532)",
-            "light-dark(#a4c8ad, #386a47)",
-            "light-dark(#6ca77a, #559363)",
-            "light-dark(#397d4b, #7bb788)",
-          ]}
-          label={`Pull requests in ${contributions.length} projects`}
-          className="mb-6"
-          style={{ width: "100%" }}
-          repos={contributions.map((item) => ({
-              name: item.project,
-              count: item.prs.length,
-              description: projectCounts(item),
-              href: item.repo,
-              logo: (
-                // GitHub's real owner avatars, rather than invented project marks.
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={`https://github.com/${item.repo.split("/")[3]}.png?size=64`}
-                  alt=""
-                  width={28}
-                  height={28}
-                />
-              ),
-            }))}
-        />
+        <div className="mb-6">
+          <GitHubContributionActivity projects={contributions} />
+        </div>
         <p className="mb-6 text-sm leading-relaxed text-muted">
           All public pull requests to other people&apos;s repositories, including open and closed work.
           {stale ? ` Showing the saved list from ${updatedAt.slice(0, 10)} while GitHub is unavailable.` : " Updated automatically from GitHub; checked hourly."}

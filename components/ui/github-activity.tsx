@@ -7,7 +7,6 @@ import {
   AnimatePresence,
   motion,
   useReducedMotion,
-  type Transition,
 } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -47,9 +46,6 @@ const useIsoLayoutEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
-const SPRING = { type: "spring", bounce: 0.2, duration: 0.62 } as const;
-const HEADER_SPRING = { ...SPRING, bounce: 0.45 } as const;
-const ROW_SPRING = { ...SPRING, bounce: 0.26, delay: 0.08 } as const;
 const TOOLTIP_FADE = { duration: 0.14, ease: EASE_OUT } as const;
 const TOOLTIP_EDGE = 8;
 
@@ -353,20 +349,8 @@ const ContributionGrid = ({
   );
 };
 
-const Avatar = ({
-  repo,
-  layoutId,
-  transition,
-  className,
-}: {
-  repo: RepoContribution;
-  layoutId: string;
-  transition: Transition;
-  className?: string;
-}) => (
-  <motion.span
-    layoutId={layoutId}
-    transition={transition}
+const Avatar = ({ repo, className }: { repo: RepoContribution; className?: string }) => (
+  <span
     className={cn(
       "grid size-7 shrink-0 place-items-center overflow-hidden text-[11px] font-medium text-muted",
       "[&_img]:size-full [&_img]:object-cover [&_svg]:size-full",
@@ -374,66 +358,42 @@ const Avatar = ({
     )}
   >
     {repo.logo ?? <span aria-hidden="true">{repo.name.charAt(0)}</span>}
-  </motion.span>
+  </span>
 );
 
-const RepoRow = ({
-  repo,
-  layoutId,
-  transition,
-}: {
-  repo: RepoContribution;
-  layoutId: string;
-  transition: Transition;
-}) => {
+const RepoRow = ({ repo }: { repo: RepoContribution }) => {
   const className =
     "flex items-center gap-3 rounded-lg mx-2 px-2 py-2 transition-colors hover:bg-foreground/5";
-
   const content = (
     <>
-      <Avatar repo={repo} layoutId={layoutId} transition={transition} />
+      <Avatar repo={repo} />
       <span className="min-w-0 flex-1 text-sm leading-snug text-foreground [overflow-wrap:anywhere]">
         {repo.name}
         {repo.description && <span className="mt-1 block text-xs leading-relaxed text-muted">{repo.description}</span>}
       </span>
-      <span className="text-sm tabular-nums text-foreground/70">
-        {repo.count}
-      </span>
+      <span className="shrink-0 text-sm tabular-nums text-foreground/70">{repo.count}</span>
     </>
   );
-
   return repo.href ? (
-    <a href={repo.href} target="_blank" rel="noreferrer" className={className}>
-      {content}
-    </a>
-  ) : (
-    <div className={className}>{content}</div>
-  );
+    <a href={repo.href} target="_blank" rel="noreferrer" className={className}>{content}</a>
+  ) : <div className={className}>{content}</div>;
 };
 
-const Chevron = ({
-  open,
-  transition,
-}: {
-  open: boolean;
-  transition: Transition;
-}) => (
-  <motion.svg
+const Chevron = ({ open }: { open: boolean }) => (
+  <svg
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
     strokeWidth="1.5"
     strokeLinecap="round"
     strokeLinejoin="round"
-    aria-hidden
-    className="size-7 text-muted"
-    initial={false}
-    animate={{ rotate: open ? 180 : 0 }}
-    transition={transition}
+    aria-hidden="true"
+    className="size-7 text-muted transition-transform duration-200 ease-out motion-reduce:transition-none"
+    style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
   >
     <circle cx="12" cy="12" r="10" />
     <path d="m16 10-4 4-4-4" />
-  </motion.svg>
+  </svg>
 );
 
 export type GitHubActivityProps = React.ComponentProps<"div"> & {
@@ -491,16 +451,6 @@ const GitHubActivity = ({
   const repos = reposProp;
 
   const scale = React.useMemo(() => toScale(accent), [accent]);
-  const transition = reduceMotion ? { duration: 0 } : SPRING;
-  const headerTransition = reduceMotion ? { duration: 0 } : HEADER_SPRING;
-  const rowTransition = reduceMotion ? { duration: 0 } : ROW_SPRING;
-
-  const listMotion = {
-    initial: false as const,
-    animate: { x: 0 },
-    exit: { opacity: 0 },
-  };
-
   const total = contributions.reduce((sum, day) => sum + day.count, 0);
 
   const heading = loading
@@ -556,76 +506,42 @@ const GitHubActivity = ({
       )}
 
       {repos.length > 0 && (
-        <motion.div
-          layout
-          id={`${uid}-panel`}
-          data-slot="github-activity-panel"
-          data-state={open ? "open" : "closed"}
-          className={cn(
-            "mt-3 bg-background",
-          )}
-          style={{ borderRadius: 18 }}
-          transition={transition}
-        >
-          <motion.div
-            layout="position"
-            transition={headerTransition}
-            className="flex items-center justify-between gap-3 py-3 px-4"
-          >
-            <span className="text-sm text-foreground">{label}</span>
-
-            <div className="flex items-center gap-3">
-              {!open && (
-                <div className="flex items-center">
-                  {repos.slice(0, STACK_LIMIT).map((repo, index) => (
-                    <Avatar
-                      key={index}
-                      repo={repo}
-                      layoutId={`${uid}-${index}`}
-                      transition={transition}
-                      className="-ml-2 first:ml-0"
-                    />
-                  ))}
-                </div>
-              )}
-
+        <div data-slot="github-activity-panel" data-state={open ? "open" : "closed"} className="mt-3 rounded-[18px] bg-background">
+          <div data-slot="github-activity-panel-header" className="flex items-center justify-between gap-3 px-4 py-3">
+            <span className="min-w-0 text-sm text-foreground">{label}</span>
+            <div className="flex shrink-0 items-center gap-3">
+              <div className="hidden items-center sm:flex" aria-hidden="true">
+                {repos.slice(0, STACK_LIMIT).map((repo) => (
+                  <Avatar key={repo.href ?? repo.name} repo={repo} className="-ml-2 first:ml-0" />
+                ))}
+              </div>
               <button
                 type="button"
                 onClick={toggle}
                 aria-expanded={open}
-                aria-controls={`${uid}-panel`}
-                aria-label={
-                  open ? "Hide contributed repositories" : "Show all contributed repositories"
-                }
-                className="grid size-9 shrink-0 place-items-center rounded-full hover:bg-code transition-colors"
+                aria-controls={`${uid}-repositories`}
+                aria-label={open ? "Hide contributed repositories" : "Show all contributed repositories"}
+                className="grid size-9 shrink-0 place-items-center rounded-full transition-colors hover:bg-code"
               >
-                <Chevron open={open} transition={transition} />
+                <Chevron open={open} />
               </button>
             </div>
-          </motion.div>
-
-          <AnimatePresence initial={false} mode="popLayout">
-            {open && (
-              <motion.ul
-                key="list"
-                layout="position"
-                {...listMotion}
-                transition={rowTransition}
-                className="max-h-80 overflow-y-auto px-0.5 pb-1"
-              >
-                {repos.map((repo, index) => (
-                  <li key={index}>
-                    <RepoRow
-                      repo={repo}
-                      layoutId={`${uid}-${index}`}
-                      transition={transition}
-                    />
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </motion.div>
+          </div>
+          <div
+            id={`${uid}-repositories`}
+            data-slot="github-activity-disclosure"
+            className="grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none"
+            style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+            aria-hidden={!open}
+            inert={!open}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <ul className="max-h-80 overflow-y-auto px-0.5 pb-1 overscroll-contain">
+                {repos.map((repo) => <li key={repo.href ?? repo.name}><RepoRow repo={repo} /></li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
