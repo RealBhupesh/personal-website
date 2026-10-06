@@ -1,0 +1,171 @@
+---
+title: "Jostraca is built for the second run. Its defaults are built for the first."
+description: "A hands-on review of Jostraca 0.39.0: what its design gets right, where regeneration can lose hand edits, and the setup I would use."
+date: "2026-10-06"
+tags:
+  - Code generation
+  - Open source
+  - TypeScript
+draft: false
+---
+
+I came across Jostraca while looking at how the Voxgig SDK generator writes its files. It is a code generator for TypeScript and Go that describes an output file tree with components, and its website leads with one promise: "a code generator you can run twice."
+
+I spent some time testing that promise against version 0.39.0. I like a lot of the design. I also think the defaults currently work against the thing the project says it is for. Every example below can be run against that version. I may be wrong on some of it, and I would be glad to be corrected.
+
+## What it gets right
+
+Jostraca splits a run into two phases. In the define phase, your callback builds an in-memory tree of components. In the build phase, Jostraca walks that tree and writes files. Nothing touches the disk until the full output is known.
+
+```ts
+import { Jostraca, Project, Folder, File, Content } from 'jostraca'
+
+await Jostraca().generate({ folder: './out' }, () => {
+  Project({ folder: 'app' }, () => {
+    Folder({ name: 'src' }, () => {
+      File({ name: 'index.js' }, () => Content('// generated\n'))
+    })
+  })
+})
+```
+
+<Figure
+  src="/writing/jostraca/two-phases.png"
+  alt="Jostraca first builds an in-memory component tree without writing files, then applies file policy and writes files plus a baseline copy during the build phase."
+  width={1344}
+  height={452}
+  caption="Jostraca's two phases · the file policy runs only after the tree is complete"
+  fullSizeLink
+/>
+
+I think this is a good decision. Because the complete tree exists before the first write, the build step can compare each file with what is already on disk and decide what to do. If you know Terraform, it is close to plan and apply.
+
+I also agree with its argument against template languages. Loops are `for`, branches are `if`, and when you do want a template file, the markers sit inside the target language's comments, so the template stays valid HTML or Go and your linter still works. Substitution with `$$path$$` is deliberately unable to grow conditionals. On top of that, every snippet in the docs is executed by the test suite, which I rarely see in projects this size.
+
+A few more things impressed me.
+
+- An exception in your generator never half-writes the output. It is raised during the define phase, before any file operation, so a failed run leaves the directory as it was.
+- You can test a generator without a disk. The output can be built in memory and asserted on directly, which makes generator code as testable as any other function.
+- The project is strict about dependencies. ADR 0001 says no production dependency lands without a written record of its cost, and removing `memfs` under that rule took 20 packages and 68,557 lines of JavaScript out of every consumer's install. A fresh `npm i jostraca` installed two packages with zero vulnerabilities for me.
+- The Go port has already paid for itself once. A global `dryrun` setting was ignored in the TypeScript version, so a preview could write files. Go handled it correctly, the shared test corpus exposed the disagreement, and the fix went into TypeScript.
+
+The maintainers have fixed a silent write before, which is why I expect the issues below to be fixable.
+
+## The default overwrites your edits
+
+The explanation page says the hard problem in code generation is the second run, where a generator "deletes that work, silently, with a zero exit code." Here is what happens with the default configuration:
+
+```ts
+import { writeFileSync } from 'node:fs'
+import { Jostraca, Project, File, Content } from 'jostraca'
+
+const j = Jostraca()
+const run = (body) => j.generate({ folder: './out' }, () => {
+  Project({}, () => File({ name: 'a.txt' }, () => Content(body)))
+})
+
+await run('line1\nline2\nline3\n')
+writeFileSync('./out/a.txt', 'line1\nUSER EDIT\nline3\n')
+const result = await run('line1\nCHANGED\nline3\n')
+```
+
+After the second run, `a.txt` contains `line1`, `CHANGED` and `line3`. The edit is gone, the process exits 0, and `result.files.written` lists the file like any other write. There is no warning.
+
+The reference documents `write` as the default, so strictly speaking this is intended behaviour. My concern is the gap between that default and the homepage. Jostraca already keeps a copy of the previous output in `out/.jostraca/generated/a.txt`, so it has what it needs to see that a person changed the file since the last run. It overwrites anyway. Three-way merge exists, but you opt in per file extension. A new user who reads the homepage, installs the package and follows the tutorial gets the behaviour the project was designed to avoid.
+
+## Merge depends on a folder git ignores
+
+So I turned merge on and tried a common team setup: a colleague clones the repository and runs the generator.
+
+```ts
+const j = Jostraca({ existing: { txt: { merge: true } } })
+// run 1, then append "// my custom code" to the file by hand
+// rm -rf out/.jostraca to simulate a fresh clone
+// run 2 with one generated line changed
+```
+
+The custom line was gone, and the file was reported as `written`, with nothing in `conflicted`.
+
+The cause is the merge base. Jostraca stores it in `.jostraca/`, and by default it writes a `.gitignore` inside that folder, so the base never reaches the repository. The options reference does say merge falls back to an overwrite without a baseline, but its list of causes leaves out a fresh clone. The explanation page says something different: that a colleague's first merge "degrades to a two-way comparison." In my test it was a plain overwrite. If I have misread this, I would like to know, because the two pages disagree with each other either way.
+
+In practice, merge works on the machine that ran the generator last. Everywhere else it needs `control.version: true`, and nothing in the getting-started path tells you that.
+
+<Figure
+  src="/writing/jostraca/second-run-outcomes.png"
+  alt="Three tested second-run setups: default settings overwrite the hand edit; merge enabled on the same machine keeps the edit; merge enabled in a fresh clone without .jostraca overwrites the edit. Both overwrites are reported as written and exit zero."
+  width={1344}
+  height={554}
+  caption="What a second run does to a hand-edited file, by setup"
+  fullSizeLink
+/>
+
+Only the middle path keeps the edit, and it needs both an opt-in and the same machine.
+
+## The protect marker can lock out the generator
+
+Any existing file that contains the string `JOSTRACA_PROTECT` is never overwritten. That is a sensible escape hatch for a user who wants to take a file over. The match is not anchored, though, so a generator that writes the string itself freezes its own file after the first run:
+
+```ts
+await run('# Docs\nAdd JOSTRACA_PROTECT to opt out.\nv1\n')
+await run('# Docs\nAdd JOSTRACA_PROTECT to opt out.\nv2\n')
+// README.md still says v1, and every list in result.files is empty
+```
+
+A generated README that explains the feature is enough to trigger it. The file stops updating, and because skipped protected files appear in none of the result lists, nothing in the output says so.
+
+## Smaller things
+
+The website tells you to install `jostraca@0.36.6`, while npm is at 0.39.0, even though the README says the site syncs from the repository docs.
+
+The README and website describe two implementations, TypeScript and Go. The repository also contains a Rust port at version 0.33.1 that no document mentions, with production dependencies that the project's own dependency rule (ADR 0001) would normally require a record for.
+
+To keep byte-identical output with Go, helpers like `each` and `omap` iterate objects in sorted key order rather than JavaScript's insertion order. TypeScript users meet that surprise even if they never touch the Go port.
+
+## What I would suggest
+
+These come from someone outside the project, and each one has a cost.
+
+First, refuse to overwrite edited files by default. Compare the file on disk with the stored baseline, and if they differ, skip it, list it under a new `edited` key in the result, and exit non-zero. This would break some existing pipelines, so it probably belongs in a major version.
+
+Second, store the baseline in the repository. Committing `.jostraca/generated/` by default makes diffs noisier. Another option is a short hash comment in each generated file, which would let any clone detect an edit without bookkeeping, at the price of one extra line per file.
+
+Third, report every file. Protected and skipped files should appear in `result.files`, so a run summary accounts for each file in the tree. The protect marker could also be honoured only when it is absent from the baseline, which would mean a person added it.
+
+Fourth, expose the plan. The dry-run machinery already exists. An `npx jostraca plan` command that prints write, merge, conflict or edited for each file would show the second run before it happens.
+
+<Figure
+  src="/writing/jostraca/proposed-default.png"
+  alt="Proposed file policy: write new files; for an existing file, compare it with the baseline. If unchanged, apply the chosen mode. If edited by a person, skip it, report edited, and exit one."
+  width={1344}
+  height={516}
+  caption="Proposed default · one extra comparison before any overwrite"
+  fullSizeLink
+/>
+
+The first suggestion adds one comparison that Jostraca already has the data for. Until something like it exists, this is the setup I would use. I checked it against 0.39.0: with `control.version` on, Jostraca stops writing its own `.gitignore`, and the dry run reports per file without touching the disk.
+
+```ts
+const jostraca = Jostraca({
+  // merge every text type you generate
+  existing: {
+    ts: { merge: true },
+    md: { merge: true },
+    json: { merge: true },
+  },
+  // keep .jostraca/ in git so a fresh clone still has a merge base
+  control: { version: true },
+})
+
+// preview first, then run it
+const preview = await jostraca.generate(
+  { folder: './out', control: { dryrun: true } },
+  myGenerator,
+)
+console.log(preview.files) // written, merged, conflicted, unchanged...
+```
+
+## Would I use it?
+
+Yes, with three changes to my own setup: merge enabled for every text extension, `control.version: true` so the baseline gets committed, and a dry run before every run that writes. The design is careful and the documentation is unusually thorough. I would like the defaults to match the promise on the homepage, because Jostraca is aimed at teams who regenerate over code they have edited.
+
+All examples were run against jostraca 0.39.0 on Node 20+. If any of this is out of date or I have misunderstood an option, I am happy to update the article.
