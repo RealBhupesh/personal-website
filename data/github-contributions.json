@@ -1,6 +1,6 @@
 {
   "username": "RealBhupesh",
-  "updatedAt": "2026-10-06T11:16:25.032Z",
+  "updatedAt": "2026-10-07T13:07:18.458Z",
   "prs": [
     {
       "number": 1,
@@ -608,7 +608,7 @@
       "title": "fix: do not flag numbered prose as a postal address",
       "repository": "Nano-Collective/prompt-scrubber",
       "createdAt": "2026-09-23T08:28:42Z",
-      "status": "open"
+      "status": "merged"
     },
     {
       "number": 6609,
@@ -616,7 +616,99 @@
       "title": "Port the price checker service spec to Minitest and fixtures",
       "repository": "antiwork/gumroad",
       "createdAt": "2026-07-30T09:30:46Z",
-      "status": "merged"
+      "status": "merged",
+      "attribution": "co-authored",
+      "evidence": "https://github.com/antiwork/gumroad/commit/a57d24a819083d76198e64aa13eecb2dc2946f8f"
+    },
+    {
+      "number": 6830,
+      "url": "https://github.com/antiwork/gumroad/pull/6830",
+      "title": "Port the sales tax calculator spec to Minitest and fixtures",
+      "repository": "antiwork/gumroad",
+      "createdAt": "2026-08-02T09:57:41Z",
+      "status": "closed",
+      "attribution": "co-authored",
+      "evidence": "https://github.com/antiwork/gumroad/commit/9eb91690da2f3dd68537d2c2f4f8230d761553e5"
+    },
+    {
+      "number": 6831,
+      "url": "https://github.com/antiwork/gumroad/pull/6831",
+      "title": "Port sales tax calculator spec to Minitest (#5801)",
+      "repository": "antiwork/gumroad",
+      "createdAt": "2026-08-02T10:01:32Z",
+      "status": "merged",
+      "attribution": "co-authored",
+      "evidence": "https://github.com/antiwork/gumroad/commit/117824881e4c93bbae87ef53121eed612c58de38"
+    },
+    {
+      "number": 6904,
+      "url": "https://github.com/antiwork/gumroad/pull/6904",
+      "title": "Split blast retries by provider",
+      "repository": "antiwork/gumroad",
+      "createdAt": "2026-08-03T06:06:49Z",
+      "status": "merged",
+      "attribution": "co-authored",
+      "evidence": "https://github.com/antiwork/gumroad/commit/29ea1c451f57c21dfd84c6bf429f8312d6356db1"
+    },
+    {
+      "number": 6912,
+      "url": "https://github.com/antiwork/gumroad/pull/6912",
+      "title": "Clear stale accepted cross-sell offer on cart update",
+      "repository": "antiwork/gumroad",
+      "createdAt": "2026-08-03T09:41:05Z",
+      "status": "merged",
+      "attribution": "co-authored",
+      "evidence": "https://github.com/antiwork/gumroad/commit/88d43f0d71b23d4cdb46a7c77bdc96d9e2e6747c"
+    },
+    {
+      "number": 6930,
+      "url": "https://github.com/antiwork/gumroad/pull/6930",
+      "title": "Port the SidekiqUtility spec to Minitest (#5801)",
+      "repository": "antiwork/gumroad",
+      "createdAt": "2026-08-03T12:55:23Z",
+      "status": "merged",
+      "attribution": "co-authored",
+      "evidence": "https://github.com/antiwork/gumroad/commit/58b75e62c4b55efa2f0ba1e15c08c4f165095e35"
+    },
+    {
+      "number": 6932,
+      "url": "https://github.com/antiwork/gumroad/pull/6932",
+      "title": "Harden sensitive logging and bundle redirects",
+      "repository": "antiwork/gumroad",
+      "createdAt": "2026-08-03T13:13:05Z",
+      "status": "merged",
+      "attribution": "co-authored",
+      "evidence": "https://github.com/antiwork/gumroad/commit/834652c9c4d644a986783830103e63886353c759"
+    },
+    {
+      "number": 7124,
+      "url": "https://github.com/antiwork/gumroad/pull/7124",
+      "title": "Preserve subscription magic links on invalid requests",
+      "repository": "antiwork/gumroad",
+      "createdAt": "2026-08-07T14:17:01Z",
+      "status": "merged",
+      "attribution": "co-authored",
+      "evidence": "https://github.com/antiwork/gumroad/commit/0ebee4240a4dd964e70e2cf8bb61f9ffbea30502"
+    },
+    {
+      "number": 9841,
+      "url": "https://github.com/makeplane/plane/pull/9841",
+      "title": "fix(api): decode HTML entities in plain-text email bodies",
+      "repository": "makeplane/plane",
+      "createdAt": "2026-09-15T20:47:57Z",
+      "status": "merged",
+      "attribution": "credited",
+      "evidence": "https://github.com/makeplane/plane/pull/9805"
+    },
+    {
+      "number": 817,
+      "url": "https://github.com/Nano-Collective/nanocoder/pull/817",
+      "title": "Added visual loading indicator for vscode extension",
+      "repository": "Nano-Collective/nanocoder",
+      "createdAt": "2026-08-07T12:09:02Z",
+      "status": "merged",
+      "attribution": "co-authored",
+      "evidence": "https://github.com/Nano-Collective/nanocoder/commit/cfec1a842cfdba4106e2c12070ea0bd62f78b829"
     }
   ]
 }

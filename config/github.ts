@@ -1,7 +1,12 @@
 export const githubUsername = "RealBhupesh";
 
-// GitHub's author search cannot discover a PR submitted by a co-author.
-// Keep credited exceptions here; their current status is still checked via the API.
-export const coauthoredPullRequests = [
-  "https://github.com/antiwork/gumroad/pull/6609",
+// Public commit identities used to verify actual Co-authored-by trailers.
+export const githubCreditEmails = [
+  "realbhupesh@gmail.com",
+  "RealBhupesh@users.noreply.github.com",
+  "76155786+RealBhupesh@users.noreply.github.com",
 ];
+
+// Optional overrides for attribution GitHub has not indexed. Routine credits
+// are discovered automatically from imported PRs and co-authored commits.
+export const coauthoredPullRequests: string[] = [];

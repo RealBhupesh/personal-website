@@ -71,7 +71,7 @@ export default async function WorkPage() {
         </div>
         <GitHubContributionActivity projects={contributions} />
         <p className="mt-4 text-sm leading-relaxed text-muted">
-          Public pull requests to other people&apos;s repositories, with their current status.
+          Authored and credited public pull requests, including imported work. PR counts are separate from commits.
           {stale ? ` Saved list from ${updatedAt.slice(0, 10)} while GitHub is unavailable.` : " Updated automatically from GitHub."}
         </p>
         <p className="mt-2 text-sm">

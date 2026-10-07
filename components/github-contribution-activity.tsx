@@ -17,7 +17,7 @@ export function GitHubContributionActivity({ projects }: { projects: Contributio
       style={{ width: "100%" }}
       repos={projects.map((item) => ({
         name: item.project,
-        count: item.prs.length,
+        count: `${item.prs.length} PR${item.prs.length === 1 ? "" : "s"}`,
         description: projectCounts(item),
         href: item.repo,
         logo: (

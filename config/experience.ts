@@ -129,7 +129,7 @@ export const contributions = [
     repo: "https://github.com/antiwork/gumroad",
     about: "The open-source codebase behind Gumroad.",
     summary:
-      "Ported the price checker service's RSpec suite to fixture-backed Minitest with Elasticsearch isolation. The merged version ran in 17.0s versus 137.1s on the same host. Co-authored.",
+      "Contributed fixture-backed Minitest ports for pricing, sales tax, and Sidekiq shutdowns. Fixed stale cart offers, provider-specific retries, sensitive logging, bundle redirects, and subscription magic links. Imported from my fork and credited as co-authored work.",
     prs: [
       {
         number: 6609,

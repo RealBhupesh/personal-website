@@ -20,7 +20,7 @@ export type Contribution = {
 
 export type RepoContribution = {
   name: string;
-  count: number;
+  count: number | string;
   description?: string;
   logo?: React.ReactNode;
   href?: string;

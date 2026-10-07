@@ -100,7 +100,7 @@ export default async function HomePage() {
           <GitHubContributionActivity projects={contributions} />
         </div>
         <p className="mb-6 text-sm leading-relaxed text-muted">
-          All public pull requests to other people&apos;s repositories, including open and closed work.
+          Authored and credited public pull requests, including imported work. PR counts are separate from commits.
           {stale ? ` Showing the saved list from ${updatedAt.slice(0, 10)} while GitHub is unavailable.` : " Updated automatically from GitHub; checked hourly."}
         </p>
         <ul className="border-b border-border">
@@ -114,7 +114,7 @@ export default async function HomePage() {
                   </a>
                 </h3>
                 <p className={`shrink-0 ${label}`}>
-                  {item.mergedCount} merged
+                  {item.mergedCount} merged PRs
                 </p>
               </div>
               <p className="mt-1 leading-[1.7]">{item.summary}</p>

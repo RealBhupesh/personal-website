@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { contributions as curated } from "@/config/experience";
-import { coauthoredPullRequests, githubUsername } from "@/config/github";
+import { coauthoredPullRequests, githubCreditEmails, githubUsername } from "@/config/github";
 import snapshot from "@/data/github-contributions.json";
 import { fetchPublicPullRequests, type GitHubPullRequest } from "@/lib/github-contributions-core";
 
@@ -34,7 +34,7 @@ export const getGitHubContributions = cache(async () => {
       });
       if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
       return response.json();
-    }, coauthoredPullRequests);
+    }, coauthoredPullRequests, githubCreditEmails);
   } catch (error) {
     console.warn("Using saved GitHub contributions:", error instanceof Error ? error.message : "request failed");
     prs = snapshot.prs as GitHubPullRequest[];
@@ -66,8 +66,8 @@ export const getGitHubContributions = cache(async () => {
 
 export function projectCounts(project: ContributionProject) {
   return [
-    project.mergedCount && `${project.mergedCount} merged`,
-    project.openCount && `${project.openCount} open`,
-    project.closedCount && `${project.closedCount} closed without merge`,
+    project.mergedCount && `${project.mergedCount} merged PR${project.mergedCount === 1 ? "" : "s"}`,
+    project.openCount && `${project.openCount} open PR${project.openCount === 1 ? "" : "s"}`,
+    project.closedCount && `${project.closedCount} closed PR${project.closedCount === 1 ? "" : "s"} without merge`,
   ].filter(Boolean).join(" · ");
 }

@@ -133,9 +133,9 @@ export default async function AboutPage() {
           <h2 id="open-source-heading" className="section-title mb-2">
             Open source
           </h2>
-          <p className="mb-2 text-sm text-muted">{mergedPrCount} merged · {totalPrCount} total PRs · {contributions.length} projects</p>
+          <p className="mb-2 text-sm text-muted">{mergedPrCount} merged PRs · {totalPrCount} total PRs · {contributions.length} projects</p>
           <p className="mb-6 text-sm leading-relaxed text-muted">
-            Public pull requests to repositories maintained by others. Statuses come from GitHub.
+            Authored and credited public pull requests to repositories maintained by others. Statuses come from GitHub.
             {stale ? ` Saved list from ${updatedAt.slice(0, 10)}; GitHub is temporarily unavailable.` : " New PRs and status changes are checked hourly."}
           </p>
           <ol className="space-y-8">
@@ -164,6 +164,9 @@ export default async function AboutPage() {
                         <span className="sr-only"> (opens in a new tab)</span>
                       </a>
                       <span className="text-muted"> ({pr.status === "closed" ? "closed without merge" : pr.status})</span>
+                      {pr.attribution && pr.evidence && (
+                        <span className="text-muted"> · <a href={pr.evidence} className={textLink} rel="noreferrer" target="_blank">{pr.attribution === "co-authored" ? "Co-authored contribution" : "Credited original patch"}<span className="sr-only"> (opens in a new tab)</span></a></span>
+                      )}
                     </li>
                   ))}
                 </ul>

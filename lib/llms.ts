@@ -16,7 +16,7 @@ function projectLine(project: (typeof projects)[number]) {
 }
 
 function contributionLine(item: ContributionProject) {
-  const prs = item.prs.map((pr) => `${pr.url} (${pr.status})`).join(", ");
+  const prs = item.prs.map((pr) => `${pr.url} (${pr.status}${pr.attribution ? `; ${pr.attribution}; evidence: ${pr.evidence}` : ""})`).join(", ");
   return `- ${item.project} (${item.repo}): ${item.summary} ${projectCounts(item)}. PRs: ${prs}`;
 }
 
