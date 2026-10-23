@@ -119,3 +119,15 @@ test("incomplete and stale calendars reject instead of replacing the saved graph
     })),
   );
 });
+test("a recent but truncated 300-day calendar is not a complete yearly snapshot", async () => {
+  const days = Array.from({ length: 300 }, (_, i) => ({
+    date: new Date(Date.now() - (299 - i) * 86400000)
+      .toISOString()
+      .slice(0, 10),
+    count: 1,
+    level: 1,
+  }));
+  await assert.rejects(
+    fetchCalendarSnapshot("RealBhupesh", async () => ({ contributions: days })),
+  );
+});

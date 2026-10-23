@@ -257,7 +257,7 @@ export function importArticle(
   const { data, content } = matter(source);
   const now = new Date().toISOString();
   const article = articleSchema.parse({
-    id: `import-${kind === "note" ? "note-" : ""}${slug}`,
+    id: `${kind === "note" ? "note-import-" : "import-"}${slug}`,
     kind,
     order: data.order ?? 0,
     slug,

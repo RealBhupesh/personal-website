@@ -16,6 +16,7 @@ import {
   fieldLabel,
   type FieldSchema,
 } from "./site-fields";
+import { recoverableSiteContent } from "./site-recovery";
 import { GithubPanel } from "./github-panel";
 import { StudioDialog } from "./dialog";
 import { api } from "./types";
@@ -154,12 +155,18 @@ export const SiteManager = forwardRef<
           raw = localStorage.getItem(recoveryKey);
         } catch {}
         accept(next);
+        if (next.draft.published)
+          setDeployment({
+            commit: next.draft.published.commit,
+            state: local ? "success" : "pending",
+          });
         try {
           if (raw) {
             localStorage.setItem(recoveryKey, raw);
-            const candidate = siteContentSchema.parse(JSON.parse(raw));
+            const candidate = JSON.parse(raw);
             if (
-              candidate?.version === 1 &&
+              next.schema &&
+              recoverableSiteContent(candidate, next.schema) &&
               JSON.stringify(candidate) !== JSON.stringify(next.draft.content)
             )
               setRecovery(candidate);
@@ -172,7 +179,7 @@ export const SiteManager = forwardRef<
     return () => {
       alive = false;
     };
-  }, [accept]);
+  }, [accept, local]);
   useEffect(() => {
     if (entry)
       onSummary({
@@ -203,6 +210,17 @@ export const SiteManager = forwardRef<
         return true;
       } catch (e) {
         setError((e as Error).message);
+        const validation = (
+          e as Error & {
+            issues?: { path: (string | number)[]; message: string }[];
+          }
+        ).issues;
+        if (validation)
+          setIssues(
+            Object.fromEntries(
+              validation.map((i) => [i.path.join("."), i.message]),
+            ),
+          );
         return false;
       } finally {
         setBusy(false);

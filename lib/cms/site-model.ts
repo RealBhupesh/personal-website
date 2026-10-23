@@ -233,7 +233,7 @@ export const calendarSchema = z.strictObject({
         level: z.number().int().min(0).max(4),
       }),
     )
-    .min(300)
+    .min(365)
     .max(380),
 });
 export const pullRequestSchema = z.object({

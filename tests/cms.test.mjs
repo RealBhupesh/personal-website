@@ -342,15 +342,64 @@ test("an updated post's reconciliation follows the new deployment, not its old c
   assert.equal(reconciled.article.published.commit, "2");
 });
 
-test('notes publish into their own namespace, preserve order, and lock published kind', async()=>{
- const a=new MemoryRepo(), b=new MemoryRepo(),cms=new CmsService(a,b);
- const blog=await draft(cms);await cms.publish(blog.article.id,blog.revision);
- const blank=await cms.create('note');const note=await cms.save({...blank.article,title:'A note',description:'A small observation',slug:blog.article.slug,body:'Worth remembering.',order:4},blank.revision);
- const live=await cms.publish(note.article.id,note.revision);assert.match(b.files.get(`content/notes/${note.article.slug}.mdx`),/order: 4/);assert.ok(b.files.has(`content/blog/${note.article.slug}.mdx`));
- await assert.rejects(cms.save({...live.article,kind:'blog'},live.revision));
- await cms.unpublish(live.article.id,live.revision);assert.ok(b.files.has(`content/blog/${note.article.slug}.mdx`));assert.equal(b.files.has(`content/notes/${note.article.slug}.mdx`),false);
+test("notes publish into their own namespace, preserve order, and lock published kind", async () => {
+  const a = new MemoryRepo(),
+    b = new MemoryRepo(),
+    cms = new CmsService(a, b);
+  const blog = await draft(cms);
+  await cms.publish(blog.article.id, blog.revision);
+  const blank = await cms.create("note");
+  const note = await cms.save(
+    {
+      ...blank.article,
+      title: "A note",
+      description: "A small observation",
+      slug: blog.article.slug,
+      body: "Worth remembering.",
+      order: 4,
+    },
+    blank.revision,
+  );
+  const live = await cms.publish(note.article.id, note.revision);
+  assert.match(
+    b.files.get(`content/notes/${note.article.slug}.mdx`),
+    /order: 4/,
+  );
+  assert.ok(b.files.has(`content/blog/${note.article.slug}.mdx`));
+  await assert.rejects(
+    cms.save({ ...live.article, kind: "blog" }, live.revision),
+  );
+  await cms.unpublish(live.article.id, live.revision);
+  assert.ok(b.files.has(`content/blog/${note.article.slug}.mdx`));
+  assert.equal(b.files.has(`content/notes/${note.article.slug}.mdx`), false);
 });
-test('existing legacy blog digests remain compatible and notes import without collisions',async()=>{
- const legacy=importArticle('same','---\ntitle: Blog\ndescription: A blog\ndate: 2026-01-01\n---\nBody','sha');assert.equal(legacy.kind,'blog');
- const a=new MemoryRepo(),b=new MemoryRepo(),cms=new CmsService(a,b);b.files.set('content/blog/same.mdx','---\ntitle: Blog\ndescription: A blog\ndate: 2026-01-01\n---\nBody');b.files.set('content/notes/same.mdx','---\ntitle: Note\ndescription: A note\norder: 7\n---\nBody');assert.equal((await cms.importExisting()).count,2);const posts=await cms.list();assert.equal(posts.find(e=>e.article.kind==='note').article.order,7);assert.equal((await cms.importExisting()).count,0);
+test("existing legacy blog digests remain compatible and notes import without collisions", async () => {
+  const legacy = importArticle(
+    "same",
+    "---\ntitle: Blog\ndescription: A blog\ndate: 2026-01-01\n---\nBody",
+    "sha",
+  );
+  assert.equal(legacy.kind, "blog");
+  const a = new MemoryRepo(),
+    b = new MemoryRepo(),
+    cms = new CmsService(a, b);
+  b.files.set(
+    "content/blog/same.mdx",
+    "---\ntitle: Blog\ndescription: A blog\ndate: 2026-01-01\n---\nBody",
+  );
+  b.files.set(
+    "content/notes/same.mdx",
+    "---\ntitle: Note\ndescription: A note\norder: 7\n---\nBody",
+  );
+  assert.equal((await cms.importExisting()).count, 2);
+  const posts = await cms.list();
+  assert.equal(posts.find((e) => e.article.kind === "note").article.order, 7);
+  assert.equal((await cms.importExisting()).count, 0);
+});
+test("a note and a blog with note-prefixed slugs have distinct imported record IDs", () => {
+  const source =
+    "---\ntitle: Text\ndescription: An entry\ndate: 2026-01-01\n---\nBody";
+  const blog = importArticle("note-foo", source, "one", "blog"),
+    note = importArticle("foo", source, "two", "note");
+  assert.notEqual(blog.id, note.id);
 });

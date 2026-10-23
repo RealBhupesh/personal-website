@@ -1,19 +1,17 @@
 import { githubUsername } from "@/config/github";
 import snapshot from "@/data/github-calendar.json";
+import { fetchCalendarSnapshot } from "@/lib/cms/github-admin";
 import { calendarSchema } from "@/lib/cms/site-model";
 export const revalidate = 3600;
 export async function GET() {
   try {
-    const response = await fetch(
-      `https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(githubUsername)}?y=last`,
-      { next: { revalidate: 3600 }, signal: AbortSignal.timeout(12000) },
-    );
-    if (!response.ok) throw Error("Calendar provider unavailable");
-    const raw = await response.json();
-    const result = calendarSchema.parse({
-      username: githubUsername,
-      updatedAt: new Date().toISOString(),
-      contributions: raw.contributions,
+    const result = await fetchCalendarSnapshot(githubUsername, async (url) => {
+      const response = await fetch(url, {
+        next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(12000),
+      });
+      if (!response.ok) throw new Error("Calendar provider unavailable");
+      return response.json();
     });
     return Response.json(result, {
       headers: {

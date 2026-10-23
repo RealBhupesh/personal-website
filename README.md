@@ -2,14 +2,12 @@
 
 Personal site. Edit content, not components, when the words change.
 
-- Bio, links, Now, navigation, experience: `config/site.ts`
-- Projects, collections, and homepage selection: `config/work.ts`
-- Experience and editorial open-source highlights: `config/experience.ts`
-- GitHub account, public commit identities, and optional attribution overrides: `config/github.ts`
-- Notes: `content/notes`
-- Writing: `content/blog`
-- Resume PDF: add `public/resume.pdf`
-- Canonical domain: `url` in `config/site.ts`
+- Manage content in the owner dashboard at `/admin`.
+- Published profile, pages, projects, experience, images, FAQs, and GitHub settings: `data/site-content.json`.
+- `config/*.ts` are typed adapters for the public site, not separate content stores.
+- Published notes: `content/notes`; articles: `content/blog`.
+- Resume PDF: add `public/resume.pdf`.
+- Canonical domain changes also require hosting/auth configuration; the dashboard shows this field read-only.
 
 ## Automatic open-source contributions
 
@@ -29,22 +27,26 @@ If GitHub fails, rate-limits requests, or returns incomplete results, the site u
 with `npm run refresh:contributions` (Node 22.18+). The script writes only after a complete fetch.
 Authored PRs, imported fork contributions, and co-authored squash commits are discovered
 without a repository whitelist. Import candidates are verified against PR commit authors and
-actual final `Co-authored-by` trailers matching the public identities in `config/github.ts`.
+actual final `Co-authored-by` trailers matching the public identities in `data/site-content.json`.
 Maintainer-consolidated patches require explicit original-patch credit plus a reference to
 an authored PR in the same repository. A mention or copied release note is not credit.
 The About page links to the evidence. GitHub indexes commit search on default branches only;
 PR-body discovery also covers credited work on other branches. A new email identity must
-be added to the config. Optional PR overrides remain available for unindexed attribution.
+be added under Website content → Site settings. Use GitHub activity to verify a PR URL or supply explicit credit with an evidence link.
 Issues, reviews, private repositories, and direct commits are not counted as PRs. Multiple
 commits inside one PR still count as one PR. The separate calendar continues to show GitHub contribution activity.
 
 Run `npm test` for contribution discovery, pagination, status, and completeness regressions.
 
-## Writing studio
+## Website dashboard
 
-Open `/admin` to manage posts. The studio includes a visual/Markdown editor, templates,
+Open `/admin` on the primary domain (`www.bhupeshcholake.in`). **Website content** manages profile/About, page copy, navigation, homepage visibility, experience, education, skills, projects/groups/selection, Now, FAQs, images, and metadata. **GitHub activity** inspects/filter PRs, verifies new PR URLs, and syncs PRs or the yearly graph into a private draft.
+
+Use **Save draft → Review changes → Publish website changes**. Saving, importing JSON, restoring history, and syncing do not publish. Site history, JSON import/export, reset, local recovery, and revision conflicts protect edits. Changing project slugs removes their old URLs; review warns about those removals. Auth ownership and infrastructure remain server-controlled.
+
+**Articles & notes** retains a visual/Markdown editor, templates,
 autosave and recovery, private media, website previews, tags and search metadata,
-revision restore, archive, import/export, and publish/unpublish controls.
+revision restore, archive, import/export, and publish/unpublish controls. Notes have their own `/notes` destination and ordering; published types/URLs stay locked.
 
 Drafts use the separate private `RealBhupesh/website-writing` repository. Published MDX
 and referenced assets are committed to this website repository, triggering its existing
@@ -54,3 +56,5 @@ See [the setup guide](docs/cms/setup.md) for the exact permissions and environme
 For local writing and testing, run `npm run cms:dev`. This stores drafts in ignored `.cms/`
 and publishes only into the local checkout. `npm run test:cms-http` tests a running local
 workspace and cleans up its temporary posts. Never expose this development port publicly.
+
+`CMS_TEST_URL=http://127.0.0.1:3101 npm run test:cms-site-http` checks the new site API against a local `cms:dev` server. It temporarily publishes local test content and restores the original public JSON and prior private draft in `finally`. Run it before the production build, rather than concurrently. Both connected Vercel projects deploy publication commits; authentication continues to use the primary domain.

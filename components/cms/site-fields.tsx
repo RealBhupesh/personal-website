@@ -6,6 +6,7 @@ import { MediaLibrary } from "./media-library";
 import { imageUrl } from "./types";
 export const SiteFieldErrors = createContext<Record<string, string>>({});
 export type FieldSchema = {
+  anyOf?: FieldSchema[];
   type?: string;
   properties?: Record<string, FieldSchema>;
   items?: FieldSchema;
