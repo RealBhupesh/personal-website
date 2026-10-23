@@ -39,3 +39,18 @@ Issues, reviews, private repositories, and direct commits are not counted as PRs
 commits inside one PR still count as one PR. The separate calendar continues to show GitHub contribution activity.
 
 Run `npm test` for contribution discovery, pagination, status, and completeness regressions.
+
+## Writing studio
+
+Open `/admin` to manage posts. The studio includes a visual/Markdown editor, templates,
+autosave and recovery, private media, website previews, tags and search metadata,
+revision restore, archive, import/export, and publish/unpublish controls.
+
+Drafts use the separate private `RealBhupesh/website-writing` repository. Published MDX
+and referenced assets are committed to this website repository, triggering its existing
+deployment. One-time GitHub App configuration is required before production sign-in.
+See [the setup guide](docs/cms/setup.md) for the exact permissions and environment variables.
+
+For local writing and testing, run `npm run cms:dev`. This stores drafts in ignored `.cms/`
+and publishes only into the local checkout. `npm run test:cms-http` tests a running local
+workspace and cleans up its temporary posts. Never expose this development port publicly.

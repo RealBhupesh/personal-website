@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/config/site";
 
-const allow = { allow: "/" } as const;
+const allow = { allow: "/", disallow: ["/admin", "/api/cms", "/api/auth"] };
 
 export default function robots(): MetadataRoute.Robots {
   return {
