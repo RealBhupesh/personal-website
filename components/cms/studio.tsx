@@ -865,6 +865,11 @@ export function Studio({
       >
         {article && (
           <>
+            {error && (
+              <p className="studio-error" role="alert">
+                {error}
+              </p>
+            )}
             <h3>{article.title || "Untitled draft"}</h3>
             <ul className="studio-checklist">
               <li>{article.title.trim() ? "✓" : "○"} Title</li>
@@ -906,6 +911,11 @@ export function Studio({
         description="Review an earlier save. Restoring it creates a new revision and leaves the live website unchanged."
         wide
       >
+        {error && (
+          <p className="studio-error" role="alert">
+            {error}
+          </p>
+        )}
         <div className="studio-history">
           <div>
             {history?.map((rev) => (
