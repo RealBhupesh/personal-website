@@ -5,6 +5,7 @@ import { cmsConfig, cmsOwner, isLoopbackHost } from "@/lib/cms/config";
 import { requireOwner } from "@/lib/cms/server";
 import { Studio } from "@/components/cms/studio";
 import { SetupGuide } from "@/components/cms/setup-guide";
+import { GitHubSignIn } from "@/components/cms/github-sign-in";
 export const dynamic = "force-dynamic";
 export default async function AdminPage({
   searchParams,
@@ -34,18 +35,16 @@ export default async function AdminPage({
           </p>
           {error && (
             <p role="alert" className="studio-error">
-              {error === "Configuration"
-                ? "GitHub sign-in is not configured correctly. Check the app's Client ID, client secret, and callback URL in Vercel and GitHub, then redeploy."
-                : error === "AccessDenied"
-                  ? "This workspace is private. Sign in with RealBhupesh’s GitHub account."
-                  : "GitHub sign-in could not be completed. Try again. If this continues, check the app's callback URL and client secret."}
+              {error === "VerificationExpired"
+                ? "The browser did not return your sign-in verification cookie. Start again below in this same tab. If this repeats, open the website in Safari or your usual browser and allow cookies for this site."
+                : error === "Configuration"
+                  ? "GitHub sign-in is not configured correctly. Check the app's Client ID, client secret, and callback URL in Vercel and GitHub, then redeploy."
+                  : error === "AccessDenied"
+                    ? "This workspace is private. Sign in with RealBhupesh’s GitHub account."
+                    : "GitHub sign-in could not be completed. Try again. If this continues, check the app's callback URL and client secret."}
             </p>
           )}
-          <form action="/admin/sign-in" method="post">
-            <button type="submit" className="studio-primary">
-              Continue with GitHub
-            </button>
-          </form>
+          <GitHubSignIn />
         </div>
       </div>
     );

@@ -62,6 +62,47 @@ assert.match(
   signIn.headers.get("set-cookie") ?? "",
   /authjs\.pkce\.code_verifier=/,
 );
+// Exercise the supported browser flow: CSRF fetch, same-origin sign-in fetch,
+// then navigation only after the verification cookie has been returned.
+const csrf = await fetch(new URL("/api/auth/csrf", base), {
+  headers: { "Accept-Encoding": "identity" },
+});
+const { csrfToken } = await csrf.json();
+const cookie = csrf.headers
+  .getSetCookie()
+  .map((value) => value.split(";")[0])
+  .join("; ");
+const browserSignIn = await fetch(new URL("/api/auth/signin/github", base), {
+  method: "POST",
+  headers: {
+    Origin: base.origin,
+    Cookie: cookie,
+    "Accept-Encoding": "identity",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "X-Auth-Return-Redirect": "1",
+  },
+  body: new URLSearchParams({ csrfToken, callbackUrl: "/admin" }),
+});
+assert.equal(browserSignIn.status, 200);
+const authorization = new URL((await browserSignIn.json()).url);
+assert.equal(authorization.origin, "https://github.com");
+assert.equal(authorization.pathname, "/login/oauth/authorize");
+assert.ok(authorization.searchParams.get("code_challenge"));
+assert.match(
+  browserSignIn.headers.get("set-cookie") ?? "",
+  /authjs\.pkce\.code_verifier=/,
+);
+const missingCookie = await fetch(
+  new URL("/api/auth/callback/github?code=cms-test-missing-cookie", base),
+  {
+    headers: { "Accept-Encoding": "identity" },
+    redirect: "manual",
+  },
+);
+assert.equal(
+  new URL(missingCookie.headers.get("location")).searchParams.get("error"),
+  "VerificationExpired",
+);
 assert.equal(
   (
     await fetch(new URL("/api/cms/posts", base), {
@@ -71,5 +112,5 @@ assert.equal(
   401,
 );
 console.log(
-  "PASS: native sign-in form, origin protection, GitHub redirect, PKCE cookies, and private dashboard authorization.",
+  "PASS: native fallback, browser CSRF/sign-in flow, verification cookies, missing-cookie recovery, and private dashboard authorization.",
 );
