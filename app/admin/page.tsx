@@ -34,8 +34,11 @@ export default async function AdminPage({
           </p>
           {error && (
             <p role="alert" className="studio-error">
-              GitHub sign-in could not be completed. Use RealBhupesh’s account
-              and try again.
+              {error === "Configuration"
+                ? "GitHub sign-in is not configured correctly. Check the app's Client ID, client secret, and callback URL in Vercel and GitHub, then redeploy."
+                : error === "AccessDenied"
+                  ? "This workspace is private. Sign in with RealBhupesh’s GitHub account."
+                  : "GitHub sign-in could not be completed. Try again. If this continues, check the app's callback URL and client secret."}
             </p>
           )}
           <form action="/admin/sign-in" method="post">

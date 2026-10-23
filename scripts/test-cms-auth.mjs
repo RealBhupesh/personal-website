@@ -1,38 +1,50 @@
 import assert from "node:assert/strict";
-import { JSDOM } from "jsdom";
 
 const base = new URL(process.env.CMS_TEST_URL ?? "http://127.0.0.1:3101");
 assert.ok(
   ["127.0.0.1", "localhost", "www.bhupeshcholake.in"].includes(base.hostname),
   "Only test the local or production writing studio",
 );
-const response = await fetch(new URL("/admin", base));
+const response = await fetch(new URL("/admin", base), {
+  headers: { "Accept-Encoding": "identity" },
+});
 assert.equal(response.status, 200);
-const document = new JSDOM(await response.text()).window.document;
-const button = [...document.querySelectorAll("button")].find((button) =>
-  button.textContent.includes("Continue with GitHub"),
-);
-assert.ok(button, "Configured studio must offer GitHub sign-in");
-const form = button.closest("form");
-assert.equal(form?.getAttribute("method")?.toLowerCase(), "post");
+const html = await response.text();
+const form = html.match(
+  /<form\b[^>]*>[\s\S]*?Continue with GitHub[\s\S]*?<\/form>/,
+)?.[0];
+assert.ok(form, "Configured studio must offer GitHub sign-in");
+assert.match(form, /method="post"/i);
+const action = form.match(/action="([^"]+)"/)?.[1];
 assert.equal(
-  form?.getAttribute("action"),
+  action,
   "/admin/sign-in",
   "Sign-in must use a native form redirect, independent of React action navigation",
 );
-const target = new URL(form.getAttribute("action"), base);
+const target = new URL(action, base);
 for (const origin of [undefined, "https://example.invalid"]) {
   const rejected = await fetch(target, {
     method: "POST",
-    headers: origin ? { Origin: origin } : {},
+    headers: {
+      "Accept-Encoding": "identity",
+      ...(origin ? { Origin: origin } : {}),
+    },
     redirect: "manual",
   });
   assert.equal(rejected.status, 403, "Sign-in requires a same-origin POST");
 }
-assert.equal((await fetch(target, { redirect: "manual" })).status, 405);
+assert.equal(
+  (
+    await fetch(target, {
+      headers: { "Accept-Encoding": "identity" },
+      redirect: "manual",
+    })
+  ).status,
+  405,
+);
 const signIn = await fetch(target, {
   method: "POST",
-  headers: { Origin: base.origin },
+  headers: { Origin: base.origin, "Accept-Encoding": "identity" },
   redirect: "manual",
 });
 assert.equal(signIn.status, 303, "Use a real HTTP redirect after the POST");
@@ -50,7 +62,14 @@ assert.match(
   signIn.headers.get("set-cookie") ?? "",
   /authjs\.pkce\.code_verifier=/,
 );
-assert.equal((await fetch(new URL("/api/cms/posts", base))).status, 401);
+assert.equal(
+  (
+    await fetch(new URL("/api/cms/posts", base), {
+      headers: { "Accept-Encoding": "identity" },
+    })
+  ).status,
+  401,
+);
 console.log(
   "PASS: native sign-in form, origin protection, GitHub redirect, PKCE cookies, and private dashboard authorization.",
 );

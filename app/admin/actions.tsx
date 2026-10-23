@@ -20,6 +20,35 @@ function PreviewImage({ src, alt }: ComponentProps<"img">) {
   // eslint-disable-next-line @next/next/no-img-element
   return <img src={privateImageSource(src)} alt={alt ?? ""} loading="lazy" />;
 }
+function PreviewCodeBlock({ children, ...props }: ComponentProps<"pre">) {
+  const language = (props as Record<string, unknown>)["data-language"];
+  const label =
+    language === "ts"
+      ? "TypeScript"
+      : language === "js"
+        ? "JavaScript"
+        : typeof language === "string"
+          ? language
+          : "Code";
+  // Return native elements from the action. A client component referenced only
+  // by an action isn't registered in the page's React Client Manifest.
+  // Preview handles the copy button's event on its existing client boundary.
+  return (
+    <div className="article-code">
+      <div className="article-code-toolbar">
+        <span>{label}</span>
+        <button
+          type="button"
+          data-preview-copy
+          aria-label={`Copy ${label} code`}
+        >
+          Copy code
+        </button>
+      </div>
+      <pre {...props}>{children}</pre>
+    </div>
+  );
+}
 function PreviewFigure({
   src,
   alt,
@@ -45,6 +74,7 @@ export async function previewArticle(value: unknown) {
       source: article.body,
       components: {
         ...mdxComponents,
+        pre: PreviewCodeBlock,
         img: PreviewImage,
         Figure: PreviewFigure,
       },

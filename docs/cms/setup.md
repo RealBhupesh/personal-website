@@ -56,6 +56,8 @@ This explicitly enables a loopback-only development workspace, with private data
 
 `npm run test:cms-http` exercises this local server and removes its own temporary articles afterward. `npm test` covers the content model, editor round trips, GitHub commit protocol, conflicts, and publication failure recovery.
 
+With `npm run cms:dev -- --port 3102` running, `npm run test:cms-preview` verifies the actual preview Server Action with code, a custom diagram, private images, and rejected unsafe MDX. It reads the dev action manifest, does not save any article, and checks the streamed response for serialization failures. Preview code blocks return native elements; the dashboard's existing client component handles their copy controls so preview does not depend on action-only client modules being present in the page manifest.
+
 ## Operating notes
 
 - Autosave runs after 15 seconds of idle time. Save immediately with Cmd/Ctrl+S.
