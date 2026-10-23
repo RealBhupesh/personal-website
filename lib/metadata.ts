@@ -27,7 +27,7 @@ export function pageMetadata({
   description,
   path,
   absolute = false,
-  image = "/opengraph-image",
+  image = site.ogImage || "/opengraph-image",
   imageAlt,
   noindex = false,
 }: {
@@ -121,8 +121,8 @@ export function personJsonLd() {
         "@type": "Person",
         "@id": personId,
         name: site.name,
-        givenName: "Bhupesh",
-        familyName: "Cholake",
+        givenName: site.name.split(" ")[0],
+        familyName: site.name.split(" ").slice(1).join(" "),
         url: site.url,
         email: `mailto:${site.email}`,
         description: site.description,
@@ -140,9 +140,9 @@ export function personJsonLd() {
           "@type": "Place",
           address: {
             "@type": "PostalAddress",
-            addressLocality: "Nashik",
-            addressRegion: "Maharashtra",
-            addressCountry: "IN",
+            addressLocality: profile.location.split(",")[0].trim(),
+            addressRegion: profile.location.split(",")[1]?.trim(),
+            addressCountry: profile.location.split(",")[2]?.trim(),
           },
         },
         hasCredential: {

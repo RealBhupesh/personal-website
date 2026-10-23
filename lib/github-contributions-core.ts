@@ -5,6 +5,7 @@ export type GitHubPullRequest = {
   repository: string;
   status: "merged" | "open" | "closed";
   createdAt: string;
+  mergedAt?: string;
   attribution?: "co-authored" | "credited";
   evidence?: string;
 };
@@ -39,6 +40,7 @@ function normalize(item: ApiPullRequest): GitHubPullRequest {
   return {
     number: item.number, url: item.html_url, title: item.title,
     repository: match[1], createdAt: item.created_at,
+    ...((item.merged_at || item.pull_request?.merged_at) ? {mergedAt: (item.merged_at || item.pull_request?.merged_at)!} : {}),
     status: item.merged_at || item.pull_request?.merged_at ? "merged" : item.state === "open" ? "open" : "closed",
   };
 }

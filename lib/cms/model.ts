@@ -33,6 +33,8 @@ const isoDate = z
   );
 export const articleSchema = z.object({
   id: idSchema,
+  kind: z.enum(["blog", "note"]).default("blog"),
+  order: z.number().int().min(-10000).max(10000).default(0),
   title: z.string().max(200),
   description: z.string().max(600),
   slug: z.string().max(120),
@@ -46,6 +48,7 @@ export const articleSchema = z.object({
   published: z
     .object({
       slug,
+      kind: z.enum(["blog", "note"]).default("blog"),
       digest: z.string(),
       at: z.string(),
       commit: z.string(),
@@ -85,6 +88,7 @@ export const contentDigest = (article: Article) =>
       article.tags,
       article.ogImage,
       article.body,
+      ...(article.kind === "note" ? ["note", article.order] : []),
     ]),
   );
 export function articleState(article: Article) {
@@ -113,6 +117,7 @@ export function newArticle(id: string, template = "blank"): Article {
     date: now.slice(0, 10),
     tags: [],
     body: bodies[template] ?? "",
+    kind: template === "note" ? "note" : "blog",
     ogImage: "",
     archived: false,
     createdAt: now,
@@ -224,7 +229,7 @@ export function validatePublication(article: Article) {
     );
   if (article.ogImage && !safeImage(article.ogImage))
     throw new CmsError("Choose a social image from the media library.");
-  if (article.published && article.slug !== article.published.slug)
+  if (article.published && (article.slug !== article.published.slug || article.kind !== article.published.kind))
     throw new CmsError(
       "Published URLs are locked to protect existing links. Keep the published slug.",
     );
@@ -238,6 +243,7 @@ export function serializeArticle(article: Article) {
     tags: article.tags,
     draft: false,
   };
+  if (article.kind === "note") fields.order = article.order;
   if (article.published) fields.updated = new Date().toISOString().slice(0, 10);
   if (article.ogImage) fields.ogImage = article.ogImage;
   return matter.stringify(article.body, fields);
@@ -246,11 +252,14 @@ export function importArticle(
   slug: string,
   source: string,
   sha: string,
+  kind: "blog" | "note" = "blog",
 ): Article {
   const { data, content } = matter(source);
   const now = new Date().toISOString();
   const article = articleSchema.parse({
-    id: `import-${slug}`,
+    id: `import-${kind === "note" ? "note-" : ""}${slug}`,
+    kind,
+    order: data.order ?? 0,
     slug,
     title: data.title ?? slug,
     description: data.description ?? "",
@@ -269,6 +278,7 @@ export function importArticle(
   if (data.draft !== true)
     article.published = {
       slug,
+      kind,
       digest: contentDigest(article),
       at: now,
       commit: "",

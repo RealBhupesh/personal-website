@@ -88,7 +88,7 @@ export function MediaLibrary({
         <div>
           <h2>Media library</h2>
           <p className="studio-muted">
-            Private until referenced by a published article. Images up to 2 MB.
+            Private until referenced by a published article or website content. Images up to 2 MB.
           </p>
         </div>
         <button

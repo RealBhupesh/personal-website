@@ -1,3 +1,4 @@
+import { SiteService, siteEditorSchema } from "@/lib/cms/site-service";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { mdxOptions } from "@/lib/mdx";
 import { mdxComponents } from "@/components/prose";
@@ -58,6 +59,39 @@ async function route(
     const service = await getCmsService();
     const { path } = await context.params;
     const [resource, id, action] = path;
+    if (resource === "site") {
+      const website = new SiteService(service.drafts, service.website);
+      if (request.method === "GET" && id === "history")
+        return response(await website.history());
+      if (request.method === "GET")
+        return response({
+          ...(await website.get(
+            new URL(request.url).searchParams.get("ref") ?? undefined,
+          )),
+          schema: siteEditorSchema(),
+        });
+      const body = await readJson(request);
+      const revision = z.string().nullable().parse(body.revision);
+      if (request.method === "PUT" && !id)
+        return response(await website.save(body.content, revision));
+      if (request.method === "POST" && id === "reset")
+        return response(await website.reset(revision));
+      if (request.method === "POST" && id === "restore")
+        return response(
+          await website.restore(z.string().parse(body.ref), revision),
+        );
+      if (request.method === "POST" && id === "publish")
+        return response(await website.publish(revision));
+      if (request.method === "POST" && id === "sync")
+        return response(
+          await website.sync(
+            z.enum(["prs", "calendar", "all"]).parse(body.kind),
+            revision,
+          ),
+        );
+      if (request.method === "POST" && id === "pull-request")
+        return response(await website.addPullRequest(body.credit, revision));
+    }
     if (resource === "posts") {
       if (request.method === "GET" && !id)
         return response((await service.list()).map(dto));
@@ -73,7 +107,7 @@ async function route(
           dto(
             await service.create(
               z
-                .enum(["blank", "essay", "tutorial", "update"])
+                .enum(["blank", "essay", "tutorial", "update", "note"])
                 .parse(body.template ?? "blank"),
             ),
           ),
@@ -189,6 +223,10 @@ async function route(
     if (error instanceof z.ZodError)
       return response(
         {
+          issues: error.issues.map((i) => ({
+            path: i.path,
+            message: i.message,
+          })),
           error: error.issues
             .map((i) => `${i.path.join(".")}: ${i.message}`)
             .join("; "),

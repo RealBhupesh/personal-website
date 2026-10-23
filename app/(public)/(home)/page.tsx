@@ -1,3 +1,4 @@
+import { content } from "@/config/content";
 import Link from "next/link";
 import { Bio } from "@/components/bio";
 import { GitHubContributionActivity } from "@/components/github-contribution-activity";
@@ -27,46 +28,18 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-16">
+      {content.pages.home.visibility.about && (
       <section id="about" aria-labelledby="about-heading">
         <Bio
           short={site.bio}
           long={site.bioLong}
-          portrait={{
-            src: "/about/childhood-portrait.jpg",
-            alt: "Bhupesh as a child, sitting on a cabinet and holding a landline phone",
-            caption: "Nashik. The phone was already the interesting object in the room.",
-            width: 370,
-            height: 625,
-          }}
-          tech={[
-            {
-              src: "/work/asteria.png",
-              alt: "Leela, the hotel guest assistant, at a reception desk",
-              caption: "Asteria",
-              width: 1280,
-              height: 720,
-              href: "/work/asteria",
-            },
-            {
-              src: "/work/fitness.png",
-              alt: "Dance Coach screen showing a hip-hop starter routine",
-              caption: "Fitness coach",
-              width: 841,
-              height: 882,
-              href: "/work/fitness-dance-diet-coach",
-            },
-            {
-              src: "/work/physicore.png",
-              alt: "Predicted airflow speed field around an airfoil",
-              caption: "PhysiCore",
-              width: 770,
-              height: 495,
-              href: "/work/physicore",
-            },
-          ]}
+          portrait={content.images.portrait}
+          tech={content.images.tech}
         />
       </section>
+      )}
 
+      {content.pages.home.visibility.experience && (
       <section aria-labelledby="experience-heading">
         <h2 id="experience-heading" className="section-title mb-4">
           Experience
@@ -87,7 +60,9 @@ export default async function HomePage() {
           ))}
         </ul>
       </section>
+      )}
 
+      {content.pages.home.visibility.openSource && (
       <section aria-labelledby="open-source-heading">
         <div className="mb-4 flex items-baseline justify-between gap-4">
           <h2 id="open-source-heading" className="section-title">
@@ -127,7 +102,9 @@ export default async function HomePage() {
           </Link>
         </p>
       </section>
+      )}
 
+      {content.pages.home.visibility.work && (
       <section aria-labelledby="work-heading">
         <h2 id="work-heading" className="section-title mb-4">
           Selected work
@@ -160,7 +137,9 @@ export default async function HomePage() {
           </Link>
         </p>
       </section>
+      )}
 
+      {content.pages.home.visibility.now && (
       <section aria-labelledby="now-heading">
         <div className="mb-4 flex items-baseline justify-between gap-4">
           <h2 id="now-heading" className="section-title">
@@ -177,14 +156,15 @@ export default async function HomePage() {
           ))}
         </dl>
       </section>
+      )}
 
+      {content.pages.home.visibility.contact && (
       <section aria-labelledby="contact-heading">
         <h2 id="contact-heading" className="section-title mb-4">
           Contact
         </h2>
         <p className="leading-[1.75]">
-          Have an AI engineering role, a difficult problem, or a project you think I should see?
-          Write to me. A little context about what you&apos;re building is a good place to start.
+          {content.pages.home.contact}
         </p>
         <p className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
           <a href={`mailto:${site.email}`} className={textLink}>
@@ -200,6 +180,7 @@ export default async function HomePage() {
           </a>
         </p>
       </section>
+      )}
     </div>
   );
 }

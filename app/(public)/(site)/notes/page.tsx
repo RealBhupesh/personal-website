@@ -1,10 +1,11 @@
+import { content } from "@/config/content";
 import Link from "next/link";
 import { getNotes } from "@/lib/content";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
-  title: "Notes",
-  description: "Short observations on software, learning, and work in progress.",
+  title: content.pages.notes.title,
+  description: content.pages.notes.description,
   path: "/notes",
   noindex: getNotes().length === 0,
 });
@@ -17,11 +18,9 @@ export default function NotesPage() {
 
   return (
     <>
-      <h1 className="section-title">Notes</h1>
+      <h1 className="section-title">{content.pages.notes.title}</h1>
       <p className="mt-4 leading-[1.75]">
-        The smaller observations that accumulate while I&apos;m learning: a question from a book,
-        something a project taught me, or an assumption I had to reconsider. I keep them here so I
-        can return to them and see how my thinking changes.
+        {content.pages.notes.intro}
       </p>
       {notes.length > 0 ? (
         <ul className="mt-8 grid grid-cols-1 gap-x-10 gap-y-2 sm:grid-cols-2">
@@ -35,7 +34,7 @@ export default function NotesPage() {
         </ul>
       ) : (
         <p className="mt-8 leading-[1.75]">
-          This is where I&apos;ll keep the smaller things worth remembering as I go.
+          {content.pages.notes.empty}
         </p>
       )}
     </>

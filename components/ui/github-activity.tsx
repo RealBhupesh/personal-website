@@ -106,12 +106,12 @@ function describeDay({ count, date }: Contribution) {
   return `${count} ${noun} on ${DATE_FORMAT.format(new Date(`${date}T00:00:00`))}`;
 }
 
-const CALENDAR_API = "https://github-contributions-api.jogruber.de/v4";
+const CALENDAR_API = "/api/github/calendar";
 
 type ApiDay = { date: string; count: number; level: number };
 
 async function fetchCalendar(login: string, signal: AbortSignal) {
-  const res = await fetch(`${CALENDAR_API}/${encodeURIComponent(login)}?y=last`, { signal });
+  const res = await fetch(`${CALENDAR_API}?username=${encodeURIComponent(login)}`, { signal });
   if (!res.ok) throw new Error("Calendar unavailable");
 
   const days: ApiDay[] = (await res.json())?.contributions ?? [];

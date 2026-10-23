@@ -1,3 +1,4 @@
+import { content } from "@/config/content";
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { GitHubContributionActivity } from "@/components/github-contribution-activity";
@@ -6,9 +7,8 @@ import { titleOf, workGroups, workIntro, workProjects, type ProjectEntry } from 
 import { breadcrumbJsonLd, pageMetadata, workListJsonLd } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
-  title: "Work",
-  description:
-    "Projects by Bhupesh Cholake: AI applications, developer tools, scientific computing, and work in progress. Read the decisions behind each project, try a demo, or explore the source.",
+  title: content.pages.work.title,
+  description: content.pages.work.description,
   path: "/work",
 });
 
@@ -48,7 +48,7 @@ export default async function WorkPage() {
       <JsonLd data={workListJsonLd(workProjects)} />
       <JsonLd data={breadcrumbJsonLd([{ name: "Work", path: "/work" }])} />
       <header>
-        <h1 className="section-title">Work</h1>
+        <h1 className="section-title">{content.pages.work.title}</h1>
         <div className="mt-4 space-y-4">
           {workIntro.map((paragraph) => (
             <p key={paragraph} className="leading-[1.75]">

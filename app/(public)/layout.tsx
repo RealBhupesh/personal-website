@@ -1,3 +1,4 @@
+import { content } from "@/config/content";
 import Image from "next/image";
 import { Footer } from "@/components/footer";
 
@@ -14,10 +15,10 @@ export default function PublicLayout({
       </div>
       <aside className="place-art pointer-events-none fixed top-12 right-[max(2rem,calc((100vw-min(100vw,88rem))/2+2rem))] bottom-12 z-0 hidden w-[min(30vw,28rem)] lg:flex lg:items-start lg:justify-center">
         <Image
-          src="/place.jpg"
-          alt="Colourful pencil drawing of a riverside city inspired by Nashik, with temples, green mountains, and a sunset."
-          width={682}
-          height={1024}
+          src={content.images.artwork.src}
+          alt={content.images.artwork.alt}
+          width={content.images.artwork.width}
+          height={content.images.artwork.height}
           priority
           sizes="(min-width: 1024px) 28rem, 30vw"
           className="h-[min(80svh,calc(100svh-6rem))] w-full max-w-full rounded-2xl object-contain"

@@ -1,3 +1,4 @@
+import { site } from "@/config/site";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { WorkStory } from "@/components/work-story";
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: Props) {
   if (!project) return {};
   return articleMetadata({
     title: titleOf(project),
-    description: `${project.lede} Built by Bhupesh Cholake.`,
+    description: `${project.lede} Built by ${site.name}.`,
     path: `/work/${project.slug}`,
     image: `/og/work/${project.slug}`,
   });

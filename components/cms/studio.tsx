@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
+import { SiteManager, type SiteManagerHandle } from "./site-manager";
 import { PostEditor } from "./post-editor";
 import { MediaLibrary } from "./media-library";
 import { StudioDialog } from "./dialog";
@@ -23,6 +24,13 @@ export function Studio({
   logout: () => Promise<void>;
 }) {
   const [view, setView] = useState("overview");
+  const websiteEditor = useRef<SiteManagerHandle>(null);
+  const [siteSummary, setSiteSummary] = useState<{
+    changes: number;
+    projects: number;
+    sync?: string;
+  } | null>(null);
+  const [kindFilter, setKindFilter] = useState("all");
   const [posts, setPosts] = useState<PostEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
@@ -220,6 +228,11 @@ export function Studio({
     } catch {}
   }
   async function navigate(next: string) {
+    if (
+      websiteEditor.current &&
+      !(await websiteEditor.current.saveBeforeLeave())
+    )
+      return;
     if (dirty && !(await save())) return;
     setView(next);
     setEntry(null);
@@ -318,7 +331,7 @@ export function Studio({
   }
   function exportPost() {
     if (!article) return;
-    const content = `---\ntitle: ${JSON.stringify(article.title)}\ndescription: ${JSON.stringify(article.description)}\ndate: ${JSON.stringify(article.date)}\ntags: ${JSON.stringify(article.tags)}\ndraft: true\n${article.ogImage ? `ogImage: ${JSON.stringify(article.ogImage)}\n` : ""}---\n\n${article.body}\n`;
+    const content = `---\ntitle: ${JSON.stringify(article.title)}\ndescription: ${JSON.stringify(article.description)}\ndate: ${JSON.stringify(article.date)}\ntags: ${JSON.stringify(article.tags)}\ndraft: true\n${article.kind === "note" ? `order: ${article.order}\n` : ""}${article.ogImage ? `ogImage: ${JSON.stringify(article.ogImage)}\n` : ""}---\n\n${article.body}\n`;
     const url = URL.createObjectURL(
       new Blob([content], { type: "text/markdown" }),
     );
@@ -332,6 +345,7 @@ export function Studio({
     .filter(
       (p) =>
         (filter === "all" || p.state === filter) &&
+        (kindFilter === "all" || p.article.kind === kindFilter) &&
         `${p.article.title} ${p.article.description} ${p.article.tags.join(" ")}`
           .toLowerCase()
           .includes(query.toLowerCase()),
@@ -365,7 +379,9 @@ export function Studio({
         <nav aria-label="Studio navigation">
           {[
             ["overview", "Overview"],
-            ["posts", "Posts"],
+            ["website", "Website content"],
+            ["posts", "Articles & notes"],
+            ["github", "GitHub activity"],
             ["media", "Media"],
             ["settings", "Settings"],
           ].map(([id, label]) => (
@@ -389,6 +405,11 @@ export function Studio({
             <form
               action={async () => {
                 if (dirty && !(await save())) return;
+                if (
+                  websiteEditor.current &&
+                  !(await websiteEditor.current.saveBeforeLeave())
+                )
+                  return;
                 await logout();
               }}
             >
@@ -398,456 +419,523 @@ export function Studio({
         </div>
       </aside>
       <div className="studio-workspace">
-        {local && (
-          <div className="studio-local-note">
-            Local development workspace. Drafts stay on this computer; Publish
-            updates this checkout only.
-          </div>
-        )}
-        {error && (
-          <div className="studio-message studio-error" role="alert">
-            <p>{error}</p>
-            <div className="studio-actions">
-              {entry && (
-                <>
-                  <button type="button" onClick={exportPost}>
-                    Export my text
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      void run(async () => {
-                        const latest = await api<PostEntry>(
-                          `posts/${entry.article.id}`,
-                        );
-                        setRecovery(article);
-                        setEntry(latest);
-                        setArticle(latest.article);
-                        current.current = {
-                          entry: latest,
-                          article: latest.article,
-                        };
-                        setError("");
-                        setSaveState("Saved version loaded");
-                      })
-                    }
-                  >
-                    Load saved version
-                  </button>
-                </>
-              )}
-              <button type="button" onClick={() => setError("")}>
-                Dismiss
+        <SiteManager
+          ref={websiteEditor}
+          hidden={view !== "website" && view !== "github"}
+          github={view === "github"}
+          local={local}
+          onSummary={setSiteSummary}
+        />
+        <div hidden={view === "website" || view === "github"}>
+          {local && (
+            <div className="studio-local-note">
+              Local development workspace. Drafts stay on this computer; Publish
+              updates this checkout only.
+            </div>
+          )}
+          {error && (
+            <div className="studio-message studio-error" role="alert">
+              <p>{error}</p>
+              <div className="studio-actions">
+                {entry && (
+                  <>
+                    <button type="button" onClick={exportPost}>
+                      Export my text
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        void run(async () => {
+                          const latest = await api<PostEntry>(
+                            `posts/${entry.article.id}`,
+                          );
+                          setRecovery(article);
+                          setEntry(latest);
+                          setArticle(latest.article);
+                          current.current = {
+                            entry: latest,
+                            article: latest.article,
+                          };
+                          setError("");
+                          setSaveState("Saved version loaded");
+                        })
+                      }
+                    >
+                      Load saved version
+                    </button>
+                  </>
+                )}
+                <button type="button" onClick={() => setError("")}>
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          )}
+          {notice && (
+            <div className="studio-message" role="status">
+              <p>{notice}</p>
+              <button
+                type="button"
+                aria-label="Dismiss notification"
+                onClick={() => setNotice("")}
+              >
+                ×
               </button>
             </div>
-          </div>
-        )}
-        {notice && (
-          <div className="studio-message" role="status">
-            <p>{notice}</p>
-            <button
-              type="button"
-              aria-label="Dismiss notification"
-              onClick={() => setNotice("")}
-            >
-              ×
-            </button>
-          </div>
-        )}
-        {deployment && (
-          <div className="studio-message">
-            <p>
-              {deployment.state === "success"
-                ? "Deployment succeeded. The website is up to date."
-                : deployment.state === "local"
-                  ? "Local publication complete. GitHub and the live website are unchanged."
-                  : ["failure", "error"].includes(deployment.state)
-                    ? "Deployment failed. Your draft is safe. Review the deployment log and retry after fixing the build."
-                    : "Deployment is pending. Your publication commit is saved."}
-            </p>
-            {deployment.url && (
-              <a href={deployment.url} target="_blank" rel="noreferrer">
-                Deployment details ↗
-              </a>
-            )}
-            <button
-              type="button"
-              aria-label="Dismiss deployment status"
-              onClick={() => setDeployment(null)}
-            >
-              ×
-            </button>
-          </div>
-        )}
-        {view === "editor" && entry && article ? (
-          <>
-            {recovery && (
-              <div className="studio-message">
-                <p>
-                  A different device recovery copy is available. Restore it to
-                  compare or continue writing.
-                </p>
-                <div className="studio-actions">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      change({
-                        ...recovery,
-                        published: entry.article.published,
-                        slug: entry.article.published?.slug ?? recovery.slug,
-                      });
-                      setRecovery(null);
-                    }}
-                  >
-                    Restore recovery copy
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      localStorage.removeItem(recoveryKey(article.id));
-                      setRecovery(null);
-                    }}
-                  >
-                    Keep saved version
-                  </button>
-                </div>
-              </div>
-            )}
-            <PostEditor
-              key={entry.article.id}
-              entry={entry}
-              article={article}
-              onChange={change}
-              onSave={() => void save()}
-              onPublish={() => setConfirm("publish")}
-              onUnpublish={() => setConfirm("unpublish")}
-              onHistory={() => void showHistory()}
-              onDuplicate={() => void duplicate()}
-              onArchive={() => void archive()}
-              onExport={exportPost}
-              onBack={() => void navigate("posts")}
-              busy={busy}
-              saveState={saveState}
-              dirty={dirty}
-            />
-          </>
-        ) : (
-          <div className="studio-page">
-            <header className="studio-page-head">
-              <div>
-                <p className="studio-muted">Your writing workspace</p>
-                <h1>
-                  {view === "overview"
-                    ? "Make room for the next idea."
-                    : view === "posts"
-                      ? "Your posts."
-                      : view === "media"
-                        ? "The visual library."
-                        : "Workspace settings."}
-                </h1>
-              </div>
-              {view !== "settings" && view !== "media" && (
-                <Dropdown.Root>
-                  <Dropdown.Trigger className="studio-primary" disabled={busy}>
-                    New post <span aria-hidden="true">＋</span>
-                  </Dropdown.Trigger>
-                  <Dropdown.Portal>
-                    <Dropdown.Content
-                      className="studio-dropdown"
-                      sideOffset={8}
-                      align="end"
-                    >
-                      {[
-                        ["blank", "Blank page"],
-                        ["essay", "Essay"],
-                        ["tutorial", "Tutorial"],
-                        ["update", "Project update"],
-                      ].map(([id, label]) => (
-                        <Dropdown.Item
-                          key={id}
-                          onSelect={() => void create(id)}
-                        >
-                          {label}
-                        </Dropdown.Item>
-                      ))}
-                    </Dropdown.Content>
-                  </Dropdown.Portal>
-                </Dropdown.Root>
+          )}
+          {deployment && (
+            <div className="studio-message">
+              <p>
+                {deployment.state === "success"
+                  ? "Deployment succeeded. The website is up to date."
+                  : deployment.state === "local"
+                    ? "Local publication complete. GitHub and the live website are unchanged."
+                    : ["failure", "error"].includes(deployment.state)
+                      ? "Deployment failed. Your draft is safe. Review the deployment log and retry after fixing the build."
+                      : "Deployment is pending. Your publication commit is saved."}
+              </p>
+              {deployment.url && (
+                <a href={deployment.url} target="_blank" rel="noreferrer">
+                  Deployment details ↗
+                </a>
               )}
-            </header>
-            {view === "overview" && (
-              <>
-                <div className="studio-counts">
-                  <div>
-                    <strong>{loading ? "…" : counts.draft}</strong>
-                    <span>Ideas in progress</span>
-                  </div>
-                  <div>
-                    <strong>{loading ? "…" : counts.published}</strong>
-                    <span>Published posts</span>
-                  </div>
-                  <div>
-                    <strong>{loading ? "…" : counts.archived}</strong>
-                    <span>In the archive</span>
-                  </div>
-                </div>
-                <div className="studio-section-head">
-                  <h2>Pick up where you left off</h2>
-                  <button type="button" onClick={() => void navigate("posts")}>
-                    All posts →
-                  </button>
-                </div>
-                {loading ? (
-                  <p role="status">Loading your library…</p>
-                ) : posts.length ? (
-                  <div className="studio-recent">
-                    {posts.slice(0, 5).map((post) => (
-                      <button
-                        key={post.article.id}
-                        type="button"
-                        onClick={() => void open(post)}
-                      >
-                        <div>
-                          <span className="studio-muted">
-                            {stateLabels[post.state]}
-                          </span>
-                          <h3>{post.article.title || "Untitled draft"}</h3>
-                          <p>
-                            {post.article.description ||
-                              "A thought waiting for its first sentence."}
-                          </p>
-                        </div>
-                        <span>{displayDate(post.article.updatedAt)}</span>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="studio-empty">
-                    <div className="studio-paper-mark" aria-hidden="true">
-                      Aa
-                      <span>
-                        One thought.
-                        <br />
-                        Then the next.
-                      </span>
-                    </div>
-                    <h2>A fresh page is a good place to start.</h2>
-                    <p>
-                      Create your first draft, or bring your existing website
-                      articles into the studio.
-                    </p>
-                    <div className="studio-actions">
-                      <button
-                        className="studio-primary"
-                        type="button"
-                        onClick={() => void create("blank")}
-                      >
-                        Start writing
-                      </button>
-                      <button
-                        type="button"
-                        disabled={busy}
-                        onClick={() => void importPosts()}
-                      >
-                        Import existing posts
-                      </button>
-                    </div>
-                  </div>
-                )}
-                <div className="studio-writing-note">
-                  <h2>A quieter place to work.</h2>
+              <button
+                type="button"
+                aria-label="Dismiss deployment status"
+                onClick={() => setDeployment(null)}
+              >
+                ×
+              </button>
+            </div>
+          )}
+          {view === "editor" && entry && article ? (
+            <>
+              {recovery && (
+                <div className="studio-message">
                   <p>
-                    Draft privately. Preview the real article. Publish when the
-                    piece is ready. Your unfinished changes stay here until you
-                    choose to share them.
+                    A different device recovery copy is available. Restore it to
+                    compare or continue writing.
                   </p>
-                  <span>
-                    ⌘ / Ctrl + S saves · Autosave after 15 seconds of idle time
-                  </span>
-                </div>
-              </>
-            )}
-            {view === "posts" && (
-              <>
-                <div className="studio-library-tools">
-                  <input
-                    aria-label="Search posts"
-                    placeholder="Search posts, ideas, or tags…"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                  />
-                  <label className="studio-sort">
-                    Sort
-                    <select
-                      aria-label="Sort posts"
-                      value={sort}
-                      onChange={(e) => setSort(e.target.value)}
+                  <div className="studio-actions">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        change({
+                          ...recovery,
+                          published: entry.article.published,
+                          slug: entry.article.published?.slug ?? recovery.slug,
+                          kind: entry.article.published?.kind ?? recovery.kind,
+                        });
+                        setRecovery(null);
+                      }}
                     >
-                      <option value="updated">Recently edited</option>
-                      <option value="date">Publication date</option>
-                      <option value="title">Title</option>
+                      Restore recovery copy
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        localStorage.removeItem(recoveryKey(article.id));
+                        setRecovery(null);
+                      }}
+                    >
+                      Keep saved version
+                    </button>
+                  </div>
+                </div>
+              )}
+              <PostEditor
+                key={entry.article.id}
+                entry={entry}
+                article={article}
+                onChange={change}
+                onSave={() => void save()}
+                onPublish={() => setConfirm("publish")}
+                onUnpublish={() => setConfirm("unpublish")}
+                onHistory={() => void showHistory()}
+                onDuplicate={() => void duplicate()}
+                onArchive={() => void archive()}
+                onExport={exportPost}
+                onBack={() => void navigate("posts")}
+                busy={busy}
+                saveState={saveState}
+                dirty={dirty}
+              />
+            </>
+          ) : (
+            <div className="studio-page">
+              <header className="studio-page-head">
+                <div>
+                  <p className="studio-muted">Your writing workspace</p>
+                  <h1>
+                    {view === "overview"
+                      ? "Make room for the next idea."
+                      : view === "posts"
+                        ? "Your posts."
+                        : view === "media"
+                          ? "The visual library."
+                          : "Workspace settings."}
+                  </h1>
+                </div>
+                {view !== "settings" && view !== "media" && (
+                  <Dropdown.Root>
+                    <Dropdown.Trigger
+                      className="studio-primary"
+                      disabled={busy}
+                    >
+                      New post <span aria-hidden="true">＋</span>
+                    </Dropdown.Trigger>
+                    <Dropdown.Portal>
+                      <Dropdown.Content
+                        className="studio-dropdown"
+                        sideOffset={8}
+                        align="end"
+                      >
+                        {[
+                          ["blank", "Blank page"],
+                          ["essay", "Essay"],
+                          ["tutorial", "Tutorial"],
+                          ["update", "Project update"],
+                          ["note", "Short note"],
+                        ].map(([id, label]) => (
+                          <Dropdown.Item
+                            key={id}
+                            onSelect={() => void create(id)}
+                          >
+                            {label}
+                          </Dropdown.Item>
+                        ))}
+                      </Dropdown.Content>
+                    </Dropdown.Portal>
+                  </Dropdown.Root>
+                )}
+              </header>
+              {view === "overview" && (
+                <>
+                  <div className="site-overview">
+                    <div>
+                      <h2>Website content</h2>
+                      <p>
+                        {siteSummary
+                          ? `${siteSummary.projects} projects · ${siteSummary.changes} unpublished website changes`
+                          : "Loading site content…"}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => void navigate("website")}
+                      >
+                        Edit website
+                      </button>
+                    </div>
+                    <div>
+                      <h2>GitHub activity</h2>
+                      <p>
+                        Latest saved data:{" "}
+                        {siteSummary?.sync
+                          ? displayDate(siteSummary.sync)
+                          : "Not synced here yet"}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => void navigate("github")}
+                      >
+                        Inspect & sync
+                      </button>
+                    </div>
+                  </div>
+                  <div className="studio-counts">
+                    <div>
+                      <strong>{loading ? "…" : counts.draft}</strong>
+                      <span>Ideas in progress</span>
+                    </div>
+                    <div>
+                      <strong>{loading ? "…" : counts.published}</strong>
+                      <span>Published posts</span>
+                    </div>
+                    <div>
+                      <strong>{loading ? "…" : counts.archived}</strong>
+                      <span>In the archive</span>
+                    </div>
+                  </div>
+                  <div className="studio-section-head">
+                    <h2>Pick up where you left off</h2>
+                    <button
+                      type="button"
+                      onClick={() => void navigate("posts")}
+                    >
+                      All posts →
+                    </button>
+                  </div>
+                  {loading ? (
+                    <p role="status">Loading your library…</p>
+                  ) : posts.length ? (
+                    <div className="studio-recent">
+                      {posts.slice(0, 5).map((post) => (
+                        <button
+                          key={post.article.id}
+                          type="button"
+                          onClick={() => void open(post)}
+                        >
+                          <div>
+                            <span className="studio-muted">
+                              {stateLabels[post.state]}
+                            </span>
+                            <h3>{post.article.title || "Untitled draft"}</h3>
+                            <p>
+                              {post.article.description ||
+                                "A thought waiting for its first sentence."}
+                            </p>
+                          </div>
+                          <span>{displayDate(post.article.updatedAt)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="studio-empty">
+                      <div className="studio-paper-mark" aria-hidden="true">
+                        Aa
+                        <span>
+                          One thought.
+                          <br />
+                          Then the next.
+                        </span>
+                      </div>
+                      <h2>A fresh page is a good place to start.</h2>
+                      <p>
+                        Create your first draft, or bring your existing website
+                        articles into the studio.
+                      </p>
+                      <div className="studio-actions">
+                        <button
+                          className="studio-primary"
+                          type="button"
+                          onClick={() => void create("blank")}
+                        >
+                          Start writing
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => void importPosts()}
+                        >
+                          Import existing posts
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <div className="studio-writing-note">
+                    <h2>A quieter place to work.</h2>
+                    <p>
+                      Draft privately. Preview the real article. Publish when
+                      the piece is ready. Your unfinished changes stay here
+                      until you choose to share them.
+                    </p>
+                    <span>
+                      ⌘ / Ctrl + S saves · Autosave after 15 seconds of idle
+                      time
+                    </span>
+                  </div>
+                </>
+              )}
+              {view === "posts" && (
+                <>
+                  <div className="studio-library-tools">
+                    <input
+                      aria-label="Search posts"
+                      placeholder="Search posts, ideas, or tags…"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <label className="studio-sort">
+                      Sort
+                      <select
+                        aria-label="Sort posts"
+                        value={sort}
+                        onChange={(e) => setSort(e.target.value)}
+                      >
+                        <option value="updated">Recently edited</option>
+                        <option value="date">Publication date</option>
+                        <option value="title">Title</option>
+                      </select>
+                    </label>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void importPosts()}
+                    >
+                      Import existing posts
+                    </button>
+                  </div>
+                  <label className="site-kind-filter">
+                    Content type{" "}
+                    <select
+                      value={kindFilter}
+                      onChange={(e) => setKindFilter(e.target.value)}
+                    >
+                      <option value="all">Articles & notes</option>
+                      <option value="blog">Articles</option>
+                      <option value="note">Notes</option>
                     </select>
                   </label>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => void importPosts()}
+                  <div
+                    className="studio-filters"
+                    role="group"
+                    aria-label="Filter posts"
                   >
-                    Import existing posts
-                  </button>
-                </div>
-                <div
-                  className="studio-filters"
-                  role="group"
-                  aria-label="Filter posts"
-                >
-                  {[
-                    ["all", "All posts"],
-                    ["draft", "Drafts"],
-                    ["changes", "Unpublished changes"],
-                    ["published", "Published"],
-                    ["archived", "Archived"],
-                  ].map(([id, label]) => (
-                    <button
-                      key={id}
-                      type="button"
-                      aria-pressed={filter === id}
-                      onClick={() => setFilter(id)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-                {loading ? (
-                  <p role="status">Loading posts…</p>
-                ) : (
-                  <div className="studio-post-list">
-                    <div className="studio-post-list-head">
-                      <span>Post</span>
-                      <span>Status</span>
-                      <span>Last edited</span>
-                    </div>
-                    {visible.map((post) => (
+                    {[
+                      ["all", "All posts"],
+                      ["draft", "Drafts"],
+                      ["changes", "Unpublished changes"],
+                      ["published", "Published"],
+                      ["archived", "Archived"],
+                    ].map(([id, label]) => (
                       <button
-                        key={post.article.id}
+                        key={id}
                         type="button"
-                        className="studio-post-row"
-                        onClick={() => void open(post)}
+                        aria-pressed={filter === id}
+                        onClick={() => setFilter(id)}
                       >
-                        <div>
-                          <h2>{post.article.title || "Untitled draft"}</h2>
-                          <p>
-                            {post.article.description || "No description yet"}
-                          </p>
-                          <small>{post.article.tags.join(" · ")}</small>
-                        </div>
-                        <span>{stateLabels[post.state]}</span>
-                        <span>{displayDate(post.article.updatedAt)}</span>
+                        {label}
                       </button>
                     ))}
-                    {!visible.length && (
-                      <div className="studio-empty">
-                        <h2>
-                          {query ? "No matching posts." : "No posts here yet."}
-                        </h2>
-                        <p>
-                          {query
-                            ? "Try another word or change the filter."
-                            : "Create a draft or import your existing articles."}
-                        </p>
-                      </div>
-                    )}
                   </div>
-                )}
-              </>
-            )}
-            {view === "media" && <MediaLibrary />}
-            {view === "settings" && (
-              <div className="studio-settings">
-                <section>
-                  <h2>Connected workspace</h2>
-                  <dl>
-                    <div>
-                      <dt>Owner</dt>
-                      <dd>RealBhupesh</dd>
-                    </div>
-                    <div>
-                      <dt>Draft storage</dt>
-                      <dd>
-                        {local
-                          ? "Private local folder (.cms)"
-                          : "Private GitHub repository"}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>Publishing destination</dt>
-                      <dd>RealBhupesh/personal-website</dd>
-                    </div>
-                    <div>
-                      <dt>Website</dt>
-                      <dd>
-                        <a
-                          href="https://www.bhupeshcholake.in/blog"
-                          target="_blank"
-                          rel="noreferrer"
+                  {loading ? (
+                    <p role="status">Loading posts…</p>
+                  ) : (
+                    <div className="studio-post-list">
+                      <div className="studio-post-list-head">
+                        <span>Post</span>
+                        <span>Status</span>
+                        <span>Last edited</span>
+                      </div>
+                      {visible.map((post) => (
+                        <button
+                          key={post.article.id}
+                          type="button"
+                          className="studio-post-row"
+                          onClick={() => void open(post)}
                         >
-                          bhupeshcholake.in/blog ↗
-                        </a>
-                      </dd>
+                          <div>
+                            <h2>{post.article.title || "Untitled draft"}</h2>
+                            <p>
+                              {post.article.description || "No description yet"}
+                            </p>
+                            <small>
+                              {post.article.kind === "note"
+                                ? "Note"
+                                : "Article"}{" "}
+                              · {post.article.tags.join(" · ")}
+                            </small>
+                          </div>
+                          <span>{stateLabels[post.state]}</span>
+                          <span>{displayDate(post.article.updatedAt)}</span>
+                        </button>
+                      ))}
+                      {!visible.length && (
+                        <div className="studio-empty">
+                          <h2>
+                            {query
+                              ? "No matching posts."
+                              : "No posts here yet."}
+                          </h2>
+                          <p>
+                            {query
+                              ? "Try another word or change the filter."
+                              : "Create a draft or import your existing articles."}
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  </dl>
-                </section>
-                <section>
-                  <h2>Bring your writing with you</h2>
-                  <p>
-                    Import published articles from the website. Original URLs,
-                    Markdown, code, and custom diagrams are preserved. Importing
-                    does not republish them.
-                  </p>
-                  <button
-                    className="studio-primary"
-                    type="button"
-                    disabled={busy}
-                    onClick={() => void importPosts()}
-                  >
-                    Import existing posts
-                  </button>
-                </section>
-                <section>
-                  <h2>How your writing is saved</h2>
-                  <p>
-                    Draft changes autosave after 15 seconds of idle time. A
-                    recovery copy stays on this device until saving succeeds.
-                    Revision history records earlier saves. Published posts keep
-                    their live version until you publish changes.
-                  </p>
-                  <p>
-                    Unpublishing removes the article on the next website
-                    deployment. Already-published files remain in the public
-                    repository&apos;s Git history.
-                  </p>
-                </section>
-                <section>
-                  <h2>Keyboard shortcuts</h2>
-                  <dl>
-                    <div>
-                      <dt>Save draft</dt>
-                      <dd>⌘ / Ctrl + S</dd>
-                    </div>
-                    <div>
-                      <dt>Bold / italic</dt>
-                      <dd>⌘ / Ctrl + B / I in visual mode</dd>
-                    </div>
-                    <div>
-                      <dt>Close a dialog</dt>
-                      <dd>Escape</dd>
-                    </div>
-                  </dl>
-                </section>
-              </div>
-            )}
-          </div>
-        )}
+                  )}
+                </>
+              )}
+              {view === "media" && <MediaLibrary />}
+              {view === "settings" && (
+                <div className="studio-settings">
+                  <section>
+                    <h2>Connected workspace</h2>
+                    <dl>
+                      <div>
+                        <dt>Owner</dt>
+                        <dd>RealBhupesh</dd>
+                      </div>
+                      <div>
+                        <dt>Draft storage</dt>
+                        <dd>
+                          {local
+                            ? "Private local folder (.cms)"
+                            : "Private GitHub repository"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Publishing destination</dt>
+                        <dd>RealBhupesh/personal-website</dd>
+                      </div>
+                      <div>
+                        <dt>Website</dt>
+                        <dd>
+                          <a
+                            href="https://www.bhupeshcholake.in/blog"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            bhupeshcholake.in/blog ↗
+                          </a>
+                        </dd>
+                      </div>
+                    </dl>
+                  </section>
+                  <section>
+                    <h2>Bring your writing with you</h2>
+                    <p>
+                      Import published articles from the website. Original URLs,
+                      Markdown, code, and custom diagrams are preserved.
+                      Importing does not republish them.
+                    </p>
+                    <button
+                      className="studio-primary"
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void importPosts()}
+                    >
+                      Import existing posts
+                    </button>
+                  </section>
+                  <section>
+                    <h2>How your writing is saved</h2>
+                    <p>
+                      Draft changes autosave after 15 seconds of idle time. A
+                      recovery copy stays on this device until saving succeeds.
+                      Revision history records earlier saves. Published posts
+                      keep their live version until you publish changes.
+                    </p>
+                    <p>
+                      Unpublishing removes the article on the next website
+                      deployment. Already-published files remain in the public
+                      repository&apos;s Git history.
+                    </p>
+                  </section>
+                  <section>
+                    <h2>Keyboard shortcuts</h2>
+                    <dl>
+                      <div>
+                        <dt>Save draft</dt>
+                        <dd>⌘ / Ctrl + S</dd>
+                      </div>
+                      <div>
+                        <dt>Bold / italic</dt>
+                        <dd>⌘ / Ctrl + B / I in visual mode</dd>
+                      </div>
+                      <div>
+                        <dt>Close a dialog</dt>
+                        <dd>Escape</dd>
+                      </div>
+                    </dl>
+                  </section>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
       <StudioDialog
         open={Boolean(confirm)}
@@ -875,7 +963,8 @@ export function Studio({
               <li>{article.title.trim() ? "✓" : "○"} Title</li>
               <li>{article.description.trim() ? "✓" : "○"} Description</li>
               <li>
-                {article.slug ? "✓" : "○"} URL: /blog/
+                {article.slug ? "✓" : "○"} URL: /
+                {article.kind === "note" ? "notes" : "blog"}/
                 {article.slug || "choose-a-slug"}
               </li>
               <li>{article.body.trim() ? "✓" : "○"} Article body</li>

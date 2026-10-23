@@ -13,6 +13,8 @@ export function fingerprint(a: Article) {
     a.body,
     a.ogImage,
     a.archived,
+    a.kind,
+    a.order,
   ]);
 }
 export function slugFromTitle(value: string) {
@@ -51,8 +53,10 @@ export async function api<T>(
   if (!response.ok) {
     const error = new Error(result.error ?? "Request failed.") as Error & {
       status?: number;
+      issues?: { path: (string | number)[]; message: string }[];
     };
     error.status = response.status;
+    error.issues = result.issues;
     throw error;
   }
   return result;

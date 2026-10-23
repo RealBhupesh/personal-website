@@ -1,3 +1,4 @@
+import { content } from "@/config/content";
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { roles, skills, training } from "@/config/experience";
@@ -8,9 +9,8 @@ import { featuredProjects, titleOf } from "@/config/work";
 import { breadcrumbJsonLd, contributionsJsonLd, faqJsonLd, pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
-  title: "About",
-  description:
-    "Facts about Bhupesh Cholake: a software engineer in Nashik, India, building AI applications, with merged open-source work and a degree in AI and Data Science.",
+  title: content.pages.about.title,
+  description: content.pages.about.description,
   path: "/about",
 });
 
@@ -39,11 +39,9 @@ export default async function AboutPage() {
       <JsonLd data={breadcrumbJsonLd([{ name: "About", path: "/about" }])} />
       <JsonLd data={contributionsJsonLd(contributions)} />
       <article>
-        <h1 className="section-title">About</h1>
+        <h1 className="section-title">{content.pages.about.title}</h1>
         <p className="mt-4 leading-[1.75]">
-          I&apos;m Bhupesh, a software engineer in Nashik. I build AI applications, developer
-          tools, and scientific software. I like work that asks me to understand the system
-          behind an answer, then make it useful to the person asking.
+          {content.pages.about.intro}
         </p>
         <p className="mt-4 font-mono text-[0.8125rem] text-muted">
           Updated {updated}
@@ -57,7 +55,7 @@ export default async function AboutPage() {
           <div className="grid gap-1 sm:grid-cols-[10.5rem_1fr] sm:gap-x-6">
             <dt className="font-mono text-[0.8125rem] text-muted">Recent role</dt>
             <dd className="leading-[1.7]">
-              Founding engineer intern, {recentRole.org}, {recentRole.period}
+              {recentRole ? `${recentRole.title}, ${recentRole.org}${recentRole.period ? `, ${recentRole.period}` : ""}` : "Independent work"}
             </dd>
           </div>
           <div className="grid gap-1 sm:grid-cols-[10.5rem_1fr] sm:gap-x-6">
@@ -76,8 +74,7 @@ export default async function AboutPage() {
           <div className="grid gap-1 sm:grid-cols-[10.5rem_1fr] sm:gap-x-6">
             <dt className="font-mono text-[0.8125rem] text-muted">Looking for</dt>
             <dd className="leading-[1.7]">
-              An AI engineer role where I can work on the model, the application, and the
-              experience of using it.
+              {content.pages.about.seeking}
             </dd>
           </div>
           <div className="grid gap-1 sm:grid-cols-[10.5rem_1fr] sm:gap-x-6">
@@ -92,7 +89,7 @@ export default async function AboutPage() {
             <dt className="font-mono text-[0.8125rem] text-muted">GitHub</dt>
             <dd>
               <a href={site.github} className={textLink} rel="me noreferrer" target="_blank">
-                github.com/RealBhupesh
+                {site.github.replace(/^https?:\/\//, "").replace(/\/$/, "")}
               </a>
             </dd>
           </div>
@@ -100,7 +97,7 @@ export default async function AboutPage() {
             <dt className="font-mono text-[0.8125rem] text-muted">LinkedIn</dt>
             <dd>
               <a href={site.linkedin} className={textLink} rel="me noreferrer" target="_blank">
-                linkedin.com/in/thebhupesh
+                {site.linkedin.replace(/^https?:\/\//, "").replace(/\/$/, "")}
               </a>
             </dd>
           </div>

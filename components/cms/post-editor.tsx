@@ -202,6 +202,33 @@ export function PostEditor({
           <aside className="studio-post-settings" aria-label="Post settings">
             <h2>Post settings</h2>
             <label>
+              Content type
+              <select
+                value={article.kind}
+                disabled={Boolean(article.published)}
+                onChange={(e) =>
+                  update("kind", e.target.value as "blog" | "note")
+                }
+              >
+                <option value="blog">Article</option>
+                <option value="note">Note</option>
+              </select>
+              <small>Published type and URL stay locked.</small>
+            </label>
+            {article.kind === "note" && (
+              <label>
+                Note order
+                <input
+                  type="number"
+                  min={-10000}
+                  max={10000}
+                  value={article.order}
+                  onChange={(e) => update("order", Number(e.target.value))}
+                />
+                <small>Lower numbers appear first.</small>
+              </label>
+            )}
+            <label>
               URL slug
               <input
                 value={article.slug}
@@ -209,7 +236,8 @@ export function PostEditor({
                 onChange={(e) => update("slug", e.target.value)}
               />
               <small>
-                /blog/{article.slug || "your-post"}
+                /{article.kind === "note" ? "notes" : "blog"}/
+                {article.slug || "your-post"}
                 {article.published ? " · Published URLs are locked" : ""}
               </small>
             </label>
@@ -266,7 +294,8 @@ export function PostEditor({
             <div className="studio-seo">
               <h3>Search preview</h3>
               <p className="studio-muted">
-                bhupeshcholake.in › blog › {article.slug || "your-post"}
+                bhupeshcholake.in › {article.kind === "note" ? "notes" : "blog"}{" "}
+                › {article.slug || "your-post"}
               </p>
               <h4>{article.title || "Your article title"}</h4>
               <p>

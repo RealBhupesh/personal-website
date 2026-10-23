@@ -81,7 +81,7 @@ export class CmsService {
     };
     if (article.archived && article.published)
       throw new CmsError("Unpublish the article before archiving it.");
-    if (article.published && article.slug !== article.published.slug)
+    if (article.published && (article.slug !== article.published.slug || article.kind !== article.published.kind))
       throw new CmsError(
         "The published URL is locked to protect existing links.",
       );
@@ -115,29 +115,20 @@ export class CmsService {
   }
   async importExisting() {
     const entries = await this.list();
-    const known = new Set(
-      entries.map((e) => e.article.published?.slug ?? e.article.slug),
-    );
-    const paths = (await this.website.list("content/blog")).filter((p) =>
-      /^content\/blog\/[a-z0-9-]+\.mdx$/.test(p),
-    );
+    const known = new Set(entries.map(e => `${e.article.kind}:${e.article.published?.slug ?? e.article.slug}`));
     let count = 0;
-    for (const path of paths) {
-      const slug = path
-        .split("/")
-        .at(-1)!
-        .replace(/\.mdx$/, "");
-      if (known.has(slug)) continue;
-      const file = await this.website.read(path);
-      if (!file) continue;
-      const article = importArticle(slug, file.content, file.sha);
-      await this.drafts.write(
-        this.path(article.id),
-        jsonFile(article),
-        null,
-        `Import: ${article.title}`,
-      );
-      count++;
+    for (const kind of ["blog", "note"] as const) {
+      const folder = kind === "note" ? "notes" : "blog";
+      const paths = (await this.website.list(`content/${folder}`)).filter(p => new RegExp(`^content/${folder}/[a-z0-9-]+\\.mdx$`).test(p));
+      for (const path of paths) {
+        const slug = path.split("/").at(-1)!.replace(/\.mdx$/, "");
+        if (known.has(`${kind}:${slug}`)) continue;
+        const file = await this.website.read(path);
+        if (!file) continue;
+        const article = importArticle(slug, file.content, file.sha, kind);
+        await this.drafts.write(this.path(article.id),jsonFile(article),null,`Import: ${article.title}`);
+        count++;
+      }
     }
     return { count };
   }
@@ -154,6 +145,7 @@ export class CmsService {
         archived: current.article.archived,
         published: current.article.published,
         slug: current.article.published?.slug ?? past.article.slug,
+        kind: current.article.published?.kind ?? past.article.kind,
       },
       expected,
     );
@@ -272,14 +264,14 @@ export class CmsService {
     if (
       entries.some(
         (e) =>
-          e.article.id !== id &&
+          e.article.id !== id && e.article.kind === article.kind &&
           (e.article.slug === article.slug ||
             e.article.published?.slug === article.slug),
       )
     )
       throw new CmsError("Another article already uses this URL.", 409);
     const head = await this.website.head();
-    const path = `content/blog/${article.slug}.mdx`;
+    const path = `content/${article.kind === "note" ? "notes" : "blog"}/${article.slug}.mdx`;
     const live = await this.website.read(path);
     const source = serializeArticle(article);
     const alreadyPublished = live?.content === source;
@@ -319,6 +311,7 @@ export class CmsService {
       );
     article.published = {
       slug: article.slug,
+      kind: article.kind,
       digest: contentDigest(article),
       at: new Date().toISOString(),
       commit,
@@ -339,7 +332,7 @@ export class CmsService {
     const { article } = entry;
     if (!article.published)
       throw new CmsError("This article is already a draft.");
-    const path = `content/blog/${article.published.slug}.mdx`;
+    const path = `content/${article.published.kind === "note" ? "notes" : "blog"}/${article.published.slug}.mdx`;
     const head = await this.website.head();
     const live = await this.website.read(path);
     if (live && live.sha !== article.published.sourceSha)

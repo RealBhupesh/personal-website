@@ -1,6 +1,8 @@
+import { content } from "@/config/content";
+import { verifiedPullRequest } from "@/lib/cms/github-admin";
 import { cache } from "react";
 import { contributions as curated } from "@/config/experience";
-import { coauthoredPullRequests, githubCreditEmails, githubUsername } from "@/config/github";
+import { githubCreditEmails, githubUsername } from "@/config/github";
 import snapshot from "@/data/github-contributions.json";
 import { fetchPublicPullRequests, type GitHubPullRequest } from "@/lib/github-contributions-core";
 
@@ -22,7 +24,7 @@ export const getGitHubContributions = cache(async () => {
   let updatedAt = new Date().toISOString();
   let stale = false;
   try {
-    prs = await fetchPublicPullRequests(githubUsername, async url => {
+    const request = async (url:string) => {
       const response = await fetch(url, {
         headers: {
           Accept: "application/vnd.github+json",
@@ -34,10 +36,17 @@ export const getGitHubContributions = cache(async () => {
       });
       if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
       return response.json();
-    }, coauthoredPullRequests, githubCreditEmails);
+    };
+    prs = await fetchPublicPullRequests(githubUsername, request, [], githubCreditEmails);
+    const byUrl = new Map(prs.map(p=>[p.url.toLowerCase(),p]));
+    for (const credit of content.github.creditedPullRequests) {
+      const pr=await verifiedPullRequest(credit,content.github,request);
+      byUrl.set(pr.url.toLowerCase(),pr);
+    }
+    prs=[...byUrl.values()];
   } catch (error) {
     console.warn("Using saved GitHub contributions:", error instanceof Error ? error.message : "request failed");
-    prs = snapshot.prs as GitHubPullRequest[];
+    prs = snapshot.username === githubUsername ? snapshot.prs as GitHubPullRequest[] : [];
     updatedAt = snapshot.updatedAt;
     stale = true;
   }
@@ -49,7 +58,7 @@ export const getGitHubContributions = cache(async () => {
       const known = curated.find(item => item.repo.toLowerCase() === repo.toLowerCase());
       group = {
         repository: pr.repository, repo, project: known?.project ?? pr.repository,
-        about: known?.about ?? "", summary: known?.summary ?? "", featured: known?.featured ?? false,
+        about: known?.about ?? "", summary: known?.summary ?? "", featured: (known?.featured ?? false) && !known?.hidden && !content.github.hiddenRepositories.some(r=>r.toLowerCase()===pr.repository.toLowerCase()),
         prs: [], mergedCount: 0, openCount: 0, closedCount: 0,
       };
       groups.set(pr.repository, group);
