@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { signIn, signOut } from "@/auth";
+import { signOut } from "@/auth";
 import { cmsConfig, cmsOwner, isLoopbackHost } from "@/lib/cms/config";
 import { requireOwner } from "@/lib/cms/server";
 import { Studio } from "@/components/cms/studio";
@@ -38,13 +38,10 @@ export default async function AdminPage({
               and try again.
             </p>
           )}
-          <form
-            action={async () => {
-              "use server";
-              await signIn("github", { redirectTo: "/admin" });
-            }}
-          >
-            <button className="studio-primary">Continue with GitHub</button>
+          <form action="/admin/sign-in" method="post">
+            <button type="submit" className="studio-primary">
+              Continue with GitHub
+            </button>
           </form>
         </div>
       </div>

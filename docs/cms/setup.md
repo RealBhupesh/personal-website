@@ -46,6 +46,8 @@ Never put app credentials in `NEXT_PUBLIC_*` variables, Git files, screenshots, 
 
 After redeployment, open `/admin`, sign in, and choose **Import existing posts**. Your Jostraca article retains its URL, code, and custom diagrams.
 
+Sign-in submits a same-origin POST to `/admin/sign-in` and returns a normal HTTP redirect to GitHub. This works without JavaScript and does not depend on React's external Server Action navigation. `CMS_TEST_URL=https://www.bhupeshcholake.in npm run test:cms-auth` checks the deployed form, redirect, authorization cookies, and unauthenticated API protection without signing in or changing content. The default target is port 3101 for a local server configured with test GitHub credentials and local mode disabled.
+
 ## Local workspace
 
 Run `npm run cms:dev`, then open http://127.0.0.1:3000/admin.

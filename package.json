@@ -10,7 +10,8 @@
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test tests/*.test.mjs",
     "refresh:contributions": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/refresh-contributions.mjs",
     "cms:dev": "CMS_LOCAL_MODE=true next dev --hostname 127.0.0.1",
-    "test:cms-http": "node scripts/test-cms-http.mjs"
+    "test:cms-http": "node scripts/test-cms-http.mjs",
+    "test:cms-auth": "node scripts/test-cms-auth.mjs"
   },
   "dependencies": {
     "@octokit/auth-app": "^8.3.1",
