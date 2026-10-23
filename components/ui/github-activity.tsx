@@ -111,7 +111,9 @@ const CALENDAR_API = "/api/github/calendar";
 type ApiDay = { date: string; count: number; level: number };
 
 async function fetchCalendar(login: string, signal: AbortSignal) {
-  const res = await fetch(`${CALENDAR_API}?username=${encodeURIComponent(login)}`, { signal });
+  // Keep the browser from retaining a graph from the previous deployment.
+  // The server still caches the provider response and supplies a saved fallback.
+  const res = await fetch(`${CALENDAR_API}?username=${encodeURIComponent(login)}`, { signal, cache: "no-store" });
   if (!res.ok) throw new Error("Calendar unavailable");
 
   const days: ApiDay[] = (await res.json())?.contributions ?? [];
