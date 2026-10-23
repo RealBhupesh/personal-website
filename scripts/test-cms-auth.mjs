@@ -10,18 +10,14 @@ const response = await fetch(new URL("/admin", base), {
 });
 assert.equal(response.status, 200);
 const html = await response.text();
-const form = html.match(
-  /<form\b[^>]*>[\s\S]*?Continue with GitHub[\s\S]*?<\/form>/,
+const link = html.match(
+  /<a\b[^>]*href="\/admin\/sign-in"[^>]*>[\s\S]*?Continue with GitHub[\s\S]*?<\/a>/,
 )?.[0];
-assert.ok(form, "Configured studio must offer GitHub sign-in");
-assert.match(form, /method="post"/i);
-const action = form.match(/action="([^"]+)"/)?.[1];
-assert.equal(
-  action,
-  "/admin/sign-in",
-  "Sign-in must use a native form redirect, independent of React action navigation",
+assert.ok(
+  link,
+  "Sign-in must be a plain link that works before JavaScript loads",
 );
-const target = new URL(action, base);
+const target = new URL("/admin/sign-in", base);
 for (const origin of [undefined, "https://example.invalid"]) {
   const rejected = await fetch(target, {
     method: "POST",
@@ -33,14 +29,37 @@ for (const origin of [undefined, "https://example.invalid"]) {
   });
   assert.equal(rejected.status, 403, "Sign-in requires a same-origin POST");
 }
+const checkpoint = await fetch(target, {
+  headers: { "Accept-Encoding": "identity", "Sec-Fetch-Site": "same-origin" },
+  redirect: "manual",
+});
 assert.equal(
-  (
-    await fetch(target, {
-      headers: { "Accept-Encoding": "identity" },
-      redirect: "manual",
-    })
-  ).status,
-  405,
+  checkpoint.status,
+  200,
+  "Store cookies on a visible same-origin page before leaving for GitHub",
+);
+assert.match(checkpoint.headers.get("cache-control"), /no-store/);
+assert.match(
+  checkpoint.headers.get("set-cookie") ?? "",
+  /authjs\.pkce\.code_verifier=/,
+);
+const checkpointHtml = await checkpoint.text();
+assert.doesNotMatch(
+  checkpointHtml,
+  /<script/i,
+  "The checkpoint must work without any JavaScript",
+);
+const githubLink = checkpointHtml.match(
+  /id="github-authorize" href="([^"]+)"/,
+)?.[1];
+assert.ok(githubLink, "The visible checkpoint must have a direct GitHub link");
+const checkpointDestination = new URL(githubLink.replaceAll("&amp;", "&"));
+assert.equal(checkpointDestination.origin, "https://github.com");
+assert.equal(checkpointDestination.pathname, "/login/oauth/authorize");
+assert.ok(checkpointDestination.searchParams.get("code_challenge"));
+assert.equal(
+  (await fetch(target, { headers: { "Sec-Fetch-Site": "cross-site" } })).status,
+  403,
 );
 const signIn = await fetch(target, {
   method: "POST",
@@ -112,5 +131,5 @@ assert.equal(
   401,
 );
 console.log(
-  "PASS: native fallback, browser CSRF/sign-in flow, verification cookies, missing-cookie recovery, and private dashboard authorization.",
+  "PASS: JavaScript-free entry and checkpoint, verification cookies before leaving the site, cross-site protection, native POST compatibility, Auth.js endpoints, and private dashboard authorization.",
 );

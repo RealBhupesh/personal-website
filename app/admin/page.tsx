@@ -5,7 +5,6 @@ import { cmsConfig, cmsOwner, isLoopbackHost } from "@/lib/cms/config";
 import { requireOwner } from "@/lib/cms/server";
 import { Studio } from "@/components/cms/studio";
 import { SetupGuide } from "@/components/cms/setup-guide";
-import { GitHubSignIn } from "@/components/cms/github-sign-in";
 export const dynamic = "force-dynamic";
 export default async function AdminPage({
   searchParams,
@@ -44,7 +43,11 @@ export default async function AdminPage({
                     : "GitHub sign-in could not be completed. Try again. If this continues, check the app's callback URL and client secret."}
             </p>
           )}
-          <GitHubSignIn />
+          <p className="studio-login-action">
+            <a href="/admin/sign-in" className="studio-primary">
+              Continue with GitHub
+            </a>
+          </p>
         </div>
       </div>
     );

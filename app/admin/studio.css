@@ -94,6 +94,7 @@
 .studio-dialog .studio-primary:hover,
 .studio-primary:hover {
   background: color-mix(in srgb, var(--foreground) 84%, var(--background));
+  color: var(--background);
 }
 .studio-root input,
 .studio-root textarea,
@@ -978,7 +979,7 @@
 .studio-login h1 {
   margin: 16px 0 25px;
 }
-.studio-login form {
+.studio-login .studio-login-action {
   margin-top: 30px;
 }
 .studio-setup header {
