@@ -1,622 +1,655 @@
 {
   "username": "RealBhupesh",
-  "updatedAt": "2026-10-07T13:07:18.458Z",
+  "updatedAt": "2026-10-23T18:35:30.788Z",
   "prs": [
     {
       "number": 1,
       "url": "https://github.com/GaneshByte1/wastex-ai-management-platform/pull/1",
       "title": "feat: Comprehensive production-level development",
       "repository": "GaneshByte1/wastex-ai-management-platform",
-      "createdAt": "2025-11-18T17:33:33Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2025-11-18T17:33:33Z"
     },
     {
       "number": 114183,
       "url": "https://github.com/firstcontributions/first-contributions/pull/114183",
       "title": "Add Bhupesh Cholake to Contributors list",
       "repository": "firstcontributions/first-contributions",
+      "status": "merged",
       "createdAt": "2026-03-24T05:03:01Z",
-      "status": "merged"
+      "mergedAt": "2026-03-24T05:03:18Z"
     },
     {
       "number": 439,
       "url": "https://github.com/lokus-ai/lokus/pull/439",
       "title": "Feature/txt support",
       "repository": "lokus-ai/lokus",
+      "status": "merged",
       "createdAt": "2026-03-24T07:15:55Z",
-      "status": "merged"
+      "mergedAt": "2026-03-27T13:19:02Z"
     },
     {
       "number": 25524,
       "url": "https://github.com/oppia/oppia/pull/25524",
       "title": "add feedback thread subject length validation",
       "repository": "oppia/oppia",
-      "createdAt": "2026-03-24T08:20:38Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-03-24T08:20:38Z"
     },
     {
       "number": 25525,
       "url": "https://github.com/oppia/oppia/pull/25525",
       "title": "add feedback thread subject length validation",
       "repository": "oppia/oppia",
-      "createdAt": "2026-03-24T08:23:04Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-03-24T08:23:04Z"
     },
     {
       "number": 3,
       "url": "https://github.com/makkorjamal/PLSduino/pull/3",
       "title": "Add SD-loaded data and pretrained model support",
       "repository": "makkorjamal/PLSduino",
-      "createdAt": "2026-03-24T08:30:08Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-03-24T08:30:08Z"
     },
     {
       "number": 43601,
       "url": "https://github.com/servo/servo/pull/43601",
       "title": "docs(script_bindings): document Bindings.conf configuration and descriptor schema",
       "repository": "servo/servo",
-      "createdAt": "2026-03-24T09:35:58Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-03-24T09:35:58Z"
     },
     {
       "number": 99,
       "url": "https://github.com/cofeed-19/cofeed-19.github.io/pull/99",
       "title": "Fix: limit unvisited feed items with native details collapse (closes #28)",
       "repository": "cofeed-19/cofeed-19.github.io",
-      "createdAt": "2026-04-01T08:51:00Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-04-01T08:51:00Z"
     },
     {
       "number": 2353,
       "url": "https://github.com/arc53/DocsGPT/pull/2353",
       "title": "feat: page-aware sources + numbered RAG citations (#2106)",
       "repository": "arc53/DocsGPT",
-      "createdAt": "2026-04-02T06:04:09Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-04-02T06:04:09Z"
     },
     {
       "number": 25769,
       "url": "https://github.com/open-webui/open-webui/pull/25769",
       "title": "fix: prevent secrets in Loguru tracebacks",
       "repository": "open-webui/open-webui",
-      "createdAt": "2026-06-06T15:52:12Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-06-06T15:52:12Z"
     },
     {
       "number": 25770,
       "url": "https://github.com/open-webui/open-webui/pull/25770",
       "title": "Codex/fix loguru secret tracebacks",
       "repository": "open-webui/open-webui",
-      "createdAt": "2026-06-06T15:53:13Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-06-06T15:53:13Z"
     },
     {
       "number": 6409,
       "url": "https://github.com/openmrs/openmrs-core/pull/6409",
       "title": "Harden UUID reference and updater authorization boundaries",
       "repository": "openmrs/openmrs-core",
-      "createdAt": "2026-07-29T13:52:56Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-07-29T13:52:56Z"
     },
     {
       "number": 18939,
       "url": "https://github.com/microsoft/aspire/pull/18939",
       "title": "Allow assigning parent account roles to Foundry project identities",
       "repository": "microsoft/aspire",
-      "createdAt": "2026-07-30T11:22:40Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-07-30T11:22:40Z"
     },
     {
       "number": 18941,
       "url": "https://github.com/microsoft/aspire/pull/18941",
       "title": "Preserve unique suffixes in App Service site names",
       "repository": "microsoft/aspire",
-      "createdAt": "2026-07-30T13:17:33Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-07-30T13:17:33Z"
     },
     {
       "number": 18942,
       "url": "https://github.com/microsoft/aspire/pull/18942",
       "title": "Allow descriptions on connection string parameters",
       "repository": "microsoft/aspire",
-      "createdAt": "2026-07-30T13:17:36Z",
-      "status": "open"
-    },
-    {
-      "number": 57789,
-      "url": "https://github.com/react/react-native/pull/57789",
-      "title": "Treat NaN border widths as unset",
-      "repository": "react/react-native",
-      "createdAt": "2026-08-02T07:18:01Z",
-      "status": "closed"
-    },
-    {
-      "number": 57790,
-      "url": "https://github.com/react/react-native/pull/57790",
-      "title": "Fix iOS Codegen fallback for libraries without an iOS config",
-      "repository": "react/react-native",
-      "createdAt": "2026-08-02T07:18:01Z",
-      "status": "closed"
+      "status": "open",
+      "createdAt": "2026-07-30T13:17:36Z"
     },
     {
       "number": 57788,
       "url": "https://github.com/react/react-native/pull/57788",
       "title": "Fix Image.getSize for Android data URIs",
       "repository": "react/react-native",
-      "createdAt": "2026-08-02T07:18:01Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-08-02T07:18:01Z"
+    },
+    {
+      "number": 57789,
+      "url": "https://github.com/react/react-native/pull/57789",
+      "title": "Treat NaN border widths as unset",
+      "repository": "react/react-native",
+      "status": "closed",
+      "createdAt": "2026-08-02T07:18:01Z"
+    },
+    {
+      "number": 57790,
+      "url": "https://github.com/react/react-native/pull/57790",
+      "title": "Fix iOS Codegen fallback for libraries without an iOS config",
+      "repository": "react/react-native",
+      "status": "closed",
+      "createdAt": "2026-08-02T07:18:01Z"
     },
     {
       "number": 57791,
       "url": "https://github.com/react/react-native/pull/57791",
       "title": "[iOS][Fabric] Reset keyboard inset state when recycling ScrollViews",
       "repository": "react/react-native",
-      "createdAt": "2026-08-02T07:57:24Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-08-02T07:57:24Z"
     },
     {
       "number": 83317,
       "url": "https://github.com/airbytehq/airbyte/pull/83317",
       "title": "fix(source-vitally): mark the secret token as sensitive",
       "repository": "airbytehq/airbyte",
-      "createdAt": "2026-08-02T08:10:07Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-02T08:10:07Z"
     },
     {
       "number": 83318,
       "url": "https://github.com/airbytehq/airbyte/pull/83318",
       "title": "fix(source-google-analytics-data-api): fix offset pagination",
       "repository": "airbytehq/airbyte",
-      "createdAt": "2026-08-02T08:12:41Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-02T08:12:41Z"
     },
     {
       "number": 83319,
       "url": "https://github.com/airbytehq/airbyte/pull/83319",
       "title": "feat(source-github): support wildcard repositories for users",
       "repository": "airbytehq/airbyte",
-      "createdAt": "2026-08-02T08:24:10Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-02T08:24:10Z"
     },
     {
       "number": 4471,
       "url": "https://github.com/triggerdotdev/trigger.dev/pull/4471",
       "title": "perf(supervisor): inspect Docker resources concurrently",
       "repository": "triggerdotdev/trigger.dev",
-      "createdAt": "2026-08-02T10:47:45Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-02T10:47:45Z"
     },
     {
       "number": 4472,
       "url": "https://github.com/triggerdotdev/trigger.dev/pull/4472",
       "title": "fix(cli): redact env vars from attempt debug logs",
       "repository": "triggerdotdev/trigger.dev",
-      "createdAt": "2026-08-02T10:47:47Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-02T10:47:47Z"
     },
     {
       "number": 4473,
       "url": "https://github.com/triggerdotdev/trigger.dev/pull/4473",
       "title": "docs(cli): clarify dev env-file propagation",
       "repository": "triggerdotdev/trigger.dev",
-      "createdAt": "2026-08-02T10:47:48Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-02T10:47:48Z"
     },
     {
       "number": 4474,
       "url": "https://github.com/triggerdotdev/trigger.dev/pull/4474",
       "title": "fix(build): support Playwright 1.58+ browser metadata",
       "repository": "triggerdotdev/trigger.dev",
-      "createdAt": "2026-08-02T10:47:50Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-02T10:47:50Z"
     },
     {
       "number": 1440,
       "url": "https://github.com/oliexdev/openScale/pull/1440",
       "title": "Add Lenovo HS10 and Dr.Trust SSW526 support",
       "repository": "oliexdev/openScale",
-      "createdAt": "2026-08-02T10:56:46Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-02T10:56:46Z"
     },
     {
       "number": 741,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/741",
       "title": "Fix update checks, cache presence, and network error classification",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-02T11:36:14Z",
-      "status": "merged"
+      "mergedAt": "2026-08-02T21:15:01Z"
     },
     {
       "number": 85,
       "url": "https://github.com/Nano-Collective/organisation/pull/85",
       "title": "Add Bhupesh Cholake to contributors",
       "repository": "Nano-Collective/organisation",
+      "status": "merged",
       "createdAt": "2026-08-03T04:27:37Z",
-      "status": "merged"
+      "mergedAt": "2026-08-03T16:08:03Z"
     },
     {
       "number": 742,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/742",
       "title": "Fix wide terminal content width",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-03T06:52:52Z",
-      "status": "merged"
+      "mergedAt": "2026-08-05T09:38:34Z"
     },
     {
       "number": 743,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/743",
       "title": "docs: add local-first memory MCP recipe",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-03T06:54:59Z",
-      "status": "merged"
+      "mergedAt": "2026-08-05T09:39:48Z"
     },
     {
       "number": 744,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/744",
       "title": "fix: preserve multibyte input in alternate-screen TUI",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-03T12:06:51Z",
-      "status": "merged"
+      "mergedAt": "2026-08-05T10:00:12Z"
     },
     {
       "number": 782,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/782",
       "title": "fix: preview very large files before ranged reads",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-04T05:00:23Z",
-      "status": "merged"
+      "mergedAt": "2026-08-09T19:52:04Z"
     },
     {
       "number": 784,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/784",
       "title": "fix: bound string_replace result context",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-04T05:50:18Z",
-      "status": "merged"
+      "mergedAt": "2026-08-09T13:38:41Z"
     },
     {
       "number": 785,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/785",
       "title": "fix: summarize oversized git diffs",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-04T06:22:32Z",
-      "status": "merged"
+      "mergedAt": "2026-08-11T20:56:41Z"
     },
     {
       "number": 786,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/786",
       "title": "fix: cap oversized tool results",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-04T07:06:59Z",
-      "status": "merged"
+      "mergedAt": "2026-08-09T20:55:44Z"
     },
     {
       "number": 382,
       "url": "https://github.com/dodopayments/billingsdk/pull/382",
       "title": "fix: persist sidebar state and remove interaction logs",
       "repository": "dodopayments/billingsdk",
-      "createdAt": "2026-08-04T14:57:08Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-08-04T14:57:08Z"
     },
     {
       "number": 798,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/798",
       "title": "fix: bound diff_edit result context",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-05T12:44:19Z",
-      "status": "merged"
+      "mergedAt": "2026-08-09T16:49:24Z"
     },
     {
       "number": 78,
       "url": "https://github.com/Nano-Collective/prompt-scrubber/pull/78",
       "title": "Add n8n workflow integration",
       "repository": "Nano-Collective/prompt-scrubber",
-      "createdAt": "2026-08-05T14:08:16Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-05T14:08:16Z"
     },
     {
       "number": 155341,
       "url": "https://github.com/python/cpython/pull/155341",
       "title": "gh-155305: Preserve user-provided sockets on transport errors",
       "repository": "python/cpython",
-      "createdAt": "2026-08-07T14:02:04Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-07T14:02:04Z"
     },
     {
       "number": 155342,
       "url": "https://github.com/python/cpython/pull/155342",
       "title": "gh-155286: Write a valid empty zstd archive",
       "repository": "python/cpython",
-      "createdAt": "2026-08-07T14:02:12Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-08-07T14:02:12Z"
     },
     {
       "number": 155343,
       "url": "https://github.com/python/cpython/pull/155343",
       "title": "gh-155321: Avoid Python.h POSIX macro redefinition",
       "repository": "python/cpython",
-      "createdAt": "2026-08-07T14:02:24Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-08-07T14:02:24Z"
     },
     {
       "number": 214765,
       "url": "https://github.com/llvm/llvm-project/pull/214765",
       "title": "[TargetParser] Recognize legacy GNU/Hurd triples",
       "repository": "llvm/llvm-project",
-      "createdAt": "2026-08-07T14:54:34Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-08-07T14:54:34Z"
     },
     {
       "number": 820,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/820",
       "title": "fix: normalize Atlas Cloud GPT-5.6 model IDs",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-07T15:00:34Z",
-      "status": "merged"
+      "mergedAt": "2026-08-09T19:19:04Z"
     },
     {
       "number": 830,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/830",
       "title": "fix: restore ACP provider discovery",
       "repository": "Nano-Collective/nanocoder",
+      "status": "merged",
       "createdAt": "2026-08-09T19:09:55Z",
-      "status": "merged"
+      "mergedAt": "2026-08-09T19:35:09Z"
     },
     {
       "number": 836,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/836",
       "title": "fix: normalize Copilot reasoning stream IDs",
       "repository": "Nano-Collective/nanocoder",
-      "createdAt": "2026-08-10T02:08:06Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-08-10T02:08:06Z"
     },
     {
       "number": 1720,
       "url": "https://github.com/inngest/inngest-js/pull/1720",
       "title": "Cursor/fix middleware sentry sampled fae4",
       "repository": "inngest/inngest-js",
-      "createdAt": "2026-09-01T06:00:46Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-01T06:00:46Z"
     },
     {
       "number": 9629,
       "url": "https://github.com/clerk/javascript/pull/9629",
       "title": "fix(clerk-js): keep SignIn identity after resetSignIn",
       "repository": "clerk/javascript",
-      "createdAt": "2026-09-01T06:02:53Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-01T06:02:53Z"
     },
     {
       "number": 39077,
       "url": "https://github.com/BerriAI/litellm/pull/39077",
       "title": "fix(vertex): send audio/webm for Gemini transcription of webm",
       "repository": "BerriAI/litellm",
-      "createdAt": "2026-09-01T06:06:36Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-01T06:06:36Z"
     },
     {
       "number": 2257,
       "url": "https://github.com/grafana/faro-web-sdk/pull/2257",
       "title": "fix(core): do not drop signals added during BatchExecutor flush",
       "repository": "grafana/faro-web-sdk",
+      "status": "merged",
       "createdAt": "2026-09-01T11:50:16Z",
-      "status": "merged"
+      "mergedAt": "2026-09-16T23:04:07Z"
     },
     {
       "number": 34166,
       "url": "https://github.com/dagster-io/dagster/pull/34166",
       "title": "fix(dagster-dbt): error on colliding dbt test names at definition time",
       "repository": "dagster-io/dagster",
-      "createdAt": "2026-09-01T11:52:44Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-01T11:52:44Z"
     },
     {
       "number": 13492,
       "url": "https://github.com/nextauthjs/next-auth/pull/13492",
       "title": "fix(next-auth): do not assume x-forwarded-proto on server actions",
       "repository": "nextauthjs/next-auth",
-      "createdAt": "2026-09-01T11:55:42Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-01T11:55:42Z"
     },
     {
       "number": 4867,
       "url": "https://github.com/hatchet-dev/hatchet/pull/4867",
       "title": "fix(sdks/ts): recover from inactive listener stream on heartbeat rejection",
       "repository": "hatchet-dev/hatchet",
-      "createdAt": "2026-09-02T08:32:45Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-09-02T08:32:45Z"
     },
     {
       "number": 2258,
       "url": "https://github.com/grafana/faro-web-sdk/pull/2258",
       "title": "fix(web-sdk): coalesce session rotation on collector invalidation",
       "repository": "grafana/faro-web-sdk",
-      "createdAt": "2026-09-03T09:37:08Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-03T09:37:08Z"
     },
     {
       "number": 23992,
       "url": "https://github.com/getsentry/sentry-javascript/pull/23992",
       "title": "fix(browser)!: stop tagging DOMException.code on events",
       "repository": "getsentry/sentry-javascript",
+      "status": "merged",
       "createdAt": "2026-09-03T10:05:23Z",
-      "status": "merged"
+      "mergedAt": "2026-09-03T13:01:09Z"
     },
     {
       "number": 15485,
       "url": "https://github.com/cloudflare/workers-sdk/pull/15485",
       "title": "fix(miniflare): reject loopback bind failures during startup",
       "repository": "cloudflare/workers-sdk",
+      "status": "merged",
       "createdAt": "2026-09-03T10:57:57Z",
-      "status": "merged"
+      "mergedAt": "2026-09-08T17:05:09Z"
     },
     {
       "number": 2435,
       "url": "https://github.com/nestjs/schematics/pull/2435",
       "title": "fix(application): set explicit rootDir in generated tsconfig",
       "repository": "nestjs/schematics",
+      "status": "merged",
       "createdAt": "2026-09-03T12:13:18Z",
-      "status": "merged"
+      "mergedAt": "2026-09-14T08:18:59Z"
     },
     {
       "number": 15569,
       "url": "https://github.com/cloudflare/workers-sdk/pull/15569",
       "title": "[wrangler] Handle dynamic retry delays in workflows instances describe",
       "repository": "cloudflare/workers-sdk",
+      "status": "merged",
       "createdAt": "2026-09-08T17:51:02Z",
-      "status": "merged"
+      "mergedAt": "2026-09-10T10:30:35Z"
     },
     {
       "number": 15574,
       "url": "https://github.com/cloudflare/workers-sdk/pull/15574",
       "title": "[vite-plugin] Ignore .wrangler persistence writes in Vite's file watcher",
       "repository": "cloudflare/workers-sdk",
+      "status": "merged",
       "createdAt": "2026-09-09T04:29:49Z",
-      "status": "merged"
+      "mergedAt": "2026-09-12T10:53:29Z"
     },
     {
       "number": 9803,
       "url": "https://github.com/makeplane/plane/pull/9803",
       "title": "fix(web): hide work item IDs when Display → IDs is off",
       "repository": "makeplane/plane",
-      "createdAt": "2026-09-09T18:33:03Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-09T18:33:03Z"
     },
     {
       "number": 9804,
       "url": "https://github.com/makeplane/plane/pull/9804",
       "title": "fix(web): show sub-work items on the parent in local",
       "repository": "makeplane/plane",
+      "status": "merged",
       "createdAt": "2026-09-09T18:42:53Z",
-      "status": "merged"
+      "mergedAt": "2026-09-17T16:58:25Z"
     },
     {
       "number": 9805,
       "url": "https://github.com/makeplane/plane/pull/9805",
       "title": "fix(api): decode HTML entities in plain-text email bodies",
       "repository": "makeplane/plane",
-      "createdAt": "2026-09-09T18:49:41Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-09-09T18:49:41Z"
     },
     {
       "number": 9818,
       "url": "https://github.com/makeplane/plane/pull/9818",
       "title": "fix(aio): create supervisor log directories on boot",
       "repository": "makeplane/plane",
-      "createdAt": "2026-09-12T10:40:52Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-12T10:40:52Z"
     },
     {
       "number": 9819,
       "url": "https://github.com/makeplane/plane/pull/9819",
       "title": "fix(web): relayout stickies masonry after refresh",
       "repository": "makeplane/plane",
-      "createdAt": "2026-09-12T10:42:07Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-12T10:42:07Z"
     },
     {
       "number": 9820,
       "url": "https://github.com/makeplane/plane/pull/9820",
       "title": "fix(web): drop deleted workflow states on refetch",
       "repository": "makeplane/plane",
-      "createdAt": "2026-09-12T10:42:56Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-12T10:42:56Z"
     },
     {
       "number": 9821,
       "url": "https://github.com/makeplane/plane/pull/9821",
       "title": "fix(aio): honor CORS_ALLOWED_ORIGINS instead of overwriting it",
       "repository": "makeplane/plane",
-      "createdAt": "2026-09-12T10:49:08Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-12T10:49:08Z"
     },
     {
       "number": 89,
       "url": "https://github.com/neugence/whipscribe-buildathon/pull/89",
       "title": "Track 0: Bhupesh Cholake - Track Record",
       "repository": "neugence/whipscribe-buildathon",
-      "createdAt": "2026-09-21T17:10:11Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-21T17:10:10Z"
     },
     {
       "number": 15798,
       "url": "https://github.com/cloudflare/workers-sdk/pull/15798",
       "title": "[wrangler] Fall back to per-zone routes when a 403 omits code 10000",
       "repository": "cloudflare/workers-sdk",
-      "createdAt": "2026-09-23T08:15:36Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-09-23T08:15:36Z"
     },
     {
       "number": 15799,
       "url": "https://github.com/cloudflare/workers-sdk/pull/15799",
       "title": "[miniflare] Keep Hyperdrive client socket errors from crashing local dev",
       "repository": "cloudflare/workers-sdk",
-      "createdAt": "2026-09-23T08:16:43Z",
-      "status": "closed"
+      "status": "closed",
+      "createdAt": "2026-09-23T08:16:43Z"
     },
     {
       "number": 2307,
       "url": "https://github.com/grafana/faro-web-sdk/pull/2307",
       "title": "fix(core): keep setSession payload overrides when options are set",
       "repository": "grafana/faro-web-sdk",
-      "createdAt": "2026-09-23T08:28:20Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-23T08:28:20Z"
     },
     {
       "number": 2308,
       "url": "https://github.com/grafana/faro-web-sdk/pull/2308",
       "title": "fix(web-sdk): report zero TLS time for non-secure resources",
       "repository": "grafana/faro-web-sdk",
+      "status": "merged",
       "createdAt": "2026-09-23T08:28:24Z",
-      "status": "open"
+      "mergedAt": "2026-10-19T20:43:38Z"
     },
     {
       "number": 1445,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/1445",
       "title": "fix: do not offer to clear an empty composer",
       "repository": "Nano-Collective/nanocoder",
-      "createdAt": "2026-09-23T08:28:28Z",
-      "status": "open"
+      "status": "closed",
+      "createdAt": "2026-09-23T08:28:28Z"
     },
     {
       "number": 1446,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/1446",
       "title": "fix: submit an exact slash command on the first Enter",
       "repository": "Nano-Collective/nanocoder",
-      "createdAt": "2026-09-23T08:28:31Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-23T08:28:31Z"
     },
     {
       "number": 1447,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/1447",
       "title": "fix: only ellipsize truncated subagent tool results",
       "repository": "Nano-Collective/nanocoder",
-      "createdAt": "2026-09-23T08:28:36Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-23T08:28:36Z"
     },
     {
       "number": 1448,
       "url": "https://github.com/Nano-Collective/nanocoder/pull/1448",
       "title": "fix: keep the selected file suggestion visible",
       "repository": "Nano-Collective/nanocoder",
-      "createdAt": "2026-09-23T08:28:40Z",
-      "status": "open"
+      "status": "open",
+      "createdAt": "2026-09-23T08:28:40Z"
     },
     {
       "number": 156,
       "url": "https://github.com/Nano-Collective/prompt-scrubber/pull/156",
       "title": "fix: do not flag numbered prose as a postal address",
       "repository": "Nano-Collective/prompt-scrubber",
+      "status": "merged",
       "createdAt": "2026-09-23T08:28:42Z",
-      "status": "merged"
+      "mergedAt": "2026-10-07T09:35:50Z"
+    },
+    {
+      "number": 17,
+      "url": "https://github.com/bolubo/aevrel/pull/17",
+      "title": "test: cover readiness drill-report mismatch and duplicate-rank failures",
+      "repository": "bolubo/aevrel",
+      "status": "merged",
+      "createdAt": "2026-10-23T04:50:27Z",
+      "mergedAt": "2026-10-23T04:58:51Z"
     },
     {
       "number": 6609,
       "url": "https://github.com/antiwork/gumroad/pull/6609",
       "title": "Port the price checker service spec to Minitest and fixtures",
       "repository": "antiwork/gumroad",
-      "createdAt": "2026-07-30T09:30:46Z",
       "status": "merged",
+      "createdAt": "2026-07-30T09:30:46Z",
+      "mergedAt": "2026-07-30T14:52:05Z",
       "attribution": "co-authored",
       "evidence": "https://github.com/antiwork/gumroad/commit/a57d24a819083d76198e64aa13eecb2dc2946f8f"
     },
@@ -625,8 +658,8 @@
       "url": "https://github.com/antiwork/gumroad/pull/6830",
       "title": "Port the sales tax calculator spec to Minitest and fixtures",
       "repository": "antiwork/gumroad",
-      "createdAt": "2026-08-02T09:57:41Z",
       "status": "closed",
+      "createdAt": "2026-08-02T09:57:41Z",
       "attribution": "co-authored",
       "evidence": "https://github.com/antiwork/gumroad/commit/9eb91690da2f3dd68537d2c2f4f8230d761553e5"
     },
@@ -635,8 +668,9 @@
       "url": "https://github.com/antiwork/gumroad/pull/6831",
       "title": "Port sales tax calculator spec to Minitest (#5801)",
       "repository": "antiwork/gumroad",
-      "createdAt": "2026-08-02T10:01:32Z",
       "status": "merged",
+      "createdAt": "2026-08-02T10:01:32Z",
+      "mergedAt": "2026-08-02T10:14:53Z",
       "attribution": "co-authored",
       "evidence": "https://github.com/antiwork/gumroad/commit/117824881e4c93bbae87ef53121eed612c58de38"
     },
@@ -645,8 +679,9 @@
       "url": "https://github.com/antiwork/gumroad/pull/6904",
       "title": "Split blast retries by provider",
       "repository": "antiwork/gumroad",
-      "createdAt": "2026-08-03T06:06:49Z",
       "status": "merged",
+      "createdAt": "2026-08-03T06:06:49Z",
+      "mergedAt": "2026-08-04T00:00:10Z",
       "attribution": "co-authored",
       "evidence": "https://github.com/antiwork/gumroad/commit/29ea1c451f57c21dfd84c6bf429f8312d6356db1"
     },
@@ -655,8 +690,9 @@
       "url": "https://github.com/antiwork/gumroad/pull/6912",
       "title": "Clear stale accepted cross-sell offer on cart update",
       "repository": "antiwork/gumroad",
-      "createdAt": "2026-08-03T09:41:05Z",
       "status": "merged",
+      "createdAt": "2026-08-03T09:41:05Z",
+      "mergedAt": "2026-08-03T10:32:59Z",
       "attribution": "co-authored",
       "evidence": "https://github.com/antiwork/gumroad/commit/88d43f0d71b23d4cdb46a7c77bdc96d9e2e6747c"
     },
@@ -665,8 +701,9 @@
       "url": "https://github.com/antiwork/gumroad/pull/6930",
       "title": "Port the SidekiqUtility spec to Minitest (#5801)",
       "repository": "antiwork/gumroad",
-      "createdAt": "2026-08-03T12:55:23Z",
       "status": "merged",
+      "createdAt": "2026-08-03T12:55:23Z",
+      "mergedAt": "2026-08-03T14:50:34Z",
       "attribution": "co-authored",
       "evidence": "https://github.com/antiwork/gumroad/commit/58b75e62c4b55efa2f0ba1e15c08c4f165095e35"
     },
@@ -675,8 +712,9 @@
       "url": "https://github.com/antiwork/gumroad/pull/6932",
       "title": "Harden sensitive logging and bundle redirects",
       "repository": "antiwork/gumroad",
-      "createdAt": "2026-08-03T13:13:05Z",
       "status": "merged",
+      "createdAt": "2026-08-03T13:13:05Z",
+      "mergedAt": "2026-08-03T14:50:29Z",
       "attribution": "co-authored",
       "evidence": "https://github.com/antiwork/gumroad/commit/834652c9c4d644a986783830103e63886353c759"
     },
@@ -685,8 +723,9 @@
       "url": "https://github.com/antiwork/gumroad/pull/7124",
       "title": "Preserve subscription magic links on invalid requests",
       "repository": "antiwork/gumroad",
-      "createdAt": "2026-08-07T14:17:01Z",
       "status": "merged",
+      "createdAt": "2026-08-07T14:17:01Z",
+      "mergedAt": "2026-08-07T18:13:57Z",
       "attribution": "co-authored",
       "evidence": "https://github.com/antiwork/gumroad/commit/0ebee4240a4dd964e70e2cf8bb61f9ffbea30502"
     },
@@ -695,8 +734,9 @@
       "url": "https://github.com/makeplane/plane/pull/9841",
       "title": "fix(api): decode HTML entities in plain-text email bodies",
       "repository": "makeplane/plane",
-      "createdAt": "2026-09-15T20:47:57Z",
       "status": "merged",
+      "createdAt": "2026-09-15T20:47:57Z",
+      "mergedAt": "2026-09-16T19:40:31Z",
       "attribution": "credited",
       "evidence": "https://github.com/makeplane/plane/pull/9805"
     },
@@ -705,8 +745,9 @@
       "url": "https://github.com/Nano-Collective/nanocoder/pull/817",
       "title": "Added visual loading indicator for vscode extension",
       "repository": "Nano-Collective/nanocoder",
-      "createdAt": "2026-08-07T12:09:02Z",
       "status": "merged",
+      "createdAt": "2026-08-07T12:09:02Z",
+      "mergedAt": "2026-08-13T10:40:12Z",
       "attribution": "co-authored",
       "evidence": "https://github.com/Nano-Collective/nanocoder/commit/cfec1a842cfdba4106e2c12070ea0bd62f78b829"
     }
