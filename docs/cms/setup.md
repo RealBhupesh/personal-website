@@ -26,6 +26,8 @@ Unpublishing removes the article in the next deployment, but cannot erase files 
 
 The GitHub sign-in flow permits only account ID `76155786`, login `RealBhupesh`. Renaming the account requires updating that allowlist. The app's server-side installation token accesses the two repositories; the sign-in token is not sent to the browser.
 
+Auth.js assigns its own UUID to the user and JWT subject. The verified GitHub account ID is stored separately as `githubAccountId` during authorization, then exposed as `session.user.id` for the dashboard owner check. Never use `token.sub` as the GitHub ID or accept an owner ID from a client session update. Sessions created before this claim was added require signing in again.
+
 ## Environment variables
 
 Add these to the **Vercel project serving www.bhupeshcholake.in**, then redeploy:
@@ -55,6 +57,8 @@ Run `npm run cms:dev`, then open http://127.0.0.1:3000/admin.
 This explicitly enables a loopback-only development workspace, with private data under ignored `.cms/`. It requires no GitHub credentials. Local Publish writes to this checkout, not GitHub or the live website. The application displays that distinction. Do not run this mode on a shared machine or expose the development port through a tunnel.
 
 `npm run test:cms-http` exercises this local server and removes its own temporary articles afterward. `npm test` covers the content model, editor round trips, GitHub commit protocol, conflicts, and publication failure recovery.
+
+The auth session tests run the installed Auth.js authorization/PKCE/JWT/session pipeline with fixture GitHub token and profile responses. They verify that the owner session retains the GitHub ID, other accounts are rejected, and client session updates cannot forge identity. To also verify the real dashboard route, start a local server with `CMS_LOCAL_MODE=false`, all required CMS settings set to test values, `AUTH_TRUST_HOST=true`, and `AUTH_SECRET=cms-session-regression-only-secret`; then run `CMS_AUTH_HTTP_URL=http://127.0.0.1:3101 node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test tests/cms-auth-session.test.mjs`. The fixture session is sent only to loopback, never production.
 
 With `npm run cms:dev -- --port 3102` running, `npm run test:cms-preview` verifies the actual preview Server Action with code, a custom diagram, private images, and rejected unsafe MDX. It reads the dev action manifest, does not save any article, and checks the streamed response for serialization failures. Preview code blocks return native elements; the dashboard's existing client component handles their copy controls so preview does not depend on action-only client modules being present in the page manifest.
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { AuthError } from "next-auth";
-import { signIn } from "@/auth";
+import { auth, signIn } from "@/auth";
+import { cmsOwnerId } from "@/lib/cms/config";
 import { requireMutationOrigin } from "@/lib/cms/server";
 import { CmsError } from "@/lib/cms/model";
 
@@ -39,6 +40,9 @@ export async function GET(request: Request) {
     }
   }
   try {
+    const session = await auth();
+    if (session?.user?.id === cmsOwnerId)
+      return NextResponse.redirect(new URL("/admin", request.url), 303);
     const destination = await githubDestination();
     const href = destination.href
       .replaceAll("&", "&amp;")
