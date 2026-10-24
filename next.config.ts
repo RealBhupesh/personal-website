@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   },
   redirects() {
     return [
-      ...["/", "/about", "/work/:path*", "/blog/:path*", "/notes/:path*", "/feed.xml", "/sitemap.xml", "/robots.txt", "/llms.txt", "/llms-full.txt"].map(source => ({
+      ...["/", "/about", "/work", "/blog", "/notes", "/work/:path*", "/blog/:path*", "/notes/:path*", "/feed.xml", "/sitemap.xml", "/robots.txt", "/llms.txt", "/llms-full.txt"].map(source => ({
         source,
         has: [{ type: "host" as const, value: "personal-website-ten-rho-90\\.vercel\\.app" }],
         destination: `${content.site.url}${source}`,

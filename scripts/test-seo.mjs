@@ -119,7 +119,7 @@ if (base.hostname === '127.0.0.1' || base.hostname === 'localhost') {
       resolve({ status: res.statusCode, location: res.headers.location, robots: res.headers['x-robots-tag'] });
     }).on('error', reject);
   });
-  for (const path of ['/', '/work/asteria', '/blog/jostraca-second-run', '/sitemap.xml']) {
+  for (const path of ['/', '/work', '/blog', '/notes', '/work/asteria', '/blog/jostraca-second-run', '/sitemap.xml']) {
     const r = await aliasRequest(path);
     assert.equal(r.status, 308, `${path}: duplicate public alias redirects permanently`);
     assert.equal(r.location, new URL(path, canonical).href);
