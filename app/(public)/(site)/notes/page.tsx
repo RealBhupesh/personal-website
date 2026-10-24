@@ -4,7 +4,7 @@ import { getNotes } from "@/lib/content";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
-  title: content.pages.notes.title,
+  title: content.pages.notes.seoTitle || content.pages.notes.title,
   description: content.pages.notes.description,
   path: "/notes",
   noindex: getNotes().length === 0,

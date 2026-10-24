@@ -3,10 +3,11 @@ import Link from "next/link";
 import { getPosts } from "@/lib/content";
 import { formatMonthYear } from "@/lib/content";
 import { PostRow } from "@/components/post-row";
-import { pageMetadata } from "@/lib/metadata";
+import { JsonLd } from "@/components/json-ld";
+import { breadcrumbJsonLd, pageMetadata, writingJsonLd } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
-  title: content.pages.blog.title,
+  title: content.pages.blog.seoTitle || content.pages.blog.title,
   description: content.pages.blog.description,
   path: "/blog",
   noindex: getPosts().length === 0,
@@ -20,6 +21,8 @@ export default function BlogPage() {
 
   return (
     <>
+      <JsonLd data={writingJsonLd(posts)} />
+      <JsonLd data={breadcrumbJsonLd([{ name: content.pages.blog.title, path: "/blog" }])} />
       <h1 className="section-title">{content.pages.blog.title}</h1>
       <p className="mt-4 leading-[1.75]">
         {content.pages.blog.intro}

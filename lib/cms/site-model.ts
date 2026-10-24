@@ -60,7 +60,9 @@ const project = z.strictObject({
   featured: z.boolean(),
   early: z.boolean(),
 });
-const page = { title: name, description: short };
+const searchTitle = z.string().trim().max(200).default("");
+const verification = z.string().trim().max(200).default("");
+const page = { title: name, seoTitle: searchTitle, description: short };
 const prUrl = z
   .string()
   .regex(
@@ -83,6 +85,8 @@ export const siteContentSchema = z
       name,
       title: short.min(1),
       description: short,
+      googleVerification: verification,
+      bingVerification: verification,
       url: web,
       email: z.email(),
       github: web,

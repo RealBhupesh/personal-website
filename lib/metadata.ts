@@ -12,7 +12,14 @@ export function absoluteUrl(path: string) {
 
 const feed = {
   "application/rss+xml": "/feed.xml",
+  "text/plain": "/llms-full.txt",
 } as const;
+
+const publicRobots: Metadata["robots"] = {
+  index: true,
+  follow: true,
+  googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+};
 
 function fullTitle(title: string, absolute: boolean) {
   return absolute ? title : `${title} · ${site.name}`;
@@ -46,7 +53,7 @@ export function pageMetadata({
     title: absolute ? { absolute: title } : title,
     description,
     alternates: { canonical: path, types: feed },
-    ...(noindex ? { robots: { index: false, follow: true } } : {}),
+    robots: noindex ? { index: false, follow: true } : publicRobots,
     openGraph: {
       title: resolved,
       description,
@@ -87,6 +94,8 @@ export function articleMetadata({
   return {
     title,
     description,
+    authors: [{ name: site.name, url: absoluteUrl("/about") }],
+    robots: publicRobots,
     alternates: { canonical: path, types: feed },
     openGraph: {
       title: resolved,
@@ -97,6 +106,7 @@ export function articleMetadata({
       locale: "en_US",
       publishedTime: published,
       modifiedTime: updated ?? published,
+      authors: [absoluteUrl("/about")],
       tags,
       images,
     },
@@ -111,7 +121,7 @@ export function articleMetadata({
 
 const personId = `${site.url}/#person`;
 const websiteId = `${site.url}/#website`;
-const person = { "@id": personId };
+const person = { "@type": "Person", "@id": personId, name: site.name, url: absoluteUrl("/about") };
 
 export function personJsonLd() {
   return {
@@ -123,6 +133,7 @@ export function personJsonLd() {
         name: site.name,
         givenName: site.name.split(" ")[0],
         familyName: site.name.split(" ").slice(1).join(" "),
+        alternateName: [site.name.split(" ")[0], new URL(site.github).pathname.slice(1)].filter(Boolean),
         url: site.url,
         email: `mailto:${site.email}`,
         description: site.description,
@@ -148,7 +159,7 @@ export function personJsonLd() {
         hasCredential: {
           "@type": "EducationalOccupationalCredential",
           credentialCategory: "degree",
-          name: "Bachelor of Engineering in Artificial Intelligence and Data Science",
+          name: profile.education,
         },
         hasOccupation: {
           "@type": "Occupation",
@@ -166,16 +177,39 @@ export function personJsonLd() {
         publisher: person,
         inLanguage: "en",
       },
-      {
-        "@type": "ProfilePage",
-        "@id": `${site.url}/about#profile`,
-        url: absoluteUrl("/about"),
-        name: `About ${site.name}`,
-        dateModified: profile.updated,
-        mainEntity: person,
-        isPartOf: { "@id": websiteId },
-      },
     ],
+  };
+}
+
+export function profilePageJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "@id": `${absoluteUrl("/about")}#profile`,
+    url: absoluteUrl("/about"),
+    name: `About ${site.name}`,
+    dateModified: profile.updated,
+    mainEntity: person,
+    isPartOf: { "@id": websiteId },
+  };
+}
+
+export function writingJsonLd(posts: readonly Post[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${absoluteUrl("/blog")}#writing`,
+    url: absoluteUrl("/blog"),
+    name: `Writing by ${site.name}`,
+    author: person,
+    isPartOf: { "@id": websiteId },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: posts.map((post, index) => ({
+        "@type": "ListItem", position: index + 1,
+        item: { "@type": "BlogPosting", headline: post.title, url: absoluteUrl(`/blog/${post.slug}`), author: person },
+      })),
+    },
   };
 }
 
@@ -262,6 +296,8 @@ export function blogPostingJsonLd(post: Post) {
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
+    "@id": `${absoluteUrl(`/blog/${post.slug}`)}#article`,
+    url: absoluteUrl(`/blog/${post.slug}`),
     headline: post.title,
     description: post.description,
     datePublished: post.date,
@@ -269,6 +305,10 @@ export function blogPostingJsonLd(post: Post) {
     wordCount: post.words,
     keywords: post.tags.join(", "),
     author: person,
+    publisher: person,
+    inLanguage: "en",
+    image: absoluteUrl(post.ogImage || `/og/blog/${post.slug}`),
+    isPartOf: { "@id": `${absoluteUrl("/blog")}#writing` },
     mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
   };
 }
@@ -277,10 +317,15 @@ export function noteArticleJsonLd(note: Note) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
+    "@id": `${absoluteUrl(`/notes/${note.slug}`)}#article`,
+    url: absoluteUrl(`/notes/${note.slug}`),
     headline: note.title,
     description: note.description,
     wordCount: note.words,
     author: person,
+    publisher: person,
+    inLanguage: "en",
+    image: absoluteUrl(`/og/notes/${note.slug}`),
     mainEntityOfPage: absoluteUrl(`/notes/${note.slug}`),
   };
 }

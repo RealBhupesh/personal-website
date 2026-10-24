@@ -2,6 +2,8 @@
 
 Personal site. Edit content, not components, when the words change.
 
+Search metadata, Google/Bing verification, and AI-readable content: [SEO setup and maintenance](docs/seo/README.md). Run `npm run test:seo` against a production server for the public crawl checks.
+
 - Manage content in the owner dashboard at `/admin`.
 - Published profile, pages, projects, experience, images, FAQs, and GitHub settings: `data/site-content.json`.
 - `config/*.ts` are typed adapters for the public site, not separate content stores.

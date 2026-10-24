@@ -1,6 +1,8 @@
 import { content } from "@/config/content";
 import Image from "next/image";
 import { Footer } from "@/components/footer";
+import { JsonLd } from "@/components/json-ld";
+import { personJsonLd } from "@/lib/metadata";
 
 export default function PublicLayout({
   children,
@@ -9,6 +11,7 @@ export default function PublicLayout({
 }) {
   return (
     <>
+      <JsonLd data={personJsonLd()} />
       <div className="site-frame relative z-10 mx-auto w-full max-w-[38rem] px-6 pt-16 pb-20 sm:pt-24 lg:max-w-[38rem] lg:px-8 lg:pt-20 lg:pb-24 lg:ml-[max(2rem,calc((100vw-min(30vw,28rem)-7rem-38rem)/2))] lg:mr-[calc(min(30vw,28rem)+7rem)]">
         {children}
         <Footer />

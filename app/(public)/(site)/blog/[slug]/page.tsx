@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { site } from "@/config/site";
 import { JsonLd } from "@/components/json-ld";
 import { Mdx } from "@/components/mdx";
 import { ArticleToc } from "@/components/article-toc";
 import { getArticleHeadings } from "@/lib/article-headings";
 import { formatMonthYear, getPostBySlug, getPosts } from "@/lib/content";
-import { articleMetadata, blogPostingJsonLd } from "@/lib/metadata";
+import { articleMetadata, blogPostingJsonLd, breadcrumbJsonLd } from "@/lib/metadata";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -37,10 +39,14 @@ export default async function BlogPostPage({ params }: Props) {
       <ArticleToc items={getArticleHeadings(post.body)} />
       <article className="essay-article">
       <JsonLd data={blogPostingJsonLd(post)} />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Writing", path: "/blog" }, { name: post.title, path: `/blog/${post.slug}` }])} />
       <header>
         <h1 className="text-[1.75rem] font-medium tracking-[-0.03em] sm:text-[2rem]">
           {post.title}
         </h1>
+        <p className="mt-3 text-sm text-muted">
+          By <Link href="/about" rel="author" className="text-foreground underline underline-offset-4">{site.name}</Link>
+        </p>
         <p className="mt-3 font-mono text-[0.8125rem] text-muted">
           {formatMonthYear(post.date)}
           {" · "}

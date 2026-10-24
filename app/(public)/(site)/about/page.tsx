@@ -6,10 +6,10 @@ import { getFaqs, profile } from "@/config/profile";
 import { getGitHubContributions, projectCounts } from "@/lib/github-contributions";
 import { site } from "@/config/site";
 import { featuredProjects, titleOf } from "@/config/work";
-import { breadcrumbJsonLd, contributionsJsonLd, faqJsonLd, pageMetadata } from "@/lib/metadata";
+import { breadcrumbJsonLd, contributionsJsonLd, faqJsonLd, pageMetadata, profilePageJsonLd } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
-  title: content.pages.about.title,
+  title: content.pages.about.seoTitle || content.pages.about.title,
   description: content.pages.about.description,
   path: "/about",
 });
@@ -35,6 +35,7 @@ export default async function AboutPage() {
 
   return (
     <>
+      <JsonLd data={profilePageJsonLd()} />
       <JsonLd data={faqJsonLd(faqs)} />
       <JsonLd data={breadcrumbJsonLd([{ name: "About", path: "/about" }])} />
       <JsonLd data={contributionsJsonLd(contributions)} />

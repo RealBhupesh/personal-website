@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { Mdx } from "@/components/mdx";
 import { getNoteBySlug, getNotes } from "@/lib/content";
-import { articleMetadata, noteArticleJsonLd } from "@/lib/metadata";
+import { articleMetadata, breadcrumbJsonLd, noteArticleJsonLd } from "@/lib/metadata";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -30,6 +30,7 @@ export default async function NotePage({ params }: Props) {
   return (
     <article>
       <JsonLd data={noteArticleJsonLd(note)} />
+      <JsonLd data={breadcrumbJsonLd([{ name: "Notes", path: "/notes" }, { name: note.title, path: `/notes/${note.slug}` }])} />
       <header>
         <h1 className="text-[1.75rem] font-medium tracking-[-0.03em] sm:text-[2rem]">
           {note.title}

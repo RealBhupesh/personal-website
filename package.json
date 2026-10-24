@@ -13,7 +13,8 @@
     "test:cms-http": "node scripts/test-cms-http.mjs",
     "test:cms-auth": "node scripts/test-cms-auth.mjs",
     "test:cms-preview": "node scripts/test-cms-preview.mjs",
-    "test:cms-site-http": "node scripts/test-cms-site-http.mjs"
+    "test:cms-site-http": "node scripts/test-cms-site-http.mjs",
+    "test:seo": "node scripts/test-seo.mjs"
   },
   "dependencies": {
     "@octokit/auth-app": "^8.3.1",

@@ -7,7 +7,7 @@ import { titleOf, workGroups, workIntro, workProjects, type ProjectEntry } from 
 import { breadcrumbJsonLd, pageMetadata, workListJsonLd } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
-  title: content.pages.work.title,
+  title: content.pages.work.seoTitle || content.pages.work.title,
   description: content.pages.work.description,
   path: "/work",
 });

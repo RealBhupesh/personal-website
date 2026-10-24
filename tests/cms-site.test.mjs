@@ -46,6 +46,17 @@ function setup() {
   );
   return { a, b, s: new SiteService(a, b) };
 }
+test("existing CMS drafts accept new search settings with safe empty defaults", () => {
+  const legacy = structuredClone(initial);
+  delete legacy.site.googleVerification;
+  delete legacy.site.bingVerification;
+  for (const page of ['about', 'work', 'blog', 'notes']) delete legacy.pages[page].seoTitle;
+  const parsed = siteContentSchema.parse(legacy);
+  assert.equal(parsed.site.googleVerification, '');
+  assert.equal(parsed.site.bingVerification, '');
+  assert.equal(parsed.pages.about.seoTitle, '');
+  assert.equal(parsed.site.name, initial.site.name);
+});
 test("site schema rejects duplicate projects, missing groups, dangling selections and unsafe URLs", () => {
   for (const mutate of [
     (x) => x.work.projects.push(x.work.projects[0]),

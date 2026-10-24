@@ -63,6 +63,8 @@ const paths: Record<string, string[]> = {
     "site.title",
     "site.description",
     "site.ogImage",
+    "site.googleVerification",
+    "site.bingVerification",
     "site.url",
     "github.username",
     "github.creditEmails",
