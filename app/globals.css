@@ -232,7 +232,7 @@ body:has(.essay-layout) .site-frame { margin-inline: auto; max-width: 46rem; }
   body:has(.essay-layout) .site-frame > footer { margin-left: 16rem; max-width: 42rem; }
   .essay-layout { display: grid; grid-template-columns: 12rem minmax(0, 42rem); gap: 4rem; }
   .essay-toc-desktop { display: block; min-width: 0; }
-  .essay-toc-sticky { position: sticky; top: 6rem; padding: 0 0.5rem 0.25rem; }
+  .essay-toc-sticky { position: sticky; top: 6rem; padding: 0 0.5rem 0.25rem; max-height: calc(100svh - 8rem); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
   .essay-toc-mobile { display: none; }
 }
 

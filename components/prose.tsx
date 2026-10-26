@@ -80,7 +80,7 @@ export function Figure({
   width: number;
   height: number;
   caption?: string;
-  fullSizeLink?: boolean;
+  fullSizeLink?: boolean | "true" | "false";
 }) {
   return (
     <figure className="my-8">
@@ -97,7 +97,7 @@ export function Figure({
           {caption}
         </figcaption>
       ) : null}
-      {fullSizeLink ? (
+      {fullSizeLink === true || fullSizeLink === "true" ? (
         <a href={src} target="_blank" rel="noreferrer" className={`mt-2 inline-block text-sm ${textLink}`}>
           View diagram at full size
           <span className="sr-only"> (opens in a new tab)</span>

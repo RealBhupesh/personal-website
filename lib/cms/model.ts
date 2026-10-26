@@ -157,7 +157,7 @@ export function validateBody(body: string) {
       };
       const allowed: Record<string, string[]> = {
         JostracaDiagram: ["kind"],
-        Figure: ["src", "alt", "width", "height", "caption"],
+        Figure: ["src", "alt", "width", "height", "caption", "fullSizeLink"],
       };
       if (!allowed[jsx.name])
         throw new CmsError(
@@ -176,6 +176,8 @@ export function validateBody(body: string) {
           throw new CmsError(
             "Images must use uploaded or existing site assets.",
           );
+        if (attribute.name === "fullSizeLink" && !["true", "false"].includes(attribute.value))
+          throw new CmsError("Full-size diagram links must be true or false.");
       }
       if (
         jsx.name === "JostracaDiagram" &&
