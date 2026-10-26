@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="economic-svg" viewBox="0 0 320 448" role="img" aria-labelledby="econ-evidence-phone-title econ-evidence-phone-desc">
+<title id="econ-evidence-phone-title">Three accounts of one transaction</title><desc id="econ-evidence-phone-desc">Seller A invoices Buyer B. Transport evidence may support the goods journey from A to B, while settlement flows from B back to A. A dashed connection means an observation has not been matched; it does not establish fraud.</desc>
+<style>
+.economic-svg{--e-bg:#f6f4ef;--e-ink:#1c1b19;--e-muted:#5c574f;--e-line:#857d71;--e-node:#eeebe4;--e-good:#315b39;--e-good-bg:#e3ebe0;background:var(--background,var(--e-bg));font-family:var(--font-geist-sans,system-ui,sans-serif)}
+@media(prefers-color-scheme:dark){.economic-svg{--e-bg:#121110;--e-ink:#eceae4;--e-muted:#a8a299;--e-line:#938a7c;--e-node:#1c1b19;--e-good:#b5ceb7;--e-good-bg:#1d2c21}}
+.economic-svg .label{font-size:18px;font-weight:500;fill:var(--foreground,var(--e-ink))}
+.economic-svg .small{font-size:15px;font-weight:400;fill:var(--muted,var(--e-muted))}
+.economic-svg .section{font-size:17px;font-weight:500;fill:var(--foreground,var(--e-ink))}
+.economic-svg .node rect{fill:var(--diagram-node,var(--e-node));stroke:var(--diagram-line,var(--e-line));stroke-width:1.25}
+.economic-svg .node.output rect{fill:var(--diagram-good,var(--e-good-bg))}
+.economic-svg .node.output .label{fill:var(--diagram-good-ink,var(--e-good))}
+.economic-svg .edge{fill:none;stroke:var(--diagram-line,var(--e-line));stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.economic-svg .edge.unmatched{stroke-dasharray:5 5}
+.economic-svg .arrow-tip{fill:var(--diagram-line,var(--e-line))}
+.economic-svg .label-gap{fill:var(--background,var(--e-bg))}
+</style>
+<defs><marker id="econ-evidence-phone-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path class="arrow-tip" d="M1 1 L7 4 L1 7Z"/></marker></defs>
+<g class="node "><rect x="98" y="16" width="124" height="64" rx="3"/><text class="label" text-anchor="middle" dominant-baseline="central"><tspan x="160" y="36">Seller A</tspan></text><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="160" y="62">GSTIN A</tspan></text></g><g class="node "><rect x="98" y="364" width="124" height="64" rx="3"/><text class="label" text-anchor="middle" dominant-baseline="central"><tspan x="160" y="384">Buyer B</tspan></text><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="160" y="410">GSTIN B</tspan></text></g><path class="edge " d="M98 48 H32 V396 H92" marker-end="url(#econ-evidence-phone-arrow)"/><rect class="label-gap" x="3" y="167" width="90" height="48"/><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="48" y="180">Invoice</tspan><tspan x="48" y="198">A to B</tspan></text><path class="edge " d="M160 80 V144" marker-end="url(#econ-evidence-phone-arrow)"/><g class="node "><rect x="99" y="150" width="122" height="100" rx="3"/><text class="label" text-anchor="middle" dominant-baseline="central"><tspan x="160" y="179">Journey</tspan></text><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="160" y="205">e-way bill</tspan><tspan x="160" y="223">toll record</tspan></text></g><path class="edge unmatched" d="M160 250 V358" marker-end="url(#econ-evidence-phone-arrow)"/><rect class="label-gap" x="99" y="277" width="122" height="48"/><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="160" y="290">unmatched</tspan><tspan x="160" y="308">review needed</tspan></text><path class="edge " d="M222 396 H288 V48 H228" marker-end="url(#econ-evidence-phone-arrow)"/><rect class="label-gap" x="226" y="167" width="92" height="48"/><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="272" y="180">Settlement</tspan><tspan x="272" y="198">B to A</tspan></text>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="economic-svg" viewBox="0 0 792 370" role="img" aria-labelledby="econ-evidence-wide-title econ-evidence-wide-desc">
+<title id="econ-evidence-wide-title">Three accounts of one transaction</title><desc id="econ-evidence-wide-desc">Seller A invoices Buyer B. Transport evidence may support the goods journey from A to B, while settlement flows from B back to A. A dashed connection means an observation has not been matched; it does not establish fraud.</desc>
+<style>
+.economic-svg{--e-bg:#f6f4ef;--e-ink:#1c1b19;--e-muted:#5c574f;--e-line:#857d71;--e-node:#eeebe4;--e-good:#315b39;--e-good-bg:#e3ebe0;background:var(--background,var(--e-bg));font-family:var(--font-geist-sans,system-ui,sans-serif)}
+@media(prefers-color-scheme:dark){.economic-svg{--e-bg:#121110;--e-ink:#eceae4;--e-muted:#a8a299;--e-line:#938a7c;--e-node:#1c1b19;--e-good:#b5ceb7;--e-good-bg:#1d2c21}}
+.economic-svg .label{font-size:18px;font-weight:500;fill:var(--foreground,var(--e-ink))}
+.economic-svg .small{font-size:15px;font-weight:400;fill:var(--muted,var(--e-muted))}
+.economic-svg .section{font-size:17px;font-weight:500;fill:var(--foreground,var(--e-ink))}
+.economic-svg .node rect{fill:var(--diagram-node,var(--e-node));stroke:var(--diagram-line,var(--e-line));stroke-width:1.25}
+.economic-svg .node.output rect{fill:var(--diagram-good,var(--e-good-bg))}
+.economic-svg .node.output .label{fill:var(--diagram-good-ink,var(--e-good))}
+.economic-svg .edge{fill:none;stroke:var(--diagram-line,var(--e-line));stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.economic-svg .edge.unmatched{stroke-dasharray:5 5}
+.economic-svg .arrow-tip{fill:var(--diagram-line,var(--e-line))}
+.economic-svg .label-gap{fill:var(--background,var(--e-bg))}
+</style>
+<defs><marker id="econ-evidence-wide-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path class="arrow-tip" d="M1 1 L7 4 L1 7Z"/></marker></defs>
+<g class="node "><rect x="24" y="130" width="160" height="112" rx="3"/><text class="label" text-anchor="middle" dominant-baseline="central"><tspan x="104" y="174">Seller A</tspan></text><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="104" y="200">GSTIN A</tspan></text></g><g class="node "><rect x="608" y="130" width="160" height="112" rx="3"/><text class="label" text-anchor="middle" dominant-baseline="central"><tspan x="688" y="174">Buyer B</tspan></text><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="688" y="200">GSTIN B</tspan></text></g><path class="edge " d="M184 151 C322 50 470 50 602 151" marker-end="url(#econ-evidence-wide-arrow)"/><rect class="label-gap" x="303" y="53" width="186" height="26"/><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="396" y="66">Invoice: A to B</tspan></text><g class="node "><rect x="294" y="150" width="204" height="76" rx="3"/><text class="label" text-anchor="middle" dominant-baseline="central"><tspan x="396" y="176">Transport evidence</tspan></text><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="396" y="202">e-way bill + toll record</tspan></text></g><path class="edge " d="M184 188 H288" marker-end="url(#econ-evidence-wide-arrow)"/><path class="edge unmatched" d="M498 188 H602" marker-end="url(#econ-evidence-wide-arrow)"/><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="552" y="158">unmatched</tspan></text><path class="edge " d="M608 222 C470 318 322 318 190 222" marker-end="url(#econ-evidence-wide-arrow)"/><rect class="label-gap" x="291" y="285" width="210" height="26"/><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="396" y="298">Settlement: B to A</tspan></text><text class="small" text-anchor="middle" dominant-baseline="central"><tspan x="396" y="350">A missing match triggers review, not a fraud verdict.</tspan></text>
+</svg>

@@ -157,6 +157,7 @@ export function validateBody(body: string) {
       };
       const allowed: Record<string, string[]> = {
         JostracaDiagram: ["kind"],
+        EconomicDiagram: ["kind"],
         Figure: ["src", "alt", "width", "height", "caption", "fullSizeLink"],
       };
       if (!allowed[jsx.name])
@@ -186,6 +187,13 @@ export function validateBody(body: string) {
         )
       )
         throw new CmsError("Choose a supported diagram.");
+      if (
+        jsx.name === "EconomicDiagram" &&
+        !["pipeline", "permissions", "evidence"].includes(
+          String(jsx.attributes.find((a) => a.name === "kind")?.value),
+        )
+      )
+        throw new CmsError("Choose a supported economic diagram.");
     }
     const link = node as unknown as { url?: string };
     if (

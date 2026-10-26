@@ -240,8 +240,8 @@ body:has(.essay-layout) .site-frame { margin-inline: auto; max-width: 46rem; }
   .essay-toc-sticky { top: 2rem; max-height: calc(100svh - 4rem); overflow-y: auto; scrollbar-width: thin; }
 }
 
-.jostraca-diagram { margin: 2rem 0; container-type: inline-size; }
-.jostraca-diagram {
+.jostraca-diagram, .economic-diagram { margin: 2rem 0; container-type: inline-size; }
+.jostraca-diagram, .economic-diagram {
   --diagram-node: light-dark(#eeebe4, #1c1b19);
   --diagram-line: light-dark(#8a8275, #756d60);
   --diagram-good: light-dark(#e3ebe0, #1d2c21);
@@ -249,9 +249,9 @@ body:has(.essay-layout) .site-frame { margin-inline: auto; max-width: 46rem; }
   --diagram-risk: light-dark(#efe4dc, #30251f);
   --diagram-risk-ink: light-dark(#704937, #d7b9a5);
 }
-.jostraca-diagram svg { width: 100%; height: auto; display: block; }
+.jostraca-diagram svg, .economic-diagram svg { width: 100%; height: auto; display: block; }
 .diagram-landscape { display: none; }
-.jostraca-diagram figcaption { margin-top: 1rem; font-size: 0.875rem; line-height: 1.6; color: var(--muted); }
+.jostraca-diagram figcaption, .economic-diagram figcaption { margin-top: 1rem; font-size: 0.875rem; line-height: 1.6; color: var(--muted); }
 .diagram-full-size { display: inline-block; margin-top: 0.4rem; font-size: 0.8125rem; color: var(--muted); text-decoration: underline; text-underline-offset: 0.2em; }
 .diagram-full-size:hover { color: var(--foreground); }
 @container (min-width: 480px) {

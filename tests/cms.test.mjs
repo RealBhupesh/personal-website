@@ -167,17 +167,20 @@ test("existing essay imports without losing diagrams, code, or its published URL
   assert.equal((await cms.importExisting()).count, 1);
   assert.equal((await cms.importExisting()).count, 0);
 });
-test("the illustrated economic essay survives CMS import and publication with safe full-size figure links", async () => {
+test("the shortened economic essay preserves its technical diagrams through CMS publication", async () => {
   const source = await readFile(new URL('../content/blog/the-country-that-can-see-itself.mdx', import.meta.url), 'utf8');
-  const imported = importArticle('the-country-that-can-see-itself', source, 'illustrated-essay-sha');
+  const imported = importArticle('the-country-that-can-see-itself', source, 'technical-essay-sha');
   validateBody(imported.body);
   const published = serializeArticle(imported);
-  assert.equal((published.match(/fullSizeLink="true"/g) || []).length, 5);
-  assert.match(published, /## The missing layer is a set of permissions/);
-  assert.match(published, /a-right-to-question\.webp/);
+  assert.equal((published.match(/<EconomicDiagram kind="(pipeline|permissions|evidence)" \/>/g) || []).length, 3);
+  assert.match(published, /## Connect the data without building a dossier/);
+  assert.doesNotMatch(published, /\.webp/);
   assert.equal(imported.published.slug, 'the-country-that-can-see-itself');
   for (const attribute of ['fullSizeLink="javascript:alert(1)"', 'onClick="alert(1)"', 'fullSizeLink={true}']) {
     assert.throws(() => validateBody(`<Figure src="/writing/example.webp" ${attribute} />`));
+  }
+  for (const attribute of ['kind="../../secret"', 'kind="unknown"', 'kind={"pipeline"}', 'kind="pipeline" onClick="alert(1)"', '']) {
+    assert.throws(() => validateBody(`<EconomicDiagram ${attribute} />`));
   }
 });
 test("only referenced media are published and MIME spoofing is rejected", async () => {

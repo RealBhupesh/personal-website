@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CodeBlock } from "@/components/code-block";
 import { JostracaDiagram } from "@/components/jostraca-diagram";
+import { EconomicDiagram } from "@/components/economic-diagram";
 
 const textLink =
   "underline decoration-foreground/25 underline-offset-[0.2em] transition-[color,text-decoration-color] duration-150 hover:decoration-foreground/80";
@@ -123,6 +124,7 @@ export const mdxComponents = {
   img: MdxImage,
   Figure,
   JostracaDiagram,
+  EconomicDiagram,
   blockquote: (props: ComponentProps<"blockquote">) => (
     <blockquote
       className="my-8 border-l border-border pl-4 text-muted"
