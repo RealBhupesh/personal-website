@@ -1,0 +1,27 @@
+---
+title: 'When asking Flatbush for zero neighbours returned them all'
+description: 'A one-line fix for a nearest-neighbour query, and the two assertions that caught the bug.'
+order: 1
+draft: false
+---
+
+Flatbush indexes points and rectangles so you can quickly find what’s nearby. The third argument to `neighbors` caps the number of results. I found that passing `0` returned every eligible result.
+
+```js
+import Flatbush from 'flatbush'
+
+const index = new Flatbush(2)
+index.add(0, 0)
+index.add(5, 5)
+index.finish()
+
+index.neighbors(0, 0, 0) // Before: [0, 1]. After: [].
+```
+
+The search appended each match before checking whether the number of results equalled the limit. Once it appended the first match, the count was already `1`, so it could never equal `0`.
+
+I added `if (maxResults === 0) return []` after the existing check that the index was ready. The query now stops before walking the tree, and querying an unfinished index still throws.
+
+In review, the maintainer asked for a smaller test. The final version uses the existing fixture and checks two things. The result is empty, and the optional filter callback never runs. That second assertion catches a search that still does the work and discards the result afterwards.
+
+Codex assisted with the patch and tests. [Read the merged Flatbush pull request](https://github.com/mourner/flatbush/pull/76).

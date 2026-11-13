@@ -73,10 +73,4 @@ export const getGitHubContributions = cache(async () => {
   return { projects, mergedPrCount: prs.filter(pr => pr.status === "merged").length, totalPrCount: prs.length, updatedAt, stale };
 });
 
-export function projectCounts(project: ContributionProject) {
-  return [
-    project.mergedCount && `${project.mergedCount} merged PR${project.mergedCount === 1 ? "" : "s"}`,
-    project.openCount && `${project.openCount} open PR${project.openCount === 1 ? "" : "s"}`,
-    project.closedCount && `${project.closedCount} closed PR${project.closedCount === 1 ? "" : "s"} without merge`,
-  ].filter(Boolean).join(" · ");
-}
+export { projectCounts } from "@/lib/github-contributions-core";

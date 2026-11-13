@@ -3,7 +3,8 @@ import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
 import { roles, skills, training } from "@/config/experience";
 import { getFaqs, profile } from "@/config/profile";
-import { getGitHubContributions, projectCounts } from "@/lib/github-contributions";
+import { ContributionArchive } from "@/components/contribution-archive";
+import { getGitHubContributions } from "@/lib/github-contributions";
 import { site } from "@/config/site";
 import { featuredProjects, titleOf } from "@/config/work";
 import { breadcrumbJsonLd, contributionsJsonLd, faqJsonLd, pageMetadata, profilePageJsonLd } from "@/lib/metadata";
@@ -136,41 +137,7 @@ export default async function AboutPage() {
             Authored and credited public pull requests to repositories maintained by others. Statuses come from GitHub.
             {stale ? ` Saved list from ${updatedAt.slice(0, 10)}; GitHub is temporarily unavailable.` : " New PRs and status changes are checked hourly."}
           </p>
-          <ol className="space-y-8">
-            {contributions.map((item) => (
-              <li key={item.repo}>
-                <h3 className="font-medium">
-                  <a href={item.repo} className={textLink} rel="noreferrer" target="_blank">
-                    {item.project}
-                    <span className="sr-only"> (opens in a new tab)</span>
-                  </a>
-                </h3>
-                {item.about && <p className="mt-1 text-sm leading-[1.6] text-muted">{item.about}</p>}
-                {item.summary && <p className="mt-2 leading-[1.7]">{item.summary}</p>}
-                <p className="mt-2 text-sm text-muted">{projectCounts(item)}</p>
-                <ul className="mt-3 space-y-2 text-sm">
-                  {item.prs.map((pr) => (
-                    <li key={pr.number} className="leading-relaxed">
-                      <a
-                        href={pr.url}
-                        title={pr.title}
-                        className={textLink}
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        #{pr.number}: {pr.title}
-                        <span className="sr-only"> (opens in a new tab)</span>
-                      </a>
-                      <span className="text-muted"> ({pr.status === "closed" ? "closed without merge" : pr.status})</span>
-                      {pr.attribution && pr.evidence && (
-                        <span className="text-muted"> · <a href={pr.evidence} className={textLink} rel="noreferrer" target="_blank">{pr.attribution === "co-authored" ? "Co-authored contribution" : "Credited original patch"}<span className="sr-only"> (opens in a new tab)</span></a></span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ol>
+          <ContributionArchive projects={contributions} />
         </section>
 
         <section className="mt-14" aria-labelledby="skills-heading">

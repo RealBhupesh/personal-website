@@ -170,3 +170,11 @@ export async function fetchPublicPullRequests(
   }
   return [...byUrl.values()].filter(item => item.repository.split("/")[0].toLowerCase() !== username.toLowerCase());
 }
+
+export function projectCounts(project: { mergedCount: number; openCount: number; closedCount: number }) {
+  return [
+    project.mergedCount && `${project.mergedCount} merged PR${project.mergedCount === 1 ? "" : "s"}`,
+    project.openCount && `${project.openCount} open PR${project.openCount === 1 ? "" : "s"}`,
+    project.closedCount && `${project.closedCount} closed PR${project.closedCount === 1 ? "" : "s"} without merge`,
+  ].filter(Boolean).join(" · ");
+}

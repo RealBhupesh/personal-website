@@ -3,27 +3,24 @@ import Link from "next/link";
 export function PostRow({
   href,
   title,
+  summary,
   meta,
 }: {
   href: string;
   title: string;
+  summary: string;
   meta?: string;
 }) {
   return (
-    <li className="border-t border-border">
+    <li className="border-t border-border py-4">
       <Link
         href={href}
-        className="group flex items-baseline justify-between gap-6 py-3"
+        className="font-medium underline decoration-foreground/25 underline-offset-[0.2em] hover:decoration-foreground focus-visible:decoration-foreground"
       >
-        <span className="underline decoration-transparent underline-offset-[0.2em] transition-[text-decoration-color,opacity] duration-150 group-hover:decoration-foreground/50 group-focus-visible:decoration-foreground/50">
-          {title}
-        </span>
-        {meta ? (
-          <span className="shrink-0 font-mono text-[0.8125rem] text-muted">
-            {meta}
-          </span>
-        ) : null}
+        {title}
       </Link>
+      <p className="mt-1 leading-[1.65]">{summary}</p>
+      {meta && <p className="mt-2 text-sm text-muted">{meta}</p>}
     </li>
   );
 }
