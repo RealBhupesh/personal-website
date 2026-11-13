@@ -2,6 +2,7 @@
 title: 'Jostraca is built for the second run. Its defaults are built for the first.'
 description: 'A hands-on review of Jostraca 0.39.0: what its design gets right, where regeneration can lose hand edits, and the setup I would use.'
 date: '2026-10-06'
+updated: '2026-11-13'
 tags:
   - Code generation
   - Open source
@@ -9,9 +10,9 @@ tags:
 draft: false
 ---
 
-I came across Jostraca while looking at how the Voxgig SDK generator writes its files. It is a code generator for TypeScript and Go that describes an output file tree with components, and its website leads with one promise: "a code generator you can run twice."
+I found Jostraca while reading the Voxgig SDK generator. Jostraca calls itself “a code generator you can run twice.” The second run is the one I care about. By then, someone may have edited what the first run produced.
 
-I spent some time testing that promise against version 0.39.0. I like a lot of the design. I also think the defaults currently work against the thing the project says it is for. Every example below can be run against that version. I may be wrong on some of it, and I would be glad to be corrected.
+I tested version 0.39.0 with a hand edit, a fresh checkout, and a file with a protection marker. Each exposed a different way that the generator’s defaults can surprise you.
 
 ## What it gets right
 

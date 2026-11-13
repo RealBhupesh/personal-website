@@ -9,7 +9,7 @@
     "github": "https://github.com/RealBhupesh",
     "linkedin": "https://www.linkedin.com/in/thebhupesh/",
     "x": "https://x.com/bhupeshcholake",
-    "bio": "I'm Bhupesh Cholake, a software developer in Nashik, India. I build AI applications, from the tools a model calls to the interface someone uses to work with it.\n\nRecently, I was a founding engineer intern at Physicore Engine, building a Python physics solver and its browser interface. Outside that work, I've built a hotel guest assistant, a Discord bot, and tools for monitoring websites and studying airflow.\n\nI also contribute to codebases other people depend on, including Cloudflare's Workers SDK, Sentry, Grafana, and Nanocoder. I'm looking for an AI engineer role where I can follow a problem from the first question through to a working product.",
+    "bio": "I'm Bhupesh Cholake, a software developer in Nashik, India. I build AI applications and developer tools, with a focus on what happens when they meet real users and messy data.\n\nAt Physicore Engine, I built a Python physics solver and the browser interface for running it. I also built Asteria, a hotel guest assistant that checks room availability and hands bookings to the front desk.\n\nIn open source, I've fixed dropped telemetry in Grafana Faro and kept large tool responses from crowding out a coding agent's context in Nanocoder. I'm looking for an AI engineering role where I can own both the model workflow and the application.",
     "bioLong": "Technology caught my attention long before I knew what kind of work I wanted to do. Growing up in Nashik, I started a YouTube channel about tech, learned to build websites, and started my own agency by 11th standard. Each attempt gave me a new question to follow.\n\nA website made me curious about design. Running an agency made me think about why someone chooses one business over another. Programming gave me a way to turn an idea into something I could put in front of a person and learn from.\n\nI went on to study Artificial Intelligence and Data Science. When I first used ChatGPT, ideas that had felt out of reach became things I could attempt. That made me more ambitious about what I could build, and more interested in how to tell whether it worked well enough to trust.\n\nThat question has stayed with me. In Asteria, the model can help a guest find a room, but code checks the inventory and staff confirm the booking. In PhysiCore, a predicted airflow field matters alongside the equations, derivatives, and assumptions that produced it. I like being able to follow an answer back to the machinery behind it.\n\nI learn from other people's machinery, too. Working on Nanocoder meant finding where oversized tool results and diffs could overwhelm an agent's context. Contributions to Cloudflare, Sentry, and Grafana have put me inside systems with existing users, constraints, and maintainers. A useful fix has to fit all three.\n\nMy curiosity also takes me beyond code. I read about strategy, psychology, and marketing because a working product still has to find a place in someone's life. People bring habits, pressures, and reasons to be cautious. I want to understand those before asking them to change how they work.\n\nI'm drawn to tools and processes that carry a lesson forward: a check that catches the same mistake next time, a workflow that makes the next decision clearer, a small piece of software that removes a recurring job. Building them has become a way of making my own learning useful to someone else.\n\nI'm looking for an AI engineer role where I can take responsibility for that whole process. I enjoy the point where a problem stops being familiar: there is something to investigate, a new skill to learn, and a chance to make a better decision than I could have made yesterday.",
     "nowUpdated": "October 2026",
     "now": [
@@ -142,8 +142,8 @@
   },
   "work": {
     "intro": [
-      "I build AI applications, tools for developers, and experiments in scientific computing. These projects show the problems I chose, the systems I built, and the decisions behind them.",
-      "You can try the live demos, read the code, or follow a project from its first question to its current limits."
+      "I build AI applications, developer tools, and scientific software. This is where I document what each project does and the choices that shaped it.",
+      "Each project links to a demo or source code where available and explains what you can try today."
     ],
     "selectedIntro": "Four projects that show my work across AI applications, developer tools, and scientific computing.",
     "groups": [
@@ -532,8 +532,24 @@
     ]
   },
   "openSource": {
-    "intro": "I've worked on agent context limits, dropped telemetry, and failures in local development tools. These changes are merged into codebases other people depend on.",
+    "intro": "I usually start with a specific failure. A telemetry batch drops events during a flush, or a spatial query returns a neighbour when asked for zero. The pull requests show the fix and how it was verified.",
     "repositories": [
+      {
+        "project": "Flatbush",
+        "repo": "https://github.com/mourner/flatbush",
+        "about": "A JavaScript spatial index for points and rectangles.",
+        "summary": "Fixed nearest-neighbour queries so a limit of zero returns an empty result.",
+        "featured": true,
+        "hidden": false
+      },
+      {
+        "project": "python-lenses",
+        "repo": "https://github.com/ingolemo/python-lenses",
+        "about": "A Python library for reading and updating nested data.",
+        "summary": "Fixed tuple updates at valid negative indexes so they follow Python's indexing rules.",
+        "featured": false,
+        "hidden": false
+      },
       {
         "project": "Cloudflare Workers SDK",
         "repo": "https://github.com/cloudflare/workers-sdk",
@@ -562,7 +578,7 @@
         "project": "Grafana Faro Web SDK",
         "repo": "https://github.com/grafana/faro-web-sdk",
         "about": "Grafana's frontend observability SDK.",
-        "summary": "Fixed a race where telemetry signals added during a batch flush were silently dropped.",
+        "summary": "Kept telemetry queued during a flush from being dropped and corrected TLS timing for resources loaded over HTTP.",
         "featured": true,
         "hidden": false
       },
@@ -578,7 +594,7 @@
         "project": "Plane",
         "repo": "https://github.com/makeplane/plane",
         "about": "An open-source project management tool.",
-        "summary": "Fixed sub-work items not showing on their parent in local mode.",
+        "summary": "Restored sub-work items in local mode and made sure supervisor log directories exist at startup. A maintainer also incorporated my fix for HTML entities in plain-text email.",
         "featured": false,
         "hidden": false
       },
@@ -625,7 +641,7 @@
     "about": {
       "title": "About",
       "description": "Meet Bhupesh Cholake, a software developer in Nashik, India. Explore his AI engineering experience, skills, education, and verified open-source contributions.",
-      "intro": "I'm Bhupesh Cholake, a software developer in Nashik, India. I build AI applications, developer tools, and scientific software. I like work that asks me to understand the system behind an answer, then make it useful to the person asking.",
+      "intro": "I'm a software developer based in Nashik, India. I build AI applications, developer tools, and scientific software. I’m drawn to problems where I can trace a result back to the code, data, or assumptions that produced it.",
       "seeking": "An AI engineer role where I can work on the model, the application, and the experience of using it.",
       "seoTitle": "About: AI Engineering & Software Development"
     },
@@ -636,8 +652,8 @@
     },
     "blog": {
       "title": "Writing",
-      "description": "Essays by Bhupesh Cholake on software development, AI engineering, and open-source tools, grounded in projects, code, and first-hand technical investigations.",
-      "intro": "Writing helps me stay with a question long enough to discover what I actually think. Here, I write about building things, understanding people, and the ideas changing how I see my work and the world.",
+      "description": "Essays by Bhupesh Cholake on software and data systems, from testing code generation defaults to designing a weekly indicator of economic activity.",
+      "intro": "I write about how software behaves in practice. So far, I’ve tested what a code generator does to hand edits and explored how India could measure economic activity sooner using records it already collects.",
       "seoTitle": "Writing on Software & AI"
     },
     "notes": {
